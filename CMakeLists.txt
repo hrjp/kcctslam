@@ -13,6 +13,9 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
 )
 
+
+
+
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
@@ -119,6 +122,23 @@ include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
 )
+
+
+
+
+
+
+
+add_executable(basic_twist_publisher src/basic_twist_publisher.cpp)
+
+
+target_link_libraries(basic_twist_publisher
+  ${catkin_LIBRARIES}
+)
+
+
+
+
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
