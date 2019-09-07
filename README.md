@@ -3,24 +3,24 @@
 >
 ---
 >
-> Ubuntu 16.04LTS
-> ROS Kinetic
+- Ubuntu 16.04LTS
+- ROS Kinetic
 >
 ---
 >
 ### ROS Package
 >
-> urg_node
-> hokuyo_3d
-> ira_laser_tools
-> joy
-> rosserial_python
+- urg_node
+- hokuyo_3d
+- ira_laser_tools
+- joy
+- rosserial_python
 >
 ---
 >
-###Python
+### Python
 >
->pandas
+- pandas
 
 
 
