@@ -1,0 +1,9 @@
+obstacle_range: 4.0
+raytrace_range: 4.0
+
+robot_radius: 0.8
+footprint_padding: 0.05
+
+unknown_cost_value: 0
+
+
