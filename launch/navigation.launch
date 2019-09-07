@@ -71,7 +71,7 @@
 		<rosparam file="$(find kcctslam)/config/nav_param/costmap_common.yaml" command="load" ns="local_costmap" />
 		<rosparam file="$(find kcctslam)/config/nav_param/costmap_local.yaml" command="load" />
 		<rosparam file="$(find kcctslam)/config/nav_param/costmap_global.yaml" command="load" />
-		<rosparam file="$(find kcctslam)/config/nav_param/planner_local_yvt.yaml" command="load" />launch/
+		<rosparam file="$(find kcctslam)/config/nav_param/planner_local_yvt.yaml" command="load" />
 		<rosparam file="$(find kcctslam)/config/nav_param/planner_global.yaml" command="load" />
 	</node>
 	
