@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
+  pcl_ros
 )
 
 
@@ -130,9 +131,13 @@ include_directories(
 
 
 add_executable(basic_twist_publisher src/basic_twist_publisher.cpp)
+add_executable(wp_pub src/wp_pub.cpp)
 
 
 target_link_libraries(basic_twist_publisher
+  ${catkin_LIBRARIES}
+)
+target_link_libraries(wp_pub
   ${catkin_LIBRARIES}
 )
 

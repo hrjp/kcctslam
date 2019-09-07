@@ -1,5 +1,5 @@
 <launch>
-	<arg name="map_file" default="/home/$(env USER)/map/f3_820-2.yaml" />
+	<arg name="map_file" default="$(find kcctslam)/config/map/f3_820-2.yaml" />
 
 	<node pkg="tf" type="static_transform_publisher" name="stf_hokuyo3d_laser" args="0.225 -0.255 0.0 0.0 0.0 0.0 camera_link 2d_blue 100"/>
 	<node pkg="tf" type="static_transform_publisher" name="stf_hokuyo3d_laser2" args="-0.485 0.255 0.0 3.14159 0.0 0.0 camera_link 2d_orange 100"/>	
@@ -66,13 +66,13 @@
 	</node>
 
 	<node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
-		<rosparam file="$(find kcctslam)/config/move_base.yaml" command="load" />
-		<rosparam file="$(find kcctslam)/config/costmap_common.yaml" command="load" ns="global_costmap" />
-		<rosparam file="$(find kcctslam)/config/costmap_common.yaml" command="load" ns="local_costmap" />
-		<rosparam file="$(find kcctslam)/config/costmap_local.yaml" command="load" />
-		<rosparam file="$(find kcctslam)/config/costmap_global.yaml" command="load" />
-		<rosparam file="$(find kcctslam)/config/planner_local_yvt.yaml" command="load" />launch/
-		<rosparam file="$(find kcctslam)/config/planner_global.yaml" command="load" />
+		<rosparam file="$(find kcctslam)/config/nav_param/move_base.yaml" command="load" />
+		<rosparam file="$(find kcctslam)/config/nav_param/costmap_common.yaml" command="load" ns="global_costmap" />
+		<rosparam file="$(find kcctslam)/config/nav_param/costmap_common.yaml" command="load" ns="local_costmap" />
+		<rosparam file="$(find kcctslam)/config/nav_param/costmap_local.yaml" command="load" />
+		<rosparam file="$(find kcctslam)/config/nav_param/costmap_global.yaml" command="load" />
+		<rosparam file="$(find kcctslam)/config/nav_param/planner_local_yvt.yaml" command="load" />launch/
+		<rosparam file="$(find kcctslam)/config/nav_param/planner_global.yaml" command="load" />
 	</node>
 	
 	<node name="waypoint" pkg="nakanoshima" type="wpmove.py" output="screen"/>
