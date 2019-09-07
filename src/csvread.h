@@ -3,6 +3,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include"wpdata.h"
 
 class csvread{
     private:
@@ -13,7 +14,7 @@ class csvread{
     public:
     csvread(const char *st);
     void print();
-    double wpdata[gyo][retu];
+    wpdata wp;
 
 };
 
@@ -41,7 +42,6 @@ using namespace std;
      for(int k=0;k<gyo;k++){
     	for(int l=0;l<retu;l++){
     	    Score[k][l]="0";
-    	    wpdata[k][l]=0;
     	}
     	
     }
@@ -67,11 +67,11 @@ using namespace std;
         i++;  // 次の人の配列に移る
     }
     //cout<<stod(Score[1][1]);
-    for(int k=1;k<gyo;k++){
-    	for(int l=1;l<retu;l++){
+    for(int k=1;k<wp.height;k++){
+    	for(int l=1;l<wp.width;l++){
     	istringstream is;        // cinの親戚？
         is.str(Score[k][l]);
-    	is>>wpdata[k-1][l-1];
+    	is>>wp.data[k-1][l-1];
     	}
     	
     }
@@ -82,9 +82,9 @@ using namespace std;
 
 void csvread::print(){
 using namespace std;
-    for(int k=0;k<gyo-1;k++){
-    	for(int l=0;l<retu-1;l++){
-    	    cout <<wpdata[k][l]<<",";
+    for(int k=0;k<wp.height-1;k++){
+    	for(int l=0;l<wp.width-1;l++){
+    	    cout <<wp.data[k][l]<<",";
     	}
     	cout <<endl;
     }

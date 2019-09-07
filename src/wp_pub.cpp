@@ -1,7 +1,5 @@
 #include <ros/ros.h>
 #include <geometry_msgs/PoseStamped.h>
-
-
 #include <tf/transform_broadcaster.h>
 #include <nav_msgs/Odometry.h>
 #include <tf/tf.h>
@@ -12,8 +10,12 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+
 #include"goal.h"
 #include"csvread.h"
+#include"wpdata.h"
+#include"tf_lis.h"
+
 using namespace std;
 
  
@@ -23,7 +25,7 @@ int main(int argc, char **argv){
     Goal goal_ob(0.5, -0.5, 0, 1.0);
     csvread csv("~/catkin_ws/src/kcctslam/config/waypointdata/wpdata.csv");
     csv.print();
-    cout<<csv.wpdata[1][1];
+    cout<<csv.wp.data[1][1];
     
     
     ros::NodeHandle n;
