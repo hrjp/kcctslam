@@ -1,11 +1,14 @@
 #pragma once
+#include "Vector.h"
 
-class wpdata{
+class Wpdata{
     public:
-    wpdata();
+    Wpdata();
+    void atov();
     static const int width=10;
     static const int height=100;
     double data[width][height];
+    Vector vec[height];
     double x(int num){return data[0][num];}
     double y(int num){return data[1][num];}
     double z(int num){return data[2][num];}
@@ -17,7 +20,7 @@ class wpdata{
     private:
 };
 
-wpdata::wpdata(){
+Wpdata::Wpdata(){
     for(int i;i<width;i++){
         for(int j=0;j<height;j++){
             data[i][j]=0;
@@ -25,7 +28,7 @@ wpdata::wpdata(){
     }
 }
 
-int wpdata::size(){
+int Wpdata::size(){
     int data_size=0;
     while(x(data_size)||y(data_size)){
         data_size++;
@@ -33,3 +36,9 @@ int wpdata::size(){
     return data_size;
 }
 
+void Wpdata::atov(){
+        for(int j=0;j<height;j++){
+            vec[j].x=x(j);
+            vec[j].y=y(j);
+        }
+}

@@ -2,7 +2,6 @@
 #include <ros/ros.h>
 #include <geometry_msgs/PoseStamped.h>
 
-
 class Goal{
 public:
     Goal(double px, double py, double pz, double ow);

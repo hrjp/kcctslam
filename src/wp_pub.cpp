@@ -22,50 +22,23 @@ using namespace std;
 int main(int argc, char **argv){
     ros::init(argc, argv, "wp_pub");
  
-    Goal goal_ob(0.5, -0.5, 0, 1.0);
-    csvread csv("~/catkin_ws/src/kcctslam/config/waypointdata/wpdata.csv");
-    //csvread csv("/home/ryo/catkin_ws/src/kcctslam/config/waypointdata/wpdata.csv");
-    //csv.print();
+   
+    //csvread csv("~/catkin_ws/src/kcctslam/config/waypointdata/wpdata.csv");
+    csvread csv("/home/ryo/catkin_ws/src/kcctslam/config/waypointdata/wpdata.csv");
+    csv.print();
     tf_lis base;
     
     
     ros::NodeHandle n;
-    /*
-    tf::TransformListener listener(ros::Duration(10));
-
-    ros::NodeHandle private_nh("~");
-    string tf_name1;
-    string tf_name2;
-    private_nh.param("tf_name1",tf_name1,std::string("/base_link"));
-    private_nh.param("tf_name2",tf_name2,std::string("/map"));
-
-    double x_m=0.0, y_m=0.0, th_m=0.0;
-
-    tf::StampedTransform trans_slam;
-*/
+    int now_wp=0;
     while (n.ok())  {
         base.update();
-        cout<<"x="<<base.pos.x<<" y="<<base.pos.y<<" yaw="<<base.pos.yaw<<endl;
-    /*
-    try {
-        listener.lookupTransform(tf_name2, tf_name1,ros::Time(0), trans_slam);
-        x_m = trans_slam.getOrigin().x();
-        y_m = trans_slam.getOrigin().y();
-        th_m = tf::getYaw(trans_slam.getRotation());
-    }
-    catch (tf::TransformException &ex)  {
-        ROS_ERROR("%s", ex.what());
-        ros::Duration(1.0).sleep();
-        continue;
-    }
-    
-    cout<< "SLAM result" << ",";
-    cout<< x_m << ",";
-    cout<< y_m << ",";
-    cout<< th_m/M_PI*180.0<< endl;
-    */
-
-
+        if((base.pos-csv.wp.vec[now_wp]).size()<1.0){
+            now_wp++;
+        }
+         Goal goal_ob(csv.wp.x(now_wp), csv.wp.y(now_wp),csv.wp.qz(now_wp), csv.wp.qw(now_wp));
+        cout<<"base_link x="<<base.pos.x<<" y="<<base.pos.y<<" yaw="<<base.pos.yaw;
+        cout<<"waypoint x="<<csv.wp.vec[now_wp].x<<" y="<<csv.wp.vec[now_wp].y<<" yaw="<<csv.wp.vec[now_wp].yaw<<endl;
     }
     
     return 0;
