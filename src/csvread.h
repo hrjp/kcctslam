@@ -23,6 +23,7 @@ class csvread{
 
 csvread::csvread(const char *st){
 using namespace std;
+cout<<"INIT!!";
     ifstream ifs(st);
  
     // 開かなかったらエラー
@@ -32,7 +33,7 @@ using namespace std;
         //return 0;
     }
  
-     
+     cout<<"INITOK!!";
     //  仮に百人分の配列を作っておく。
     //　名前・国語・英語・数学の順に値が入る。
     /*const int gyo=50;
@@ -48,7 +49,7 @@ using namespace std;
     string str = "";
     int i = 0;  // Score[i][ ]のカウンタ。一人分のデータを入れる
     int j = 0;  // Score[ ][j]のカウンタ。一人分の名前、国語、英語、数学を入れていく。（０～３）
- 
+    cout<<"INITOK!!";
     // ファイルの中身を一行ずつ読み取る
     while(getline(ifs, str))
     {
@@ -66,7 +67,7 @@ using namespace std;
         j = 0;
         i++;  // 次の人の配列に移る
     }
-    //cout<<stod(Score[1][1]);
+    cout<<"FILEdataOK!!";
     for(int k=1;k<wp.height;k++){
     	for(int l=1;l<wp.width;l++){
     	istringstream is;        // cinの親戚？

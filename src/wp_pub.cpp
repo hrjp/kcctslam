@@ -24,11 +24,13 @@ int main(int argc, char **argv){
  
     Goal goal_ob(0.5, -0.5, 0, 1.0);
     csvread csv("~/catkin_ws/src/kcctslam/config/waypointdata/wpdata.csv");
-    csv.print();
-    cout<<csv.wp.data[1][1];
+    //csvread csv("/home/ryo/catkin_ws/src/kcctslam/config/waypointdata/wpdata.csv");
+    //csv.print();
+    tf_lis base;
     
     
     ros::NodeHandle n;
+    /*
     tf::TransformListener listener(ros::Duration(10));
 
     ros::NodeHandle private_nh("~");
@@ -40,8 +42,11 @@ int main(int argc, char **argv){
     double x_m=0.0, y_m=0.0, th_m=0.0;
 
     tf::StampedTransform trans_slam;
-
+*/
     while (n.ok())  {
+        base.update();
+        cout<<"x="<<base.pos.x<<" y="<<base.pos.y<<" yaw="<<base.pos.yaw<<endl;
+    /*
     try {
         listener.lookupTransform(tf_name2, tf_name1,ros::Time(0), trans_slam);
         x_m = trans_slam.getOrigin().x();
@@ -58,6 +63,9 @@ int main(int argc, char **argv){
     cout<< x_m << ",";
     cout<< y_m << ",";
     cout<< th_m/M_PI*180.0<< endl;
+    */
+
+
     }
     
     return 0;
