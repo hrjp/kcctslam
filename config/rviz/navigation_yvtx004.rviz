@@ -208,17 +208,13 @@ Visualization Manager:
           Value: true
         camera_link:
           Value: true
-        map:
-          Value: true
       Marker Scale: 1
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: true
       Tree:
-        map:
-          camera_link:
-            {}
+        {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -289,6 +285,22 @@ Visualization Manager:
         {}
       Queue Size: 100
       Value: true
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /marker_array
+      Name: MarkerArray
+      Namespaces:
+        cmd_vel_display: true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /marker_array1
+      Name: MarkerArray
+      Namespaces:
+        cmd_vel_display: true
+      Queue Size: 100
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -318,11 +330,11 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Scale: 90.2872162
+      Scale: 44.3142166
       Target Frame: base_link
       Value: TopDownOrtho (rviz)
-      X: 0
-      Y: 0
+      X: -0.749880612
+      Y: -0.430972099
     Saved: ~
 Window Geometry:
   Displays:
