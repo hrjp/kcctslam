@@ -5,7 +5,7 @@
 
 #include <string>
 #include <math.h>
-
+#include <sstream>
 #include"wpdata.h"
 
 
@@ -95,8 +95,9 @@ void wpmarker::update(Wpdata wp,int now_wp){
         marker_array1.markers[i].color.b = 0.5f;
         marker_array1.markers[i].color.a = 1.0f;
     }
-    char str[]={char(i+48)};
-    marker_array1.markers[i].text= str;
+    ostringstream oss;
+    oss<<i;
+    marker_array1.markers[i].text= oss.str().c_str();
     }
     marker_pub.publish(marker_array);
     marker_pub1.publish(marker_array1);
