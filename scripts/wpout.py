@@ -4,6 +4,7 @@ import rospy
 import csv
 from move_base_msgs.msg import MoveBaseActionGoal
 from visualization_msgs.msg import Marker
+#from visualization_msgs.msg import Marker1
 
 predata=pd.read_csv('~/catkin_ws/src/kcctslam/config/waypointdata/wpdata.csv')
 # get timestamp
@@ -15,6 +16,8 @@ predata.to_csv('~/catkin_ws/src/kcctslam/config/waypointdata/wpdata'+tstr+".csv"
 
 df=pd.DataFrame(columns=['x', 'y','z','qx','qy','qz','qw'])
 pub = rospy.Publisher("waypoint", Marker, queue_size = 10)
+pub1 = rospy.Publisher("waypoint1", Marker, queue_size = 10)
+
 def callback(data):
     i=0
     pos = data.goal.target_pose.pose
@@ -62,9 +65,43 @@ def callback(data):
             marker_data.lifetime = rospy.Duration()
 
             marker_data.type = 0
-
-            pub.publish(marker_data)
             
+            
+            
+            
+            # Mark number
+            marker_data1 = Marker()
+            marker_data1.header.frame_id = "map"
+            marker_data1.header.stamp = rospy.Time.now()
+
+            marker_data1.ns = "basic_shapes"
+            marker_data1.id = j
+
+            marker_data1.action = Marker.ADD
+
+            marker_data1.pose.position.x =df.iat[j,0]
+            marker_data1.pose.position.y =df.iat[j,1]
+            marker_data1.pose.position.z =df.iat[j,2]+1
+
+            marker_data1.pose.orientation.x=df.iat[j,3]
+            marker_data1.pose.orientation.y=df.iat[j,4]
+            marker_data1.pose.orientation.z=df.iat[j,5]
+            marker_data1.pose.orientation.w=df.iat[j,6]
+
+            marker_data1.color.r = 0.0
+            marker_data1.color.g = 0.0
+            marker_data1.color.b = 0.0
+            marker_data1.color.a = 1.0
+            marker_data1.scale.x = 1
+            marker_data1.scale.y = 1
+            marker_data1.scale.z = 1
+
+            marker_data1.lifetime = rospy.Duration()
+            marker_data1.text=str(j)
+            marker_data1.type = 9
+
+            pub1.publish(marker_data1)
+            pub.publish(marker_data)
             
             
             
