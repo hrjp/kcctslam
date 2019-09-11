@@ -76,7 +76,9 @@
 	</node>
 	
 	<!--<node name="waypoint" pkg="nakanoshima" type="wpmove.py" output="screen"/>-->
-	<node name="wp_pub" pkg="kcctslam" type="wp_pub" output="screen"/>
+	<node name="wp_pub" pkg="kcctslam" type="wp_pub" output="screen">
+	<param name="waypointfile" type="str" value="$(find kcctslam)/config/waypointdata/wpdata.csv" />
+	</node>
 	
 	<node pkg="rviz" type="rviz" args="-d '$(find kcctslam)/config/rviz/navigation_yvtx004.rviz'" name="visualizer" respawn="true" />
 </launch>

@@ -18,12 +18,16 @@
 #include"wpmarker.h"
 
 using namespace std;
-
  
 int main(int argc, char **argv){
     int now_wp=0;
     ros::init(argc, argv, "wp_pub");
-    csvread csv("/home/ryo/catkin_ws/src/kcctslam/config/waypointdata/wpdata.csv");
+    ros::NodeHandle pn("~");
+    string filename;
+    pn.getParam("waypointfile",filename);
+    //csvread csv("/home/ryo/catkin_ws/src/kcctslam/config/waypointdata/wpdata.csv");
+    //csvread csv("../config/waypointdata/wpdata.csv");
+    csvread csv(filename.c_str());
     csv.print();
     cout<<endl<<csv.wp.size()<<endl;
     tf_lis base;
