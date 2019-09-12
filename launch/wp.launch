@@ -1,5 +1,5 @@
 <launch>
-	<arg name="map_file" default="$(find kcctslam)/config/map/f3-6.yaml" />
+	<arg name="map_file" default="$(find kcctslam)/config/map/g-6.yaml" />
 
 	<node pkg="tf" type="static_transform_publisher" name="stf_hokuyo3d_laser" args="0.225 -0.255 0.0 0.0 0.0 0.0 camera_link 2d_blue 100"/>
 	<node pkg="tf" type="static_transform_publisher" name="stf_hokuyo3d_laser2" args="-0.485 0.255 0.0 3.14159 0.0 0.0 camera_link 2d_orange 100"/>	

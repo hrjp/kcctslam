@@ -21,15 +21,25 @@ using namespace std;
 
  
 int main(int argc, char **argv){
+    
     int now_wp=0;
     ros::init(argc, argv, "wp_pub");
-    csvread csv("/home/ryo/catkin_ws/src/kcctslam/config/waypointdata/wpdata.csv");
+    ros::NodeHandle n;
+    
+    
+    ros::NodeHandle pn("~");
+    string filename;
+    pn.getParam("waypointfile",filename);
+    csvread csv(filename.c_str());
+    
+    //csvread csv("/home/ryo/catkin_ws/src/kcctslam/config/waypointdata/wpdata.csv");
+    
     csv.print();
     cout<<endl<<csv.wp.size()<<endl;
     tf_lis base;
     wpmarker wpmarker;
     
-    ros::NodeHandle n;
+    
     
     Goal init_goal_ob(csv.wp.x(now_wp), csv.wp.y(now_wp),csv.wp.qz(now_wp), csv.wp.qw(now_wp));
     while (n.ok())  {

@@ -79,7 +79,7 @@ using namespace std;
     	
     }
     wp.atov();
-
+    ifs.close();
 
 }
 
