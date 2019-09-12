@@ -11,7 +11,11 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
+  pcl_ros
 )
+
+
+
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -119,6 +123,27 @@ include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
 )
+
+
+
+
+
+
+
+add_executable(basic_twist_publisher src/basic_twist_publisher.cpp)
+add_executable(wp_pub src/wp_pub.cpp)
+
+
+target_link_libraries(basic_twist_publisher
+  ${catkin_LIBRARIES}
+)
+target_link_libraries(wp_pub
+  ${catkin_LIBRARIES}
+)
+
+
+
+
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
