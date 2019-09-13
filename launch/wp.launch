@@ -75,8 +75,8 @@
 		<rosparam file="$(find kcctslam)/config/nav_param/planner_global.yaml" command="load" />
 	</node>
 		
+	
 	<node name="waypoint_manager" pkg="kcctslam" type="wpout.py" output="screen"/>
-
 		
 	<node pkg="rviz" type="rviz" args="-d '$(find kcctslam)/config/rviz/navigation_yvtx004.rviz'" name="visualizer" respawn="true" />
 </launch>
