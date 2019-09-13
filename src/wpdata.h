@@ -1,6 +1,9 @@
 #pragma once
 #include "Vector.h"
 
+const int WP_NAVIGATION=0;
+const int WP_STOP=2;
+
 class Wpdata{
     public:
     Wpdata();
@@ -16,6 +19,8 @@ class Wpdata{
     double qy(int num){return data[4][num];}
     double qz(int num){return data[5][num];}
     double qw(int num){return data[6][num];}
+    double type(int num){return data[7][num];}
+    void typechenge(int num,int type);
     int size();
     private:
 };
@@ -41,4 +46,8 @@ void Wpdata::atov(){
             vec[j].x=x(j);
             vec[j].y=y(j);
         }
+}
+
+void Wpdata::typechenge(int num,int type){
+    data[7][num]=type;
 }
