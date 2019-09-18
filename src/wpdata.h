@@ -2,8 +2,8 @@
 #include "Vector.h"
 
 const int WP_NAVIGATION=0;
+const int WP_DITECTION=1;
 const int WP_STOP=2;
-
 class Wpdata{
     public:
     Wpdata();

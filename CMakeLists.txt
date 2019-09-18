@@ -132,7 +132,9 @@ include_directories(
 
 add_executable(basic_twist_publisher src/basic_twist_publisher.cpp)
 add_executable(wp_pub src/wp_pub.cpp)
-
+add_executable(pcl_handler
+	       src/pcl_handler.cpp
+	      )
 
 target_link_libraries(basic_twist_publisher
   ${catkin_LIBRARIES}
@@ -143,6 +145,9 @@ target_link_libraries(wp_pub
 
 
 
+target_link_libraries(pcl_handler
+		      ${catkin_LIBRARIES}
+		     )
 
 
 ## Declare a C++ library
