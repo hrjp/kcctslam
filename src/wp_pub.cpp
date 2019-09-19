@@ -107,6 +107,7 @@ int main(int argc, char **argv){
         wpmarker.update(csv.wp,now_wp);
         
         //wpに到着したら次のwpを目指す
+        /*
         if((base.pos-csv.wp.vec[now_wp]).size()<1.0 && now_wp+1<csv.wp.size()){
             now_wp++;
             cout<<"publishwp="<<now_wp<<endl;
@@ -118,7 +119,7 @@ int main(int argc, char **argv){
             goal_point.header.stamp = ros::Time::now();
             goal_point.header.frame_id = "map";
             goal_pub.publish(goal_point);
-        }
+        }*/
 
         switch (int(csv.wp.type(now_wp))){
         
@@ -129,7 +130,7 @@ int main(int argc, char **argv){
                 csv.wp.typechenge(now_wp,WP_NAVIGATION);
             }
             else{
-                final_cmd_vel=zero_vel;
+                final_cmd_vel=nav_vel;
             }
             break;
         
@@ -137,13 +138,42 @@ int main(int argc, char **argv){
             if(up_button){
                 //入力がきたらナビゲーションを再開する
                 csv.wp.typechenge(now_wp,WP_NAVIGATION);
+                now_wp++;
+                    cout<<"publishwp="<<now_wp<<endl;
+
+                    goal_point.pose.position.x = csv.wp.x(now_wp);
+                    goal_point.pose.position.y = csv.wp.y(now_wp);
+                    goal_point.pose.orientation.z =  csv.wp.qz(now_wp);
+                    goal_point.pose.orientation.w = csv.wp.qw(now_wp);
+                    goal_point.header.stamp = ros::Time::now();
+                    goal_point.header.frame_id = "map";
+                    goal_pub.publish(goal_point);
             }
             else{
-                final_cmd_vel.angular.x=1.0;
+                final_cmd_vel=nav_vel;
+                
+                if((base.pos-csv.wp.vec[now_wp]).size()<1.0 && now_wp+1<csv.wp.size()){
+                    final_cmd_vel.angular.x=1.0;
+                    
+
+                }
             }
             break;
 
         default:
+            //
+            if((base.pos-csv.wp.vec[now_wp]).size()<1.0 && now_wp+1<csv.wp.size()){
+                now_wp++;
+                cout<<"publishwp="<<now_wp<<endl;
+
+                goal_point.pose.position.x = csv.wp.x(now_wp);
+                goal_point.pose.position.y = csv.wp.y(now_wp);
+                goal_point.pose.orientation.z =  csv.wp.qz(now_wp);
+                goal_point.pose.orientation.w = csv.wp.qw(now_wp);
+                goal_point.header.stamp = ros::Time::now();
+                goal_point.header.frame_id = "map";
+                goal_pub.publish(goal_point);
+            }
             final_cmd_vel=nav_vel;
             break;
         }
@@ -157,7 +187,7 @@ int main(int argc, char **argv){
         //cout<<"waypoint x="<<csv.wp.vec[now_wp].x<<" y="<<csv.wp.vec[now_wp].y<<" yaw="<<csv.wp.vec[now_wp].yaw<<endl;
         final_cmd_vel.linear.y=human_dis;
         cmd_pub.publish(final_cmd_vel);
-        ros::spinOnce();
+        ros::spinOnce();//subsucriberの割り込み関数はこの段階で実装される
         loop_rate.sleep();
         
     }
