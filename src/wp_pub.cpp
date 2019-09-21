@@ -17,6 +17,9 @@
 #include"tf_lis.h"
 #include"wpmarker.h"
 
+#include<time.h>
+
+
 using namespace std;
 
 geometry_msgs::Twist nav_vel;//navigation stack の速度指令
@@ -99,17 +102,27 @@ int main(int argc, char **argv){
     tf_lis base;
     wpmarker wpmarker;
     
-    
+    clock_t start=clock();
+    clock_t end=clock();
     while (n.ok())  {
 
         //nav stack update
         base.update();
         wpmarker.update(csv.wp,now_wp);
         
-        //wpに到着したら次のwpを目指す
-        /*
-        if((base.pos-csv.wp.vec[now_wp]).size()<1.0 && now_wp+1<csv.wp.size()){
-            now_wp++;
+       if(nav_vel.linear.x==0&&nav_vel.angular.z==0&&(int(csv.wp.type(now_wp)))==0){
+       }
+       else{
+             start= clock();
+       }
+       
+
+        clock_t end = clock();
+        
+        const double repub_time = static_cast<double>(end - start) / CLOCKS_PER_SEC * 10000.0;
+        //cout<<repub_time<<endl;
+        if(repub_time>5000){
+             start= clock();
             cout<<"publishwp="<<now_wp<<endl;
 
             goal_point.pose.position.x = csv.wp.x(now_wp);
@@ -119,8 +132,9 @@ int main(int argc, char **argv){
             goal_point.header.stamp = ros::Time::now();
             goal_point.header.frame_id = "map";
             goal_pub.publish(goal_point);
-        }*/
+        }
 
+        static int ditect_trg=0;
         switch (int(csv.wp.type(now_wp))){
         
         //一時停止
@@ -153,15 +167,20 @@ int main(int argc, char **argv){
                 final_cmd_vel=nav_vel;
                 
                 if((base.pos-csv.wp.vec[now_wp]).size()<1.0 && now_wp+1<csv.wp.size()){
+                    ditect_trg=true;
                     final_cmd_vel.angular.x=1.0;
                     
 
+                }
+                if(ditect_trg){
+                    final_cmd_vel.angular.x=1.0;
                 }
             }
             break;
 
         default:
             //
+            ditect_trg=false;
             if((base.pos-csv.wp.vec[now_wp]).size()<1.0 && now_wp+1<csv.wp.size()){
                 now_wp++;
                 cout<<"publishwp="<<now_wp<<endl;

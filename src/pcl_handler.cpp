@@ -137,7 +137,7 @@ int main(int argc, char** argv){
     nh.getParam("max_nn", g_max_nn);
     nh.getParam("radius", g_radius);
     nh.getParam("loop_rate", g_loop_rate);    
-    ROS_INFO("[%s], [%f < x < %f], [%f < y < %f], [max_nn:%i], [radius:%f], [loop_rate:%i]", ros::this_node::getName().c_str(), g_xmin, g_xmax, g_ymin, g_ymax, g_max_nn, g_radius, g_loop_rate);    
+   ROS_INFO("[%s], [%f < x < %f], [%f < y < %f], [max_nn:%i], [radius:%f], [loop_rate:%i]", ros::this_node::getName().c_str(), g_xmin, g_xmax, g_ymin, g_ymax, g_max_nn, g_radius, g_loop_rate);    
 
     // 
     ros::Subscriber sub = nh.subscribe<sensor_msgs::PointCloud2>("/laser2pc/pc2", 1, callback_knn);
