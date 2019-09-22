@@ -28,12 +28,19 @@ geometry_msgs::Twist final_cmd_vel;//ロボットに送る速度指令
 
 double human_dis=0;
 
+
+//cmd_repub
+clock_t cstart=clock();
+
+
 void dis_vel_callback(const geometry_msgs::Twist& vel_cmd){ 
      human_dis=vel_cmd.linear.x;
 }
 
  void cmd_vel_callback(const geometry_msgs::Twist& vel_cmd){ 
      nav_vel=vel_cmd;
+
+     cstart=clock();
 }
 
 int up_button,down_button,right_button,left_button;
@@ -133,6 +140,31 @@ int main(int argc, char **argv){
             goal_point.header.frame_id = "map";
             goal_pub.publish(goal_point);
         }
+
+
+
+        
+
+////////////////////////cmdrepub
+        const double cpub_time = static_cast<double>(clock() - start) / CLOCKS_PER_SEC * 10000.0;
+        //cout<<repub_time<<endl;
+        if(cpub_time>5000){
+            cout<<"publishwp="<<now_wp<<endl;
+            geometry_msgs::PoseStamped goal_point;
+            goal_point.pose.position.x = csv.wp.x(now_wp);
+            goal_point.pose.position.y = csv.wp.y(now_wp);
+            goal_point.pose.orientation.z =  csv.wp.qz(now_wp);
+            goal_point.pose.orientation.w = csv.wp.qw(now_wp);
+            goal_point.header.stamp = ros::Time::now();
+            goal_point.header.frame_id = "map";
+            goal_pub.publish(goal_point);
+        }
+
+
+
+
+
+
 
         static int ditect_trg=0;
         switch (int(csv.wp.type(now_wp))){

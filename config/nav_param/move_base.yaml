@@ -6,3 +6,5 @@ shutdown_costmaps: true
 controller_frequency: 3.0
 recovery_behaviour_enabled: true
 clearing_rotation_allowed: false
+
+planner_patience: 40.0
