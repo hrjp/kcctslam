@@ -86,8 +86,8 @@ int main(int argc, char **argv){
     ros::Publisher cmd_pub = n.advertise<geometry_msgs::Twist>("final_cmd_vel", 10);  
     ros::Subscriber dis_sub = lSubscriber.subscribe("/pcl_handler/front_dist", 50, dis_vel_callback);
     //2D_NAV_GOAL publisher
-    ros::Publisher goal_pub = n.advertise<geometry_msgs::PoseStamped>("move_base_simple/goal", 1);
-    geometry_msgs::PoseStamped goal_point;
+    ros::Publisher goal_pub = n.advertise<geometry_msgs::PoseStamped>("/move_base_simple/goal", 1);
+    
     //制御周期10ms
     ros::Rate loop_rate(10);
     //csv.print();
@@ -124,7 +124,7 @@ int main(int argc, char **argv){
         if(repub_time>5000){
              start= clock();
             cout<<"publishwp="<<now_wp<<endl;
-
+            geometry_msgs::PoseStamped goal_point;
             goal_point.pose.position.x = csv.wp.x(now_wp);
             goal_point.pose.position.y = csv.wp.y(now_wp);
             goal_point.pose.orientation.z =  csv.wp.qz(now_wp);
@@ -154,7 +154,7 @@ int main(int argc, char **argv){
                 csv.wp.typechenge(now_wp,WP_NAVIGATION);
                 now_wp++;
                     cout<<"publishwp="<<now_wp<<endl;
-
+                    geometry_msgs::PoseStamped goal_point;
                     goal_point.pose.position.x = csv.wp.x(now_wp);
                     goal_point.pose.position.y = csv.wp.y(now_wp);
                     goal_point.pose.orientation.z =  csv.wp.qz(now_wp);
@@ -162,6 +162,7 @@ int main(int argc, char **argv){
                     goal_point.header.stamp = ros::Time::now();
                     goal_point.header.frame_id = "map";
                     goal_pub.publish(goal_point);
+                    //final_cmd_vel.angular.x=0;
             }
             else{
                 final_cmd_vel=nav_vel;
@@ -184,7 +185,7 @@ int main(int argc, char **argv){
             if((base.pos-csv.wp.vec[now_wp]).size()<1.0 && now_wp+1<csv.wp.size()){
                 now_wp++;
                 cout<<"publishwp="<<now_wp<<endl;
-
+                geometry_msgs::PoseStamped goal_point;
                 goal_point.pose.position.x = csv.wp.x(now_wp);
                 goal_point.pose.position.y = csv.wp.y(now_wp);
                 goal_point.pose.orientation.z =  csv.wp.qz(now_wp);
