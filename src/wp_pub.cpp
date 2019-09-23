@@ -7,6 +7,9 @@
 #include <tf/transform_listener.h>
 #include <geometry_msgs/Twist.h>
 
+#include <move_base_msgs/MoveBaseAction.h>
+#include <actionlib/client/simple_action_client.h>
+
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -18,6 +21,8 @@
 #include"wpmarker.h"
 
 #include<time.h>
+
+typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
 
 
 using namespace std;
@@ -111,6 +116,10 @@ int main(int argc, char **argv){
     
     clock_t start=clock();
     clock_t end=clock();
+
+    //tell the action client that we want to spin a thread by default
+    MoveBaseClient ac("move_base", true);
+
     while (n.ok())  {
 
         //nav stack update
@@ -131,14 +140,37 @@ int main(int argc, char **argv){
         if(repub_time>5000){
              start= clock();
             cout<<"publishwp="<<now_wp<<endl;
-            geometry_msgs::PoseStamped goal_point;
+
+
+            move_base_msgs::MoveBaseGoal goal;
+
+            //we'll send a goal to the robot to move 1 meter forward
+            goal.target_pose.header.frame_id = "map";
+           //goal.target_pose.header.frame_id = "base_footprint";
+            goal.target_pose.header.stamp = ros::Time::now();
+
+            goal.target_pose.pose.position.x = csv.wp.x(now_wp);
+            goal.target_pose.pose.position.y = csv.wp.y(now_wp);
+            goal.target_pose.pose.orientation.z = csv.wp.qz(now_wp);
+            goal.target_pose.pose.orientation.w = csv.wp.qw(now_wp);
+            ROS_INFO("Sending goal");
+            ac.sendGoal(goal);
+
+            ac.waitForResult();
+
+            if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED)
+	        ROS_INFO("Hooray, the base moved 1 meter forward");
+            else
+	        ROS_INFO("The base failed to move forward 1 meter for some reason");
+
+            /*geometry_msgs::PoseStamped goal_point;
             goal_point.pose.position.x = csv.wp.x(now_wp);
             goal_point.pose.position.y = csv.wp.y(now_wp);
             goal_point.pose.orientation.z =  csv.wp.qz(now_wp);
             goal_point.pose.orientation.w = csv.wp.qw(now_wp);
             goal_point.header.stamp = ros::Time::now();
             goal_point.header.frame_id = "map";
-            goal_pub.publish(goal_point);
+            goal_pub.publish(goal_point);*/
         }
 
 
@@ -146,6 +178,7 @@ int main(int argc, char **argv){
         
 
 ////////////////////////cmdrepub
+/*
         const double cpub_time = static_cast<double>(clock() - start) / CLOCKS_PER_SEC * 10000.0;
         //cout<<repub_time<<endl;
         if(cpub_time>5000){
@@ -160,7 +193,7 @@ int main(int argc, char **argv){
             goal_pub.publish(goal_point);
         }
 
-
+*/
 
 
 
