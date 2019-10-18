@@ -132,6 +132,7 @@ include_directories(
 
 add_executable(basic_twist_publisher src/basic_twist_publisher.cpp)
 add_executable(wp_pub src/wp_pub.cpp)
+add_executable(hard_serialport_retry src/hard_serialport_retry.cpp)
 add_executable(pcl_handler
 	       src/pcl_handler.cpp
 	      )
@@ -149,7 +150,9 @@ target_link_libraries(pcl_handler
 		      ${catkin_LIBRARIES}
 		     )
 
-
+target_link_libraries(hard_serialport_retry
+  ${catkin_LIBRARIES}
+)
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/kcctslam.cpp
