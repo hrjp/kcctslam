@@ -6,6 +6,7 @@
 #include <tf/transform_datatypes.h>
 #include <tf/transform_listener.h>
 #include <geometry_msgs/Twist.h>
+#include<geometry_msgs/PoseWithCovarianceStamped.h>
 
 #include <move_base_msgs/MoveBaseAction.h>
 #include <actionlib/client/simple_action_client.h>
@@ -19,6 +20,7 @@
 #include"wpdata.h"
 #include"tf_lis.h"
 #include"wpmarker.h"
+#include"realsense_lis.h"
 
 #include<time.h>
 
@@ -99,6 +101,9 @@ int main(int argc, char **argv){
     ros::Subscriber dis_sub = lSubscriber.subscribe("/pcl_handler/front_dist", 50, dis_vel_callback);
     //2D_NAV_GOAL publisher
     ros::Publisher goal_pub = n.advertise<geometry_msgs::PoseStamped>("/move_base_simple/goal", 1);
+
+    //2D_POSE_ESTIMATE pub
+    ros::Publisher initial_pub = n.advertise<geometry_msgs::PoseWithCovarianceStamped>("/initialpose", 1);
     
     //制御周期10ms
     ros::Rate loop_rate(10);
@@ -112,6 +117,7 @@ int main(int argc, char **argv){
     zero_vel.angular.z=0;
 
     tf_lis base;
+    realsense_lis rs;
     wpmarker wpmarker;
     
     clock_t start=clock();
@@ -124,6 +130,7 @@ int main(int argc, char **argv){
 
         //nav stack update
         base.update();
+        rs.update();
         wpmarker.update(csv.wp,now_wp);
         
        if(nav_vel.linear.x==0&&nav_vel.angular.z==0&&(int(csv.wp.type(now_wp)))==0){
@@ -172,6 +179,22 @@ int main(int argc, char **argv){
             goal_point.header.frame_id = "map";
             goal_pub.publish(goal_point);*/
         }
+        
+        //2d pose estimate 初期位置のパブリッシュ
+        if(down_button){
+            geometry_msgs::PoseWithCovarianceStamped initial_pose;
+            initial_pose.pose.pose.position.x = csv.wp.x(now_wp);
+            initial_pose.pose.pose.position.x = csv.wp.x(now_wp);
+            initial_pose.pose.pose.position.y = csv.wp.y(now_wp);
+            initial_pose.pose.pose.orientation.z =  csv.wp.qz(now_wp);
+            initial_pose.pose.pose.orientation.w = csv.wp.qw(now_wp);
+            initial_pose.header.stamp = ros::Time::now();
+            initial_pose.header.frame_id = "map";
+            initial_pub.publish(initial_pose);
+        }
+
+
+
 
 
 
@@ -193,7 +216,8 @@ int main(int argc, char **argv){
             goal_pub.publish(goal_point);
         }
 
-*/
+*/      
+
 
 
 
@@ -268,7 +292,7 @@ int main(int argc, char **argv){
         right_button=0;
 
         
-        //cout<<"base_link x="<<base.pos.x<<" y="<<base.pos.y<<" yaw="<<base.pos.yaw;
+        cout<<"rs_link x="<<rs.pos.x<<" y="<<rs.pos.y<<" yaw="<<rs.pos.yaw<<endl;
         //cout<<"waypoint x="<<csv.wp.vec[now_wp].x<<" y="<<csv.wp.vec[now_wp].y<<" yaw="<<csv.wp.vec[now_wp].yaw<<endl;
         final_cmd_vel.linear.y=human_dis;
         cmd_pub.publish(final_cmd_vel);

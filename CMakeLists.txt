@@ -132,6 +132,7 @@ include_directories(
 
 add_executable(basic_twist_publisher src/basic_twist_publisher.cpp)
 add_executable(wp_pub src/wp_pub.cpp)
+add_executable(wp_moving_node src/wp_moving.cpp)
 add_executable(hard_serialport_retry src/hard_serialport_retry.cpp)
 add_executable(pcl_handler
 	       src/pcl_handler.cpp
@@ -141,6 +142,9 @@ target_link_libraries(basic_twist_publisher
   ${catkin_LIBRARIES}
 )
 target_link_libraries(wp_pub
+  ${catkin_LIBRARIES}
+)
+target_link_libraries(wp_moving_node
   ${catkin_LIBRARIES}
 )
 
