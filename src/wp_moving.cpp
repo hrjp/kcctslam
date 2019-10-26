@@ -19,7 +19,7 @@
 #include"csvread.h"
 #include"wpdata.h"
 #include"tf_lis.h"
-#include"wpmarker.h"
+#include"wp_realtime_marker.h"
 #include"realsense_lis.h"
 #include"csvwrite.h"
 
@@ -62,7 +62,7 @@ void key_vel_callback(const geometry_msgs::Twist& vel_cmd){
 
 
 int main(int argc, char **argv){
-    int now_wp=0;
+    
     ros::init(argc, argv, "wp_moving_node");
     ros::NodeHandle n;
    
@@ -73,9 +73,8 @@ int main(int argc, char **argv){
     pn.getParam("waypointfile",filename);
     csvread csv(filename.c_str());*/
     csvwrite csvw("wptest.csv");
-    Vector a;
-    csvw.write(a);
-    csvw.write(a);
+    //csvw.write(a);
+    //csvw.write(a);
     //cmd_velの受信と送信
     /*
     ros::NodeHandle lSubscriber("");
@@ -96,18 +95,41 @@ int main(int argc, char **argv){
     ros::Rate loop_rate(10);
     //csv.print();
     //cout<<endl<<csv.wp.size()<<endl;
-
-    
-
-
-
-   
+    int now_wp=0;
+    bool wp_mode=false;
+    realsense_lis now_tf;
     wpmarker wpmarker;
-
+    Wpdata rsdata;
 
     while (n.ok())  {
+       now_tf.update();
        
+        if(up_button){
+            cout<<"Waypoint_mark_start"<<endl;
+            csvw.write(now_tf.pos);
+            rsdata.vec[now_wp]=now_tf.pos;
+            rsdata.vtoa();
+            wp_mode=true;
+            wpmarker.update(rsdata,now_wp);
+        }
 
+        if(wp_mode){
+            if((now_tf.pos-rsdata.vec[now_wp]).size()>1.0){
+                now_wp++;
+                cout<<"Waypoint NUMBER < "<<now_wp<<" >"<<endl;
+                csvw.write(now_tf.pos);
+                rsdata.vec[now_wp]=now_tf.pos;
+                rsdata.vtoa();
+                wpmarker.update(rsdata,now_wp);
+            }
+        }
+
+
+
+        up_button=0;
+        down_button=0;
+        left_button=0;
+        right_button=0;
         ros::spinOnce();//subsucriberの割り込み関数はこの段階で実装される
         loop_rate.sleep();
         

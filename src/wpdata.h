@@ -8,8 +8,9 @@ class Wpdata{
     public:
     Wpdata();
     void atov();
+    void vtoa();
     static const int width=10;
-    static const int height=100;
+    static const int height=2000;
     double data[width][height];
     Vector vec[height];
     double x(int num){return data[0][num];}
@@ -23,6 +24,7 @@ class Wpdata{
     void typechenge(int num,int type);
     int size();
     private:
+    void EulerAnglesToQuaternion(double roll, double pitch, double yaw,double& q0, double& q1, double& q2, double& q3);
 };
 
 Wpdata::Wpdata(){
@@ -31,6 +33,20 @@ Wpdata::Wpdata(){
             data[i][j]=0;
         }
     }
+}
+
+void Wpdata::EulerAnglesToQuaternion(double roll, double pitch, double yaw,double& q0, double& q1, double& q2, double& q3){
+    double cosRoll = cos(roll / 2.0);
+    double sinRoll = sin(roll / 2.0);
+    double cosPitch = cos(pitch / 2.0);
+    double sinPitch = sin(pitch / 2.0);
+    double cosYaw = cos(yaw / 2.0);
+    double sinYaw = sin(yaw / 2.0);
+
+    q0 = cosRoll * cosPitch * cosYaw + sinRoll * sinPitch * sinYaw;
+    q1 = sinRoll * cosPitch * cosYaw - cosRoll * sinPitch * sinYaw;
+    q2 = cosRoll * sinPitch * cosYaw + sinRoll * cosPitch * sinYaw;
+    q3 = cosRoll * cosPitch * sinYaw - sinRoll * sinPitch * cosYaw;
 }
 
 int Wpdata::size(){
@@ -45,6 +61,17 @@ void Wpdata::atov(){
         for(int j=0;j<height;j++){
             vec[j].x=x(j);
             vec[j].y=y(j);
+        }
+}
+
+void Wpdata::vtoa(){
+        for(int j=0;j<height;j++){
+            data[0][j]=vec[j].x;
+            data[1][j]=vec[j].y;
+            double q[4];
+            EulerAnglesToQuaternion(0, 0,vec[j].yaw,q[0], q[1], q[2], q[3]);
+            data[5][j]=q[3];
+            data[6][j]=q[0];
         }
 }
 

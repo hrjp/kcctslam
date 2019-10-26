@@ -7,6 +7,7 @@
     -->
     
     <include file="$(find realsense2_camera)/launch/rs_t265.launch"/>
+    <node pkg="tf" type="static_transform_publisher" name="rs_map_transform" args="0 0 0 0 0 0 map rs_odom_frame 100"/>
     
 	<arg name="map_file" default="$(find kcctslam)/config/map/f3-6.yaml" />
 
@@ -95,8 +96,10 @@
 	
 	
 	<node pkg="rviz" type="rviz" args="-d '$(find kcctslam)/config/rviz/navigation_yvtx004.rviz'" name="visualizer" respawn="true" />
-	
+	<!--
 	<node name="wp_pub" pkg="kcctslam" type="wp_pub" output="screen">
 	<param name="waypointfile" type="str" value="$(find kcctslam)/config/waypointdata/wpdata.csv" />
 	</node>
+	-->
+	<node name="wp_moving_node" pkg="kcctslam" type="wp_moving_node" output="screen"/>
 </launch>

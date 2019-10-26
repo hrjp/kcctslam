@@ -44,7 +44,7 @@ csvwrite::csvwrite(const char *st){
         //return 0;
     }
     else{
-        cout << "Sucsessful opened" << endl;
+        cout << "Sucsessful opened!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
         ofs<<",x,y,z,qx,qy,qz,qw,type"<<endl;
     }
 
