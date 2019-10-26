@@ -13,6 +13,11 @@ float rad();
 float deg();
 float size();
 
+float get_qw();
+float get_qx();
+float get_qy();
+float get_qz();
+
 void clear();
 
 Vector rot(float deg);
@@ -33,7 +38,7 @@ bool operator!=(Vector vec);
 Vector operator()(float init_x,float init_y);
 
 private:
-
+void EulerAnglesToQuaternion(double roll, double pitch, double yaw,double& q0, double& q1, double& q2, double& q3);
 };
 Vector::Vector(float init_x,float init_y){
     x=init_x;
@@ -47,6 +52,27 @@ Vector::Vector(float init_x,float init_y,float init_yaw){
 float Vector::rad(){return atan2(y,x);}
 float Vector::deg(){return rad()*180/PI;}
 float Vector::size(){return sqrt(x*x+y*y);}
+
+float Vector::get_qw(){
+    double q[4]={0};
+    EulerAnglesToQuaternion(0,0,this->yaw,q[0],q[1],q[2],q[3]);
+    return q[0];
+}
+float Vector::get_qx(){
+    double q[4]={0};
+    EulerAnglesToQuaternion(0,0,this->yaw,q[0],q[1],q[2],q[3]);
+    return q[1];
+}
+float Vector::get_qy(){
+    double q[4]={0};
+    EulerAnglesToQuaternion(0,0,this->yaw,q[0],q[1],q[2],q[3]);
+    return q[2];
+}
+float Vector::get_qz(){
+    double q[4]={0};
+    EulerAnglesToQuaternion(0,0,this->yaw,q[0],q[1],q[2],q[3]);
+    return q[3];
+}
 
 Vector Vector::operator+(Vector vec){
     Vector ans;
@@ -125,3 +151,16 @@ Vector Vector::operator()(float init_x,float init_y){
     return ret_vector;
 }
 
+void Vector::EulerAnglesToQuaternion(double roll, double pitch, double yaw,double& q0, double& q1, double& q2, double& q3){
+            double cosRoll = cos(roll / 2.0);
+            double sinRoll = sin(roll / 2.0);
+            double cosPitch = cos(pitch / 2.0);
+            double sinPitch = sin(pitch / 2.0);
+            double cosYaw = cos(yaw / 2.0);
+            double sinYaw = sin(yaw / 2.0);
+
+            q0 = cosRoll * cosPitch * cosYaw + sinRoll * sinPitch * sinYaw;
+            q1 = sinRoll * cosPitch * cosYaw - cosRoll * sinPitch * sinYaw;
+            q2 = cosRoll * sinPitch * cosYaw + sinRoll * cosPitch * sinYaw;
+            q3 = cosRoll * cosPitch * sinYaw - sinRoll * sinPitch * cosYaw;
+}

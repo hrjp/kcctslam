@@ -7,7 +7,10 @@
     -->
     
     <include file="$(find realsense2_camera)/launch/rs_t265.launch"/>
-    <node pkg="tf" type="static_transform_publisher" name="rs_map_transform" args="0 0 0 0 0 0 map rs_odom_frame 100"/>
+    <!--
+    <node pkg="tf" type="static_transform_publisher" name="rs_map_transform" args="0 0 0 0 0 0 map rs_odom 100"/>
+    -->
+    <node pkg="tf" type="static_transform_publisher" name="rs_odom_transform" args="0 0 0 0 0 0 rs_odom rs_odom_frame 100"/>
     
 	<arg name="map_file" default="$(find kcctslam)/config/map/f3-6.yaml" />
 
@@ -102,4 +105,5 @@
 	</node>
 	-->
 	<node name="wp_moving_node" pkg="kcctslam" type="wp_moving_node" output="screen"/>
+	<node name="waypoint_manager" pkg="kcctslam" type="wpout.py" output="screen"/>
 </launch>

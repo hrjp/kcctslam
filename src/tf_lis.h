@@ -12,7 +12,7 @@ using namespace std;
 
 class tf_lis{
     public:
-    tf_lis();
+    tf_lis(const char *base_id,const char *child_id);
     Vector update();
     Vector pos;
     private:
@@ -23,10 +23,10 @@ class tf_lis{
     tf::StampedTransform trans_slam;
 };
 
-tf_lis::tf_lis():listener(ros::Duration(10)){
+tf_lis::tf_lis(const char *base_id,const char *child_id):listener(ros::Duration(10)){
     ros::NodeHandle private_nh("~");
-    private_nh.param("tf_name1",tf_name1,std::string("/base_link"));
-    private_nh.param("tf_name2",tf_name2,std::string("/map"));
+    private_nh.param("tf_name1",tf_name1,std::string(child_id));
+    private_nh.param("tf_name2",tf_name2,std::string(base_id));
 
 }
 

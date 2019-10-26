@@ -23,11 +23,11 @@ def callback(data):
     global i
     pos = data.goal.target_pose.pose
     print "[({0},{1},0.0),(0.0,0.0,{2},{3})],".format(pos.position.x,pos.position.y,pos.orientation.z,pos.orientation.w)
-    df.loc[i] = [pos.position.x,pos.position.y,pos.position.z,pos.orientation.x,pos.orientation.y,pos.orientation.z,pos.orientation.w,0]
+    df.loc[i] = [pos.position.x,pos.position.y,0,pos.orientation.x,pos.orientation.y,pos.orientation.z,pos.orientation.w,pos.position.z]
 #    df.to_csv('~/catkin_ws/src/nakanoshima/scripts/sample.csv', header=True)
     df.to_csv('~/catkin_ws/src/kcctslam/config/waypointdata/wpdata.csv', header=True)
     i=i+1
-    print(df)
+#    print(df)
     
 #    with open('~/catkin_ws/src/nakanoshima/scripts/sample2.csv', 'r') as f:
     counter = 0
@@ -48,7 +48,7 @@ def callback(data):
 
             marker_data.pose.position.x =df.iat[j,0]
             marker_data.pose.position.y =df.iat[j,1]
-            marker_data.pose.position.z =df.iat[j,2]
+            marker_data.pose.position.z =0
 
             marker_data.pose.orientation.x=df.iat[j,3]
             marker_data.pose.orientation.y=df.iat[j,4]
@@ -82,7 +82,7 @@ def callback(data):
 
             marker_data1.pose.position.x =df.iat[j,0]
             marker_data1.pose.position.y =df.iat[j,1]
-            marker_data1.pose.position.z =df.iat[j,2]+1
+            marker_data1.pose.position.z =1
 
             marker_data1.pose.orientation.x=df.iat[j,3]
             marker_data1.pose.orientation.y=df.iat[j,4]

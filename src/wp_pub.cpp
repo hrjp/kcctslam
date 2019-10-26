@@ -20,7 +20,6 @@
 #include"wpdata.h"
 #include"tf_lis.h"
 #include"wpmarker.h"
-#include"realsense_lis.h"
 
 #include<time.h>
 
@@ -116,8 +115,8 @@ int main(int argc, char **argv){
     zero_vel.linear.x=0;
     zero_vel.angular.z=0;
 
-    tf_lis base;
-    realsense_lis rs;
+    tf_lis base("/map","/base_link");
+    tf_lis rs("/rs_link","/rs_odom_frame");
     wpmarker wpmarker;
     
     clock_t start=clock();
