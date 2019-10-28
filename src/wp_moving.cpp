@@ -108,15 +108,20 @@ int main(int argc, char **argv){
 
     wpmarker wpmarker;
     Wpdata rsdata;
-    Vector rsodom(0,0,0);
+    Vector pubodom;
     while (n.ok())  {
        rs_tf.update();
        lidar_tf.update();
-       rs_odom(rsodom);
+       rs_odom(pubodom);
         if(up_button){
-            rsodom=(lidar_tf.pos-rs_tf.pos);
-            rsodom.yaw=0;
-            //rsodom.yaw=lidar_tf.pos.yaw-rs_tf.pos.yaw;
+            Vector rsodom(0,0,0);
+            //rsodom.yaw=0;
+            //rsodom=Vector(0,0,0);
+            rsodom=(lidar_tf.pos-rs_tf.pos);     
+            rsodom=(rsodom-lidar_tf.pos).rad_rot(lidar_tf.pos.yaw-rs_tf.pos.yaw)+lidar_tf.pos;
+            rsodom.yaw=(lidar_tf.pos.yaw-rs_tf.pos.yaw);
+            pubodom+=rsodom;
+            pubodom.yaw+=rsodom.yaw;
             cout<<"Waypoint_mark_start"<<endl;
             goal_pub.publish(csv_write(rs_tf.pos,1));
             rsdata.vec[now_wp]=rs_tf.pos;
@@ -127,7 +132,7 @@ int main(int argc, char **argv){
         if(down_button){
             //rsodom+=diff_tf.pos;
             //rsodom=lidar_tf.pos;
-            rsodom.yaw+=rs_tf.pos.yaw-lidar_tf.pos.yaw;
+            //rsodom.yaw+=rs_tf.pos.yaw-lidar_tf.pos.yaw;
             cout<<"Waypoint_mark_start"<<endl;
             goal_pub.publish(csv_write(lidar_tf.pos,1));
             rsdata.vec[now_wp]=lidar_tf.pos;
@@ -157,8 +162,8 @@ int main(int argc, char **argv){
             }
             
         }
-        cout<<"x="<<lidar_tf.pos.x<<"y="<<lidar_tf.pos.y<<endl;
-        //cout<<"x="<<rs_tf.pos.x<<"y="<<rs_tf.pos.y<<endl;
+        //cout<<"x="<<lidar_tf.pos.x<<"y="<<lidar_tf.pos.y<<endl;
+       // cout<<"rs="<<rs_tf.pos.yaw<<"  lidar="<<lidar_tf.pos.yaw<<"  odom="<<rsodom.yaw<<endl;
 
 
         up_button=0;

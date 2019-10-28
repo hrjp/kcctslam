@@ -21,6 +21,7 @@ float get_qz();
 void clear();
 
 Vector rot(float deg);
+Vector rad_rot(float rad);
 
 Vector operator+(Vector vec);
 Vector operator-(Vector vec);
@@ -137,6 +138,13 @@ bool Vector::operator!=(Vector vec){
 Vector Vector::rot(float deg){
     Vector ans;
     float rad=deg*PI/180;
+    ans.x=cos(rad)*x-sin(rad)*y;
+    ans.y=sin(rad)*x+cos(rad)*y;
+    return ans;
+}
+
+Vector Vector::rad_rot(float rad){
+    Vector ans;
     ans.x=cos(rad)*x-sin(rad)*y;
     ans.y=sin(rad)*x+cos(rad)*y;
     return ans;
