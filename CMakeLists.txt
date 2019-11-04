@@ -129,7 +129,7 @@ include_directories(
 
 
 
-
+add_executable(nav_master src/nav_master.cpp)
 add_executable(basic_twist_publisher src/basic_twist_publisher.cpp)
 add_executable(wp_pub src/wp_pub.cpp)
 add_executable(wp_moving_node src/wp_moving.cpp)
@@ -148,6 +148,9 @@ target_link_libraries(wp_moving_node
   ${catkin_LIBRARIES}
 )
 
+target_link_libraries(nav_master
+  ${catkin_LIBRARIES}
+)
 
 
 target_link_libraries(pcl_handler

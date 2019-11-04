@@ -16,18 +16,33 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include<cmath>
 
 #include"csvread.h"
 #include"wpdata.h"
 #include"tf_lis.h"
-#include"wp_realtime_marker.h"
+#include"wpmarker.h"
 
 #include<time.h>
 
 
-
+typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
 
 using namespace std;
+geometry_msgs::Twist nav_vel;//navigation stack の速度指令
+
+geometry_msgs::Twist final_cmd_vel;//ロボットに送る速度指令
+
+//前方の障害物の距離受信
+double front_dis=0;
+void dis_vel_callback(const geometry_msgs::Twist& vel_cmd){ 
+     front_dis=vel_cmd.linear.x;
+}
+
+//cmd_vel subscribe
+void cmd_vel_callback(const geometry_msgs::Twist& vel_cmd){ 
+     nav_vel=vel_cmd;
+}
 
 //key input
 int up_button,down_button,right_button,left_button;
@@ -92,18 +107,53 @@ Vector rs_odom_attach(Vector rs_tf,Vector lidar_tf,Vector pubodom){
     return pubodom;
 }
 
+//現在地と目標ウェイポイントから速度指令を計算
+ geometry_msgs::Twist cmd_vel_calc(Vector nowpos,Vector wppos,double front_dis){
+     geometry_msgs::Twist calc_vel;
+     const double angle_p=1.0;
+     const double vel_p=1.0;
+     double angle1=wppos.yaw-nowpos.yaw+3.141592;
+     double angle2=wppos.yaw-nowpos.yaw;
+     double angle3=wppos.yaw-nowpos.yaw-3.141592;
+    if(abs(angle1)<abs(angle2)&&abs(angle1)<abs(angle3)){
+        calc_vel.angular.z=angle1*angle_p;
+    }
+    else if(abs(angle2)<abs(angle1)&&abs(angle2)<abs(angle3)){
+        calc_vel.angular.z=angle2*angle_p;
+    }
+    else if(abs(angle3)<abs(angle1)&&abs(angle3)<abs(angle2)){
+        calc_vel.angular.z=angle3*angle_p;
+    }
+    
+
+}
+
 
 
 int main(int argc, char **argv){
     
-    ros::init(argc, argv, "wp_moving_node");
+    ros::init(argc, argv, "nav_master");
     ros::NodeHandle n;
+
+    //ウェイポイントファイルのロード
+    ros::NodeHandle pn("~");
+    string filename;
+    pn.getParam("waypointfile",filename);
+    csvread csv(filename.c_str());
+
+
+    //cmd_velの受信と送信
+    ros::NodeHandle lSubscriber("");
+    ros::Subscriber sub = lSubscriber.subscribe("/cmd_vel", 50, cmd_vel_callback);
+    ros::Publisher cmd_pub = n.advertise<geometry_msgs::Twist>("final_cmd_vel", 10); 
+
+    //前方の障害物距離 subscliber
+    ros::Subscriber dis_sub = lSubscriber.subscribe("/pcl_handler/front_dist", 50, dis_vel_callback);
 
     //2D_NAV_GOAL publisher
     ros::Publisher goal_pub = n.advertise<geometry_msgs::PoseStamped>("/move_base_simple/goal", 1);
     
    //十字キー入力 subscliber
-   ros::NodeHandle lSubscriber("");
    ros::Subscriber ket_sub = lSubscriber.subscribe("/turtle1/cmd_vel", 50, key_vel_callback);
     
 
@@ -120,6 +170,12 @@ int main(int argc, char **argv){
 
     tf_lis rs_tf("/map","/rs_link");
     tf_lis lidar_tf("/map","/base_link");
+
+    geometry_msgs::Twist zero_vel;//停止
+    zero_vel.linear.x=0;
+    zero_vel.angular.z=0;
+
+    MoveBaseClient ac("move_base", true);
     
 
     wpmarker wpmarker;
@@ -129,6 +185,7 @@ int main(int argc, char **argv){
        rs_tf.update();
        lidar_tf.update();
        rs_odom(pubodom);
+       wpmarker.update(csv.wp,now_wp);
 
         if(up_button){
             if(wp_mode==RS_MODE){
@@ -205,4 +262,3 @@ int main(int argc, char **argv){
     
     return 0;
 }
-

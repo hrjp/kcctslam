@@ -6,7 +6,7 @@
 #include"wpdata.h"
 class csvread{
     private:
-    static const int gyo=100;
+    static const int gyo=2000;
     static const int retu=10;
     std::string Score[gyo][retu];
     
