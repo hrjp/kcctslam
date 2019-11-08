@@ -9,7 +9,7 @@
     <include file="$(find realsense2_camera)/launch/rs_t265.launch"/>
     
 	<arg name="map_file" default="$(find kcctslam)/config/map/f3-6.yaml" />
-    <node pkg="tf" type="static_transform_publisher" name="rs_odom_transform" args="0 0 0 0 0 0 rs_odom rs_odom_frame 100"/>
+
 	<node pkg="tf" type="static_transform_publisher" name="stf_hokuyo3d_laser" args="0.225 -0.255 0.0 0.0 0.0 0.0 camera_link 2d_blue 100"/>
 	<node pkg="tf" type="static_transform_publisher" name="stf_hokuyo3d_laser2" args="-0.485 0.255 0.0 3.14159 0.0 0.0 camera_link 2d_orange 100"/>	
 	<!--<node pkg="tf" type="static_transform_publisher" name="map_transform" args="0 0 0 0 0 0 map base_link 100"/>-->
@@ -26,7 +26,7 @@
 	-->
 	
 	<node name="serial_node"        pkg="rosserial_python"      type="serial_node.py">
-	<param name="port"              type="string"               value="/dev/teensy"/>
+	<param name="port"              type="string"               value="/dev/ttyACM0"/>
 	<param name="baud"              type="int"                  value="57600"/>
 	</node>
 	
@@ -43,7 +43,7 @@
 
 	<node name="urg_node2" pkg="urg_node" type="urg_node" output="screen">
  	<remap from="/scan" to="/scan2" />
-	<param name="serial_port" value="/dev/utm30lx"/>
+	<param name="serial_port" value="/dev/ttyACM1"/>
    	<param name="serial_baud" value="115200"/>
    	<param name="frame_id" value="2d_orange"/>
    	<param name="calibrate_time" value="true"/>
@@ -101,7 +101,7 @@
 	<param name="radius" value="10.0"/>
 	<param name="x_max" value="5.0"/>
 	<param name="x_min" value="0.0"/>
-	<param name="y_max" value="0.2"/>
+	<param name="y_max" value="0.7"/>
 	<param name="y_min" value="-0.2"/>
 	<param name="loop_rate" value="10"/>		
 	</node>
@@ -114,7 +114,7 @@
 	
 	<node pkg="rviz" type="rviz" args="-d '$(find kcctslam)/config/rviz/navigation_yvtx004.rviz'" name="visualizer" respawn="true" />
 	
-	<node name="nav_master" pkg="kcctslam" type="nav_master" output="screen">
+	<node name="wp_pub" pkg="kcctslam" type="wp_pub" output="screen">
 	<param name="waypointfile" type="str" value="$(find kcctslam)/config/waypointdata/wpdata.csv" />
 	</node>
 </launch>

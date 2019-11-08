@@ -143,7 +143,7 @@ int main(int argc, char **argv){
                 lidar_tf.update();
                 rs_odom(pubodom);
                 cout<<"Waypoint NUMBER : [ "<<now_wp<<" ] (LiDAR)"<<endl;
-                goal_pub.publish(csv_write(lidar_tf.pos,1));
+                goal_pub.publish(csv_write(lidar_tf.pos,LIDAR_NAVIGATION));
                 rsdata.vec[now_wp]=lidar_tf.pos;
             }
             
@@ -161,7 +161,7 @@ int main(int argc, char **argv){
                 lidar_tf.update();
                 rs_odom(pubodom);
                 cout<<"Waypoint NUMBER : [ "<<now_wp<<" ] (REALSENSE)"<<endl;
-                goal_pub.publish(csv_write(rs_tf.pos,2));
+                goal_pub.publish(csv_write(rs_tf.pos,RS_NAVIGATION));
                 rsdata.vec[now_wp]=rs_tf.pos;
             }
             rsdata.vtoa();
@@ -175,7 +175,7 @@ int main(int argc, char **argv){
             if((lidar_tf.pos-rsdata.vec[now_wp]).size()>1.0){
                 now_wp++;
                 cout<<"Waypoint NUMBER : [ "<<now_wp<<" ] (LiDAR)"<<endl;
-                goal_pub.publish(csv_write(lidar_tf.pos,1));
+                goal_pub.publish(csv_write(lidar_tf.pos,LIDAR_NAVIGATION));
                 rsdata.vec[now_wp]=lidar_tf.pos;
                 rsdata.vtoa();
                 wpmarker.update(rsdata,now_wp);
@@ -186,7 +186,7 @@ int main(int argc, char **argv){
             if((rs_tf.pos-rsdata.vec[now_wp]).size()>1.0){
                 now_wp++;
                 cout<<"Waypoint NUMBER : [ "<<now_wp<<" ] (REALSENSE)"<<endl;
-                goal_pub.publish(csv_write(rs_tf.pos,2));
+                goal_pub.publish(csv_write(rs_tf.pos,RS_NAVIGATION));
                 rsdata.vec[now_wp]=rs_tf.pos;
                 rsdata.vtoa();
                 wpmarker.update(rsdata,now_wp);

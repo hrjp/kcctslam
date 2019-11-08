@@ -33,10 +33,22 @@ geometry_msgs::Twist nav_vel;//navigation stack の速度指令
 
 geometry_msgs::Twist final_cmd_vel;//ロボットに送る速度指令
 
+double double_constrain(double val,double down_limit,double up_limit){
+  if(val>up_limit){
+    return up_limit;
+  }
+  if(val<down_limit){
+    return down_limit;
+  }
+  return val;
+}
+
+
+
 //前方の障害物の距離受信
 double front_dis=0;
 void dis_vel_callback(const geometry_msgs::Twist& vel_cmd){ 
-     front_dis=vel_cmd.linear.x;
+     front_dis=vel_cmd.linear.x-0.255;
 }
 
 //cmd_vel subscribe
@@ -73,6 +85,8 @@ geometry_msgs::PoseStamped csv_write(Vector pos,int type){
             goal_point.header.frame_id = "map";
             return goal_point;
 }
+
+//初期座標のデータを生成
 geometry_msgs::PoseWithCovarianceStamped init_pose(Vector pos){
             geometry_msgs::PoseWithCovarianceStamped initial_pose;
             initial_pose.pose.pose.position.x = pos.x;
@@ -84,6 +98,7 @@ geometry_msgs::PoseWithCovarianceStamped init_pose(Vector pos){
             return initial_pose;
 
 }
+
 //TF rs_odomの配信
 void rs_odom(Vector pos){
    static tf::TransformBroadcaster br;
@@ -110,22 +125,47 @@ Vector rs_odom_attach(Vector rs_tf,Vector lidar_tf,Vector pubodom){
 //現在地と目標ウェイポイントから速度指令を計算
  geometry_msgs::Twist cmd_vel_calc(Vector nowpos,Vector wppos,double front_dis){
      geometry_msgs::Twist calc_vel;
+     //param
      const double angle_p=1.0;
-     const double vel_p=1.0;
-     double angle1=wppos.yaw-nowpos.yaw+3.141592;
-     double angle2=wppos.yaw-nowpos.yaw;
-     double angle3=wppos.yaw-nowpos.yaw-3.141592;
+     const double angle_max=0.5;
+     const double vel_p=0.3;
+     const double vel_max=0.15;
+     const double curve_stop_angle=30.0*M_PI/180.0;
+     const double front_ditect_dis=5.0;
+     const double front_stop_distance=0.5;
+
+     //double angle1=wppos.yaw-nowpos.yaw+M_PI*2.0;
+     //double angle2=wppos.yaw-nowpos.yaw;
+     //double angle3=wppos.yaw-nowpos.yaw-M_PI*2.0;
+
+     double angle1=(wppos-nowpos).rad()+M_PI*2.0;
+     double angle2=(wppos-nowpos).rad();
+     double angle3=(wppos-nowpos).rad()-M_PI*2.0;
+
     if(abs(angle1)<abs(angle2)&&abs(angle1)<abs(angle3)){
-        calc_vel.angular.z=angle1*angle_p;
+        calc_vel.angular.z=angle1;
     }
     else if(abs(angle2)<abs(angle1)&&abs(angle2)<abs(angle3)){
-        calc_vel.angular.z=angle2*angle_p;
+        calc_vel.angular.z=angle2;
     }
     else if(abs(angle3)<abs(angle1)&&abs(angle3)<abs(angle2)){
-        calc_vel.angular.z=angle3*angle_p;
+        calc_vel.angular.z=angle3;
     }
-    
 
+    front_dis-=front_stop_distance;
+    front_dis=20.0;
+
+    if(front_dis>front_ditect_dis){
+        calc_vel.linear.x=vel_max;
+    }
+    else{
+        calc_vel.linear.x=double_constrain(front_dis*vel_p,0,vel_max);
+    }
+    calc_vel.angular.z*=angle_p;
+    calc_vel.angular.z*=double_constrain(angle_p,-angle_max,angle_max);
+    calc_vel.linear.x*=(abs(calc_vel.angular.z)<curve_stop_angle);
+    //cout<<nowpos.yaw<<","<<wppos.yaw<<endl;
+    return calc_vel;
 }
 
 
@@ -181,12 +221,47 @@ int main(int argc, char **argv){
     wpmarker wpmarker;
     Wpdata rsdata;
     Vector pubodom;
+    initial_pub.publish(init_pose(csv.wp.vec[now_wp]));
     while (n.ok())  {
-       rs_tf.update();
-       lidar_tf.update();
-       rs_odom(pubodom);
-       wpmarker.update(csv.wp,now_wp);
+        rs_tf.update();
+        lidar_tf.update();
+        rs_odom(pubodom);
+        wpmarker.update(csv.wp,now_wp);
 
+        switch (int(csv.wp.type(now_wp))){
+
+        //一時停止
+        case WP_STOP:
+            if(up_button){
+                //入力がきたらナビゲーションを再開する
+                csv.wp.typechenge(now_wp,int(csv.wp.type(now_wp-1)));
+            }
+            else{
+                final_cmd_vel=zero_vel;
+            }
+            break;
+
+        case LIDAR_NAVIGATION:
+            final_cmd_vel=cmd_vel_calc(lidar_tf.pos,csv.wp.vec[now_wp],front_dis);
+            if((lidar_tf.pos-csv.wp.vec[now_wp]).size()<0.5){
+                pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
+                now_wp++;
+                cout<<"publishwp="<<now_wp<<endl;
+            }
+            break;
+        case RS_NAVIGATION:
+            final_cmd_vel=cmd_vel_calc(rs_tf.pos,csv.wp.vec[now_wp],front_dis);
+            if((rs_tf.pos-csv.wp.vec[now_wp]).size()<0.2){
+                now_wp++;
+                cout<<"publishwp="<<now_wp<<"type="<<csv.wp.type(now_wp)<<endl;
+            }
+            break;
+        default:
+        final_cmd_vel=nav_vel;
+        }
+
+
+        /*
         if(up_button){
             if(wp_mode==RS_MODE){
                 initial_pub.publish(init_pose(rs_tf.pos));
@@ -249,11 +324,12 @@ int main(int argc, char **argv){
                 wpmarker.update(rsdata,now_wp);
             }
         }
-
+        */
         //cout<<"x="<<lidar_tf.pos.x<<"y="<<lidar_tf.pos.y<<endl;
        // cout<<"rs="<<rs_tf.pos.yaw<<"  lidar="<<lidar_tf.pos.yaw<<"  odom="<<rsodom.yaw<<endl;
-        cout<<loop_rate.cycleTime()<<endl;
-
+        //cout<<loop_rate.cycleTime()<<endl;
+        final_cmd_vel.linear.y=front_dis;
+        cmd_pub.publish(final_cmd_vel);
         key_reset();
         ros::spinOnce();//subsucriberの割り込み関数はこの段階で実装される
         loop_rate.sleep();

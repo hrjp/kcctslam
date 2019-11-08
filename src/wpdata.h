@@ -1,9 +1,14 @@
 #pragma once
 #include "Vector.h"
-
+/*
 const int WP_NAVIGATION=0;
 const int WP_DITECTION=1;
 const int WP_STOP=2;
+*/
+const int LIDAR_NAVIGATION=1;
+const int RS_NAVIGATION=2;
+const int WP_STOP=3;
+
 class Wpdata{
     public:
     Wpdata();
@@ -25,6 +30,7 @@ class Wpdata{
     int size();
     private:
     void EulerAnglesToQuaternion(double roll, double pitch, double yaw,double& q0, double& q1, double& q2, double& q3);
+    void QuaternionToEulerAngles(double q0, double q1, double q2, double q3,double& roll, double& pitch, double& yaw);
 };
 
 Wpdata::Wpdata(){
@@ -33,6 +39,23 @@ Wpdata::Wpdata(){
             data[i][j]=0;
         }
     }
+}
+
+void Wpdata::QuaternionToEulerAngles(double q0, double q1, double q2, double q3,double& roll, double& pitch, double& yaw)
+{
+    double q0q0 = q0 * q0;
+    double q0q1 = q0 * q1;
+    double q0q2 = q0 * q2;
+    double q0q3 = q0 * q3;
+    double q1q1 = q1 * q1;
+    double q1q2 = q1 * q2;
+    double q1q3 = q1 * q3;
+    double q2q2 = q2 * q2;
+    double q2q3 = q2 * q3;
+    double q3q3 = q3 * q3;
+    roll = atan2(2.0 * (q2q3 + q0q1), q0q0 - q1q1 - q2q2 + q3q3);
+    pitch = asin(2.0 * (q0q2 - q1q3));
+    yaw = atan2(2.0 * (q1q2 + q0q3), q0q0 + q1q1 - q2q2 - q3q3);
 }
 
 void Wpdata::EulerAnglesToQuaternion(double roll, double pitch, double yaw,double& q0, double& q1, double& q2, double& q3){
@@ -61,6 +84,9 @@ void Wpdata::atov(){
         for(int j=0;j<height;j++){
             vec[j].x=x(j);
             vec[j].y=y(j);
+            double roll_,pitch_,yaw_;
+            QuaternionToEulerAngles(qw(j),qx(j),qy(j),qz(j),roll_,pitch_,yaw_);
+            vec[j].yaw=yaw_;
         }
 }
 
