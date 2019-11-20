@@ -8,6 +8,7 @@ const int WP_STOP=2;
 const int LIDAR_NAVIGATION=1;
 const int RS_NAVIGATION=2;
 const int WP_STOP=3;
+const int RS_BACK_NAVIGATION=4;
 
 class Wpdata{
     public:

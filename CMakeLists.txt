@@ -137,6 +137,8 @@ add_executable(hard_serialport_retry src/hard_serialport_retry.cpp)
 add_executable(pcl_handler
 	       src/pcl_handler.cpp
 	      )
+	      
+add_executable(odom_pub src/odom_pub.cpp)
 
 target_link_libraries(basic_twist_publisher
   ${catkin_LIBRARIES}
@@ -158,6 +160,9 @@ target_link_libraries(pcl_handler
 		     )
 
 target_link_libraries(hard_serialport_retry
+  ${catkin_LIBRARIES}
+)
+target_link_libraries(odom_pub
   ${catkin_LIBRARIES}
 )
 ## Declare a C++ library

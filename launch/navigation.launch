@@ -8,7 +8,7 @@
     
     <include file="$(find realsense2_camera)/launch/rs_t265.launch"/>
     
-	<arg name="map_file" default="$(find kcctslam)/config/map/f3-6.yaml" />
+	<arg name="map_file" default="$(find kcctslam)/config/map/f3-7.yaml" />
     <node pkg="tf" type="static_transform_publisher" name="rs_odom_transform" args="0 0 0 0 0 0 rs_odom rs_odom_frame 100"/>
 	<node pkg="tf" type="static_transform_publisher" name="stf_hokuyo3d_laser" args="0.225 -0.255 0.0 0.0 0.0 0.0 camera_link 2d_blue 100"/>
 	<node pkg="tf" type="static_transform_publisher" name="stf_hokuyo3d_laser2" args="-0.485 0.255 0.0 3.14159 0.0 0.0 camera_link 2d_orange 100"/>	
@@ -23,6 +23,7 @@
 	<node name="joy_node" pkg="joy" type="joy_node" />
 	<node name="basic_twist_publisher" pkg="basic_lecture" type="basic_twist_publisher">
 	</node>
+	value="57600"
 	-->
 	
 	<node name="serial_node"        pkg="rosserial_python"      type="serial_node.py">
@@ -63,10 +64,17 @@
 	</node>
 	
 	<node name="amcl" pkg="amcl" type="amcl">
-		<param name="odom_alpha1" type="double" value="7" />
+	
+		<!--<param name="odom_alpha1" type="double" value="7" />
 		<param name="odom_alpha2" type="double" value="7" />
 		<param name="odom_alpha3" type="double" value="3.5" />
-		<param name="odom_alpha4" type="double" value="3.5" />
+		<param name="odom_alpha4" type="double" value="3.5" />-->
+		
+		<param name="odom_alpha1" type="double" value="0.2" />
+		<param name="odom_alpha2" type="double" value="0.2" />
+		<param name="odom_alpha3" type="double" value="0.2" />
+		<param name="odom_alpha4" type="double" value="0.2" />
+		
 		<param name="laser_max_beams" type="int" value="150" />
 		<param name="min_particles" type="int" value="300" />
 		<param name="max_particles" type="int" value="1000" />
@@ -113,7 +121,7 @@
 	
 	
 	<node pkg="rviz" type="rviz" args="-d '$(find kcctslam)/config/rviz/navigation_yvtx004.rviz'" name="visualizer" respawn="true" />
-	
+	<node name="odom_pub" pkg="kcctslam" type="odom_pub"/>
 	<node name="nav_master" pkg="kcctslam" type="nav_master" output="screen">
 	<param name="waypointfile" type="str" value="$(find kcctslam)/config/waypointdata/wpdata.csv" />
 	</node>

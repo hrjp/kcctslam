@@ -8,6 +8,8 @@
 #include <tf/transform_broadcaster.h>
 #include <geometry_msgs/Twist.h>
 #include<geometry_msgs/PoseWithCovarianceStamped.h>
+#include <std_msgs/Float32.h>
+
 
 #include <move_base_msgs/MoveBaseAction.h>
 #include <actionlib/client/simple_action_client.h>
@@ -123,13 +125,13 @@ Vector rs_odom_attach(Vector rs_tf,Vector lidar_tf,Vector pubodom){
 }
 
 //現在地と目標ウェイポイントから速度指令を計算
- geometry_msgs::Twist cmd_vel_calc(Vector nowpos,Vector wppos,double front_dis){
+ geometry_msgs::Twist cmd_vel_calc(Vector nowpos,Vector wppos,double front_dis,bool back_drive){
      geometry_msgs::Twist calc_vel;
      //param
-     const double angle_p=1.0;
+     const double angle_p=1.2;
      const double angle_max=0.5;
      const double vel_p=0.3;
-     const double vel_max=0.15;
+     const double vel_max=0.25;
      const double curve_stop_angle=30.0*M_PI/180.0;
      const double front_ditect_dis=5.0;
      const double front_stop_distance=0.5;
@@ -138,9 +140,9 @@ Vector rs_odom_attach(Vector rs_tf,Vector lidar_tf,Vector pubodom){
      //double angle2=wppos.yaw-nowpos.yaw;
      //double angle3=wppos.yaw-nowpos.yaw-M_PI*2.0;
 
-     double angle1=(wppos-nowpos).rad()+M_PI*2.0;
-     double angle2=(wppos-nowpos).rad();
-     double angle3=(wppos-nowpos).rad()-M_PI*2.0;
+     double angle1=(wppos-nowpos).rad()-nowpos.yaw+M_PI*2.0+back_drive*M_PI;
+     double angle2=(wppos-nowpos).rad()-nowpos.yaw+back_drive*M_PI;
+     double angle3=(wppos-nowpos).rad()-nowpos.yaw-M_PI*2.0+back_drive*M_PI;
 
     if(abs(angle1)<abs(angle2)&&abs(angle1)<abs(angle3)){
         calc_vel.angular.z=angle1;
@@ -164,6 +166,7 @@ Vector rs_odom_attach(Vector rs_tf,Vector lidar_tf,Vector pubodom){
     calc_vel.angular.z*=angle_p;
     calc_vel.angular.z*=double_constrain(angle_p,-angle_max,angle_max);
     calc_vel.linear.x*=(abs(calc_vel.angular.z)<curve_stop_angle);
+    calc_vel.linear.x*=back_drive?-1:1;
     //cout<<nowpos.yaw<<","<<wppos.yaw<<endl;
     return calc_vel;
 }
@@ -199,6 +202,12 @@ int main(int argc, char **argv){
 
     //2D_POSE_ESTIMATE publisher
     ros::Publisher initial_pub = n.advertise<geometry_msgs::PoseWithCovarianceStamped>("/initialpose", 1);
+
+    //直進速度　publisher
+    ros::Publisher linear_vel = n.advertise<std_msgs::Float32>("linear_vel", 10);
+
+    //旋回速度　publisher
+    ros::Publisher angular_vel = n.advertise<std_msgs::Float32>("angular_vel", 10);
     
     //制御周期10ms
     ros::Rate loop_rate(10);
@@ -242,16 +251,23 @@ int main(int argc, char **argv){
             break;
 
         case LIDAR_NAVIGATION:
-            final_cmd_vel=cmd_vel_calc(lidar_tf.pos,csv.wp.vec[now_wp],front_dis);
-            if((lidar_tf.pos-csv.wp.vec[now_wp]).size()<0.5){
+            final_cmd_vel=cmd_vel_calc(lidar_tf.pos,csv.wp.vec[now_wp],front_dis,false);
+            if((lidar_tf.pos-csv.wp.vec[now_wp]).size()<0.8){
                 pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
                 now_wp++;
                 cout<<"publishwp="<<now_wp<<endl;
             }
             break;
         case RS_NAVIGATION:
-            final_cmd_vel=cmd_vel_calc(rs_tf.pos,csv.wp.vec[now_wp],front_dis);
-            if((rs_tf.pos-csv.wp.vec[now_wp]).size()<0.2){
+            final_cmd_vel=cmd_vel_calc(rs_tf.pos,csv.wp.vec[now_wp],front_dis,false);
+            if((rs_tf.pos-csv.wp.vec[now_wp]).size()<0.5){
+                now_wp++;
+                cout<<"publishwp="<<now_wp<<"type="<<csv.wp.type(now_wp)<<endl;
+            }
+            break;
+        case RS_BACK_NAVIGATION:
+            final_cmd_vel=cmd_vel_calc(rs_tf.pos,csv.wp.vec[now_wp],front_dis,true);
+            if((rs_tf.pos-csv.wp.vec[now_wp]).size()<0.5){
                 now_wp++;
                 cout<<"publishwp="<<now_wp<<"type="<<csv.wp.type(now_wp)<<endl;
             }
@@ -328,6 +344,17 @@ int main(int argc, char **argv){
         //cout<<"x="<<lidar_tf.pos.x<<"y="<<lidar_tf.pos.y<<endl;
        // cout<<"rs="<<rs_tf.pos.yaw<<"  lidar="<<lidar_tf.pos.yaw<<"  odom="<<rsodom.yaw<<endl;
         //cout<<loop_rate.cycleTime()<<endl;
+
+        //直進速度表示
+        std_msgs::Float32 linear_vel_data;
+        linear_vel_data.data=final_cmd_vel.linear.x;
+        linear_vel.publish(linear_vel_data);
+
+        // 旋回速度表示
+        std_msgs::Float32 angular_vel_data;
+        angular_vel_data.data=final_cmd_vel.angular.z;
+        angular_vel.publish(angular_vel_data);
+
         final_cmd_vel.linear.y=front_dis;
         cmd_pub.publish(final_cmd_vel);
         key_reset();

@@ -5,8 +5,6 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
-        - /TF1
-        - /Marker2
       Splitter Ratio: 0.784386992
     Tree Height: 775
   - Class: rviz/Tool Properties
@@ -211,6 +209,32 @@ Visualization Manager:
           Value: true
         map:
           Value: true
+        odom:
+          Value: true
+        rs_accel_frame:
+          Value: true
+        rs_accel_optical_frame:
+          Value: true
+        rs_fisheye1_frame:
+          Value: true
+        rs_fisheye1_optical_frame:
+          Value: true
+        rs_fisheye2_frame:
+          Value: true
+        rs_fisheye2_optical_frame:
+          Value: true
+        rs_gyro_frame:
+          Value: true
+        rs_gyro_optical_frame:
+          Value: true
+        rs_link:
+          Value: true
+        rs_odom:
+          Value: true
+        rs_odom_frame:
+          Value: true
+        rs_pose_frame:
+          Value: true
       Marker Scale: 1
       Name: TF
       Show Arrows: true
@@ -218,12 +242,29 @@ Visualization Manager:
       Show Names: true
       Tree:
         map:
-          base_link:
-            camera_link:
-              2d_blue:
-                {}
-              2d_orange:
-                {}
+          odom:
+            base_link:
+              camera_link:
+                2d_blue:
+                  {}
+                2d_orange:
+                  {}
+          rs_odom:
+            rs_odom_frame:
+              rs_pose_frame:
+                rs_link:
+                  rs_accel_frame:
+                    rs_accel_optical_frame:
+                      {}
+                  rs_fisheye1_frame:
+                    rs_fisheye1_optical_frame:
+                      {}
+                  rs_fisheye2_frame:
+                    rs_fisheye2_optical_frame:
+                      {}
+                  rs_gyro_frame:
+                    rs_gyro_optical_frame:
+                      {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -299,7 +340,7 @@ Visualization Manager:
       Marker Topic: /marker_array
       Name: MarkerArray
       Namespaces:
-        {}
+        cmd_vel_display: true
       Queue Size: 100
       Value: true
     - Class: rviz/MarkerArray
@@ -307,7 +348,7 @@ Visualization Manager:
       Marker Topic: /marker_array1
       Name: MarkerArray
       Namespaces:
-        {}
+        cmd_vel_display: true
       Queue Size: 100
       Value: true
     - Class: rviz/Marker
@@ -318,6 +359,71 @@ Visualization Manager:
         {}
       Queue Size: 100
       Value: true
+    - Class: jsk_rviz_plugin/PieChart
+      Enabled: true
+      Name: Linear Vel
+      Topic: /linear_vel
+      Value: true
+      auto color change: true
+      background color: 0; 0; 0
+      backround alpha: 0
+      foreground alpha: 0.699999988
+      foreground alpha 2: 0.400000006
+      foreground color: 25; 255; 240
+      left: 20
+      max color: 255; 0; 0
+      max value: 0.400000006
+      min value: 0
+      show caption: true
+      size: 128
+      text size: 16
+      top: 20
+    - Class: jsk_rviz_plugin/PieChart
+      Enabled: true
+      Name: Angular Vel
+      Topic: /angular_vel
+      Value: true
+      auto color change: false
+      background color: 0; 0; 0
+      backround alpha: 0
+      foreground alpha: 0.699999988
+      foreground alpha 2: 0.400000006
+      foreground color: 25; 255; 240
+      left: 170
+      max color: 255; 0; 0
+      max value: 1
+      min value: 0
+      show caption: true
+      size: 128
+      text size: 16
+      top: 20
+    - Class: jsk_rviz_plugin/TFTrajectory
+      Enabled: true
+      Name: TFTrajectory
+      Value: true
+      color: 0; 170; 255
+      duration: 60
+      frame: base_link
+      line_width: 0.0700000003
+    - Class: jsk_rviz_plugin/PieChart
+      Enabled: true
+      Name: Robot Vel
+      Topic: /robot_odom
+      Value: true
+      auto color change: true
+      background color: 0; 0; 0
+      backround alpha: 0
+      foreground alpha: 0.699999988
+      foreground alpha 2: 0.400000006
+      foreground color: 25; 255; 240
+      left: 320
+      max color: 255; 0; 0
+      max value: 0.5
+      min value: 0
+      show caption: true
+      size: 128
+      text size: 14
+      top: 20
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -337,7 +443,7 @@ Visualization Manager:
   Value: true
   Views:
     Current:
-      Angle: -1.17999935
+      Angle: -1.50999904
       Class: rviz/TopDownOrtho
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
@@ -347,7 +453,7 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Scale: 44.3142166
+      Scale: 63.8286667
       Target Frame: base_link
       Value: TopDownOrtho (rviz)
       X: -0.749880612
