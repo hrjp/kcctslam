@@ -118,7 +118,7 @@ int main(int argc, char **argv){
     //const int LIDAR_NAVIGATION=1;
     //const int RS_NAVIGATION=2;
 
-    tf_lis rs_tf("/map","/rs_link");
+    tf_lis rs_tf("/map","/rs_camera_link");
     tf_lis lidar_tf("/map","/base_link");
     
 
@@ -129,64 +129,6 @@ int main(int argc, char **argv){
        rs_tf.update();
        lidar_tf.update();
        rs_odom(pubodom);
-
-        if(up_button){
-            if(wp_mode==RS_NAVIGATION){
-                initial_pub.publish(init_pose(rs_tf.pos));
-            }
-            wp_mode=LIDAR_NAVIGATION;
-            
-            pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
-            cout<<"LIDAR MODE SELECT"<<endl;
-            if(now_wp==0){
-                rs_tf.update();
-                lidar_tf.update();
-                rs_odom(pubodom);
-                cout<<"Waypoint NUMBER : [ "<<now_wp<<" ] (LiDAR)"<<endl;
-                goal_pub.publish(csv_write(lidar_tf.pos,LIDAR_NAVIGATION));
-                rsdata.vec[now_wp]=lidar_tf.pos;
-            }
-            
-            rsdata.vtoa();
-            wpmarker.update(rsdata,now_wp);
-        }
-        if(down_button){
-            wp_mode=RS_NAVIGATION;
- 
-            pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
-
-            cout<<"REALSENSE MODE SELECT"<<endl;
-            if(now_wp==0){
-                rs_tf.update();
-                lidar_tf.update();
-                rs_odom(pubodom);
-                cout<<"Waypoint NUMBER : [ "<<now_wp<<" ] (REALSENSE)"<<endl;
-                goal_pub.publish(csv_write(rs_tf.pos,RS_NAVIGATION));
-                rsdata.vec[now_wp]=rs_tf.pos;
-            }
-            rsdata.vtoa();
-            wpmarker.update(rsdata,now_wp);
-        }
-        if(right_button){
-            wp_mode=RS_BACK_NAVIGATION;
- 
-            //pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
-
-            cout<<"REALSENSE BACK MODE SELECT"<<endl;
-            if(now_wp==0){
-                rs_tf.update();
-                lidar_tf.update();
-                rs_odom(pubodom);
-                cout<<"Waypoint NUMBER : [ "<<now_wp<<" ] (REALSENSE_BACK)"<<endl;
-                goal_pub.publish(csv_write(rs_tf.pos,RS_BACK_NAVIGATION));
-                rsdata.vec[now_wp]=rs_tf.pos;
-            }
-            rsdata.vtoa();
-            wpmarker.update(rsdata,now_wp);
-        }
-        if(left_button){
-            wp_mode=false;
-        }
 
         if(wp_mode==LIDAR_NAVIGATION){
             if((lidar_tf.pos-rsdata.vec[now_wp]).size()>1.0){
@@ -221,9 +163,72 @@ int main(int argc, char **argv){
             }
         }
 
+        if(up_button){
+            if(wp_mode==RS_NAVIGATION){
+                initial_pub.publish(init_pose(rs_tf.pos));
+            }
+            wp_mode=LIDAR_NAVIGATION;
+            
+            pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
+            cout<<"LIDAR MODE SELECT"<<endl;
+            if(now_wp==0){
+                rs_tf.update();
+                lidar_tf.update();
+                rs_odom(pubodom);
+                cout<<"Waypoint NUMBER : [ "<<now_wp<<" ] (LiDAR)"<<endl;
+                goal_pub.publish(csv_write(lidar_tf.pos,LIDAR_NAVIGATION));
+                rsdata.vec[now_wp]=lidar_tf.pos;
+            }
+            
+            rsdata.vtoa();
+            wpmarker.update(rsdata,now_wp);
+            
+        }
+        if(down_button){
+            wp_mode=RS_NAVIGATION;
+ 
+            pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
+
+            cout<<"REALSENSE MODE SELECT"<<endl;
+            if(now_wp==0){
+                rs_tf.update();
+                lidar_tf.update();
+                rs_odom(pubodom);
+                cout<<"Waypoint NUMBER : [ "<<now_wp<<" ] (REALSENSE)"<<endl;
+                goal_pub.publish(csv_write(rs_tf.pos,RS_NAVIGATION));
+                rsdata.vec[now_wp]=rs_tf.pos;
+            }
+            rsdata.vtoa();
+            wpmarker.update(rsdata,now_wp);
+           
+        }
+        if(right_button){
+            wp_mode=RS_BACK_NAVIGATION;
+ 
+            //pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
+
+            cout<<"REALSENSE BACK MODE SELECT"<<endl;
+            if(now_wp==0){
+                rs_tf.update();
+                lidar_tf.update();
+                rs_odom(pubodom);
+                cout<<"Waypoint NUMBER : [ "<<now_wp<<" ] (REALSENSE_BACK)"<<endl;
+                goal_pub.publish(csv_write(rs_tf.pos,RS_BACK_NAVIGATION));
+                rsdata.vec[now_wp]=rs_tf.pos;
+            }
+            rsdata.vtoa();
+            wpmarker.update(rsdata,now_wp);
+         
+        }
+        if(left_button){
+            wp_mode=false;
+        }
+
+       
+
         //cout<<"x="<<lidar_tf.pos.x<<"y="<<lidar_tf.pos.y<<endl;
        // cout<<"rs="<<rs_tf.pos.yaw<<"  lidar="<<lidar_tf.pos.yaw<<"  odom="<<rsodom.yaw<<endl;
-        cout<<loop_rate.cycleTime()<<endl;
+        //cout<<loop_rate.cycleTime()<<endl;
 
         key_reset();
         ros::spinOnce();//subsucriberの割り込み関数はこの段階で実装される

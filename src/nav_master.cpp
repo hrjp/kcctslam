@@ -131,7 +131,7 @@ Vector rs_odom_attach(Vector rs_tf,Vector lidar_tf,Vector pubodom){
      const double angle_p=1.2;
      const double angle_max=0.5;
      const double vel_p=0.3;
-     const double vel_max=0.25;
+     const double vel_max=0.35;
      const double curve_stop_angle=30.0*M_PI/180.0;
      const double front_ditect_dis=5.0;
      const double front_stop_distance=0.5;
@@ -217,7 +217,7 @@ int main(int argc, char **argv){
     const int LIDAR_MODE=1;
     const int RS_MODE=2;
 
-    tf_lis rs_tf("/map","/rs_link");
+    tf_lis rs_tf("/map","/rs_camera_link");
     tf_lis lidar_tf("/map","/base_link");
 
     geometry_msgs::Twist zero_vel;//停止
