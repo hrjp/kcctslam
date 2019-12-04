@@ -47,6 +47,7 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr pass_through(pcl::PointCloud<pcl::PointXYZ>:
 
 // callback
 void callback_knn(sensor_msgs::PointCloud2 pc2){
+	g_vel.linear.x = g_xmax;
     // 
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_nan (new pcl::PointCloud<pcl::PointXYZ>); // NaN値あり
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>); // NaN値なし
@@ -92,7 +93,11 @@ void callback_knn(sensor_msgs::PointCloud2 pc2){
 	tree2d->radiusSearch(p, radius, k_indices, k_distances, max_nn);
 
 	// error handling
-	if(k_indices.size() == 0) return;
+	if(k_indices.size() == 0) {
+		g_vel.linear.x = g_xmax;
+	
+	return;
+	}
 
 	// get center of each nearest neighbors
 	if(max_nn > 1){
@@ -114,8 +119,10 @@ void callback_knn(sensor_msgs::PointCloud2 pc2){
 	else if(max_nn == 1){
 	    //求めたインデックスでもとのPointCloudの点を見る
 	    ROS_INFO("A nearest point of (0.5, 0.5) is...\nx: %lf, y:%lf, z:%lf", cloud->points[k_indices[0]].x, cloud->points[k_indices[0]].y, cloud->points[k_indices[0]].z);
+		 g_vel.linear.x = g_xmax;
 	}else{
 	    ROS_INFO("No neighbor exist.");
+	    g_vel.linear.x = g_xmax;
 	}
     }
 }
@@ -146,9 +153,10 @@ int main(int argc, char** argv){
     // Instead of ros::spin, use spinOnce to publish.
     ros::Rate loop_rate(g_loop_rate);
     while (nh.ok()){
-	ros::spinOnce ();
+	
 	pub.publish(gfiltered);
 	cmd_pub.publish(g_vel);
+	ros::spinOnce ();
 	loop_rate.sleep();
     }
 	

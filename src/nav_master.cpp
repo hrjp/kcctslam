@@ -128,10 +128,11 @@ Vector rs_odom_attach(Vector rs_tf,Vector lidar_tf,Vector pubodom){
  geometry_msgs::Twist cmd_vel_calc(Vector nowpos,Vector wppos,double front_dis,bool back_drive){
      geometry_msgs::Twist calc_vel;
      //param
-     const double angle_p=1.2;
+     const double angle_p=0.8;
+     const double angle_stop_p=1.5;
      const double angle_max=0.5;
      const double vel_p=0.3;
-     const double vel_max=0.35;
+     const double vel_max=0.4;
      const double curve_stop_angle=30.0*M_PI/180.0;
      const double front_ditect_dis=5.0;
      const double front_stop_distance=0.5;
@@ -155,7 +156,7 @@ Vector rs_odom_attach(Vector rs_tf,Vector lidar_tf,Vector pubodom){
     }
 
     front_dis-=front_stop_distance;
-    front_dis=20.0;
+    //front_dis=20.0;
 
     if(front_dis>front_ditect_dis){
         calc_vel.linear.x=vel_max;
@@ -163,7 +164,13 @@ Vector rs_odom_attach(Vector rs_tf,Vector lidar_tf,Vector pubodom){
     else{
         calc_vel.linear.x=double_constrain(front_dis*vel_p,0,vel_max);
     }
-    calc_vel.angular.z*=angle_p;
+    if((abs(calc_vel.angular.z)<curve_stop_angle)){
+        calc_vel.angular.z*=angle_p;
+    }
+    else{
+         calc_vel.angular.z*=angle_stop_p;
+    }
+    
     calc_vel.angular.z*=double_constrain(angle_p,-angle_max,angle_max);
     calc_vel.linear.x*=(abs(calc_vel.angular.z)<curve_stop_angle);
     calc_vel.linear.x*=back_drive?-1:1;
@@ -275,75 +282,6 @@ int main(int argc, char **argv){
         default:
         final_cmd_vel=nav_vel;
         }
-
-
-        /*
-        if(up_button){
-            if(wp_mode==RS_MODE){
-                initial_pub.publish(init_pose(rs_tf.pos));
-            }
-            wp_mode=LIDAR_MODE;
-            
-            pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
-            cout<<"LIDAR MODE SELECT"<<endl;
-            if(now_wp==0){
-                rs_tf.update();
-                lidar_tf.update();
-                rs_odom(pubodom);
-                cout<<"Waypoint NUMBER : [ "<<now_wp<<" ] (LiDAR)"<<endl;
-                goal_pub.publish(csv_write(lidar_tf.pos,1));
-                rsdata.vec[now_wp]=lidar_tf.pos;
-            }
-            
-            rsdata.vtoa();
-            wpmarker.update(rsdata,now_wp);
-        }
-        if(down_button){
-            wp_mode=RS_MODE;
- 
-            pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
-
-            cout<<"REALSENSE MODE SELECT"<<endl;
-            if(now_wp==0){
-                rs_tf.update();
-                lidar_tf.update();
-                rs_odom(pubodom);
-                cout<<"Waypoint NUMBER : [ "<<now_wp<<" ] (REALSENSE)"<<endl;
-                goal_pub.publish(csv_write(rs_tf.pos,2));
-                rsdata.vec[now_wp]=rs_tf.pos;
-            }
-            rsdata.vtoa();
-            wpmarker.update(rsdata,now_wp);
-        }
-        if(left_button){
-            wp_mode=false;
-        }
-
-        if(wp_mode==LIDAR_MODE){
-            if((lidar_tf.pos-rsdata.vec[now_wp]).size()>1.0){
-                now_wp++;
-                cout<<"Waypoint NUMBER : [ "<<now_wp<<" ] (LiDAR)"<<endl;
-                goal_pub.publish(csv_write(lidar_tf.pos,1));
-                rsdata.vec[now_wp]=lidar_tf.pos;
-                rsdata.vtoa();
-                wpmarker.update(rsdata,now_wp);
-            }
-        }
-
-        if(wp_mode==RS_MODE){
-            if((rs_tf.pos-rsdata.vec[now_wp]).size()>1.0){
-                now_wp++;
-                cout<<"Waypoint NUMBER : [ "<<now_wp<<" ] (REALSENSE)"<<endl;
-                goal_pub.publish(csv_write(rs_tf.pos,2));
-                rsdata.vec[now_wp]=rs_tf.pos;
-                rsdata.vtoa();
-                wpmarker.update(rsdata,now_wp);
-            }
-        }
-        */
-        //cout<<"x="<<lidar_tf.pos.x<<"y="<<lidar_tf.pos.y<<endl;
-       // cout<<"rs="<<rs_tf.pos.yaw<<"  lidar="<<lidar_tf.pos.yaw<<"  odom="<<rsodom.yaw<<endl;
-        //cout<<loop_rate.cycleTime()<<endl;
 
         //直進速度表示
         std_msgs::Float32 linear_vel_data;

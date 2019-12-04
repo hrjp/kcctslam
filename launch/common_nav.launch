@@ -71,10 +71,10 @@
 		<param name="odom_alpha3" type="double" value="3.5" />
 		<param name="odom_alpha4" type="double" value="3.5" />-->
 		
-		<param name="odom_alpha1" type="double" value="0.2" />
-		<param name="odom_alpha2" type="double" value="0.2" />
-		<param name="odom_alpha3" type="double" value="0.2" />
-		<param name="odom_alpha4" type="double" value="0.2" />
+		<param name="odom_alpha1" type="double" value="7" />
+		<param name="odom_alpha2" type="double" value="7" />
+		<param name="odom_alpha3" type="double" value="3.5" />
+		<param name="odom_alpha4" type="double" value="3.5" />
 		
 		<param name="laser_max_beams" type="int" value="150" />
 		<param name="min_particles" type="int" value="300" />
@@ -109,7 +109,7 @@
 	<param name="max_nn" value="20"/>
 	<param name="radius" value="10.0"/>
 	<param name="x_max" value="5.0"/>
-	<param name="x_min" value="0.0"/>
+	<param name="x_min" value="-0.5"/>
 	<param name="y_max" value="0.2"/>
 	<param name="y_min" value="-0.2"/>
 	<param name="loop_rate" value="10"/>		
@@ -124,4 +124,6 @@
 	
 	<node pkg="rviz" type="rviz" args="-d '$(find kcctslam)/config/rviz/navigation_yvtx004.rviz'" name="visualizer" respawn="true" />
 	<node name="odom_pub" pkg="kcctslam" type="odom_pub"/>
+	<!--<node name="tf_pub" pkg="kcctslam" type="tf_pub"/>-->
+	
 </launch>
