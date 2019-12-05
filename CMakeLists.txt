@@ -129,22 +129,46 @@ include_directories(
 
 
 
-
+add_executable(nav_master src/nav_master.cpp)
+add_executable(tf_pub src/tf_pub.cpp)
 add_executable(basic_twist_publisher src/basic_twist_publisher.cpp)
-add_executable(wp_pub src/wp_pub.cpp)
-
+#add_executable(wp_pub src/wp_pub.cpp)
+add_executable(wp_moving_node src/wp_moving.cpp)
+add_executable(hard_serialport_retry src/hard_serialport_retry.cpp)
+add_executable(pcl_handler
+	       src/pcl_handler.cpp
+	      )
+	      
+add_executable(odom_pub src/odom_pub.cpp)
 
 target_link_libraries(basic_twist_publisher
   ${catkin_LIBRARIES}
 )
-target_link_libraries(wp_pub
+target_link_libraries(tf_pub
+  ${catkin_LIBRARIES}
+)
+#target_link_libraries(wp_pub
+#  ${catkin_LIBRARIES}
+#)
+target_link_libraries(wp_moving_node
+  ${catkin_LIBRARIES}
+)
+
+target_link_libraries(nav_master
   ${catkin_LIBRARIES}
 )
 
 
+target_link_libraries(pcl_handler
+		      ${catkin_LIBRARIES}
+		     )
 
-
-
+target_link_libraries(hard_serialport_retry
+  ${catkin_LIBRARIES}
+)
+target_link_libraries(odom_pub
+  ${catkin_LIBRARIES}
+)
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/kcctslam.cpp

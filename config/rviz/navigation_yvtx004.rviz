@@ -5,8 +5,8 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
-        - /TF1
-      Splitter Ratio: 0.784386992
+        - /Robot Vel1
+      Splitter Ratio: 0.530555546
     Tree Height: 775
   - Class: rviz/Tool Properties
     Expanded:
@@ -208,13 +208,68 @@ Visualization Manager:
           Value: true
         camera_link:
           Value: true
+        map:
+          Value: true
+        odom:
+          Value: true
+        rs_accel_frame:
+          Value: true
+        rs_accel_optical_frame:
+          Value: true
+        rs_camera_link:
+          Value: true
+        rs_fisheye1_frame:
+          Value: true
+        rs_fisheye1_optical_frame:
+          Value: true
+        rs_fisheye2_frame:
+          Value: true
+        rs_fisheye2_optical_frame:
+          Value: true
+        rs_gyro_frame:
+          Value: true
+        rs_gyro_optical_frame:
+          Value: true
+        rs_link:
+          Value: true
+        rs_odom:
+          Value: true
+        rs_odom_frame:
+          Value: true
+        rs_pose_frame:
+          Value: true
       Marker Scale: 1
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: true
       Tree:
-        {}
+        map:
+          odom:
+            base_link:
+              camera_link:
+                2d_blue:
+                  {}
+                2d_orange:
+                  {}
+          rs_odom:
+            rs_odom_frame:
+              rs_pose_frame:
+                rs_link:
+                  rs_accel_frame:
+                    rs_accel_optical_frame:
+                      {}
+                  rs_camera_link:
+                    {}
+                  rs_fisheye1_frame:
+                    rs_fisheye1_optical_frame:
+                      {}
+                  rs_fisheye2_frame:
+                    rs_fisheye2_optical_frame:
+                      {}
+                  rs_gyro_frame:
+                    rs_gyro_optical_frame:
+                      {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -301,6 +356,87 @@ Visualization Manager:
         cmd_vel_display: true
       Queue Size: 100
       Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /waypoint1
+      Name: Marker
+      Namespaces:
+        {}
+      Queue Size: 100
+      Value: true
+    - Class: jsk_rviz_plugin/PieChart
+      Enabled: true
+      Name: Linear Vel
+      Topic: /linear_vel
+      Value: true
+      auto color change: true
+      background color: 0; 0; 0
+      backround alpha: 0
+      foreground alpha: 0.699999988
+      foreground alpha 2: 0.400000006
+      foreground color: 25; 255; 240
+      left: 170
+      max color: 255; 0; 0
+      max value: 0.400000006
+      min value: 0
+      show caption: true
+      size: 128
+      text size: 16
+      top: 20
+    - Class: jsk_rviz_plugin/PieChart
+      Enabled: true
+      Name: Angular Vel
+      Topic: /angular_vel
+      Value: true
+      auto color change: false
+      background color: 0; 0; 0
+      backround alpha: 0
+      foreground alpha: 0.699999988
+      foreground alpha 2: 0.400000006
+      foreground color: 25; 255; 240
+      left: 320
+      max color: 255; 0; 0
+      max value: 1
+      min value: 0
+      show caption: true
+      size: 128
+      text size: 16
+      top: 20
+    - Class: jsk_rviz_plugin/TFTrajectory
+      Enabled: true
+      Name: TFTrajectory
+      Value: true
+      color: 0; 170; 255
+      duration: 60
+      frame: base_link
+      line_width: 0.0700000003
+    - Class: jsk_rviz_plugin/PieChart
+      Enabled: true
+      Name: Robot Vel
+      Topic: /robot_odom
+      Value: true
+      auto color change: true
+      background color: 0; 0; 0
+      backround alpha: 0
+      foreground alpha: 0.699999988
+      foreground alpha 2: 0.400000006
+      foreground color: 25; 255; 240
+      left: 20
+      max color: 255; 0; 0
+      max value: 3
+      min value: 0
+      show caption: true
+      size: 128
+      text size: 14
+      top: 20
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /body_model
+      Name: MarkerArray
+      Namespaces:
+        cmd_vel_display: true
+      Queue Size: 100
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -320,33 +456,38 @@ Visualization Manager:
   Value: true
   Views:
     Current:
-      Angle: -1.17999935
-      Class: rviz/TopDownOrtho
+      Class: rviz/Orbit
+      Distance: 11.8903141
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
+      Focal Point:
+        X: -0.257887363
+        Y: -0.460475445
+        Z: -0.797391951
+      Focal Shape Fixed Size: true
+      Focal Shape Size: 0.0500000007
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Scale: 44.3142166
+      Pitch: 0.639797449
       Target Frame: base_link
-      Value: TopDownOrtho (rviz)
-      X: -0.749880612
-      Y: -0.430972099
+      Value: Orbit (rviz)
+      Yaw: 5.51817846
     Saved: ~
 Window Geometry:
   Displays:
     collapsed: false
   Height: 1028
   Hide Left Dock: false
-  Hide Right Dock: true
-  QMainWindow State: 000000ff00000000fd00000002000000000000019a000003befc0200000001fb000000100044006900730070006c0061007900730100000028000003be000000d700ffffff000000010000010f000002a2fc0200000002fb0000000a0056006900650077007300000000280000019b000000ad00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007300000001c9000001010000006100ffffff0000059f000003be00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  Hide Right Dock: false
+  QMainWindow State: 000000ff00000000fd00000002000000000000016a000003befc0200000001fb000000100044006900730070006c0061007900730100000028000003be000000d700ffffff000000010000010f000003befc0200000002fb0000000a005600690065007700730000000028000002b7000000ad00fffffffb0000001e0054006f006f006c002000500072006f00700065007200740069006500730000000028000003be0000006100ffffff000005cf000003be00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Tool Properties:
-    collapsed: true
+    collapsed: false
   Views:
-    collapsed: true
+    collapsed: false
   Width: 1855
   X: 65
   Y: 24
