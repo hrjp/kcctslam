@@ -5,7 +5,7 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
-        - /Robot Vel1
+        - /PoseParticles1
       Splitter Ratio: 0.530555546
     Tree Height: 775
   - Class: rviz/Tool Properties
@@ -115,10 +115,10 @@ Visualization Manager:
       Axes Length: 0.300000012
       Axes Radius: 0.00999999978
       Class: rviz/PoseArray
-      Color: 0; 255; 255
+      Color: 0; 0; 255
       Enabled: true
       Head Length: 0.0700000003
-      Head Radius: 0.0299999993
+      Head Radius: 0.0500000007
       Name: PoseParticles
       Shaft Length: 0.230000004
       Shaft Radius: 0.00999999978
@@ -457,16 +457,16 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 11.8903141
+      Distance: 22.5743008
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -0.257887363
-        Y: -0.460475445
-        Z: -0.797391951
+        X: -0.332512498
+        Y: 0.00752384588
+        Z: -0.289551049
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.0500000007
       Invert Z Axis: false

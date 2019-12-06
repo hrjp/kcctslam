@@ -63,6 +63,12 @@ void wpmarker::update(Wpdata wp,int now_wp){
     marker_array.markers[i].color.b = 0.0f;
     marker_array.markers[i].color.a = 1.0f;
     }
+    if(wp.type(i)==SKIP_WP){
+        marker_array.markers[i].color.r = 0.5f;
+        marker_array.markers[i].color.g = 0.5f;
+        marker_array.markers[i].color.b = 0.5f;
+        marker_array.markers[i].color.a = 1.0f;
+    }
 
 //number
     marker_array1.markers[i].header.frame_id = "/map";
@@ -90,11 +96,18 @@ void wpmarker::update(Wpdata wp,int now_wp){
     marker_array1.markers[i].color.a = 1.0f;
     }
     else{
-         marker_array1.markers[i].color.r = 0.5f;
+        marker_array1.markers[i].color.r = 0.5f;
         marker_array1.markers[i].color.g = 0.5f;
         marker_array1.markers[i].color.b = 0.5f;
         marker_array1.markers[i].color.a = 1.0f;
     }
+    if(wp.type(i)==SKIP_WP){
+        marker_array1.markers[i].color.r = 0.5f;
+        marker_array1.markers[i].color.g = 0.5f;
+        marker_array1.markers[i].color.b = 0.5f;
+        marker_array1.markers[i].color.a = 1.0f;
+    }
+    
     ostringstream oss;
     oss<<i;
     marker_array1.markers[i].text= oss.str().c_str();

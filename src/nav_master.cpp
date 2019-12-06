@@ -267,7 +267,7 @@ int main(int argc, char **argv){
                 cout<<"publishwp="<<now_wp<<endl;
                 if(csv.wp.type(now_wp)==RS_NAVIGATION){
                     delay_count=0;
-                    pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
+                    //pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
                     csv.wp.typechenge(now_wp,CHENGE_RS_NAVIGATION);
                 }
             }
@@ -295,6 +295,9 @@ int main(int argc, char **argv){
                 csv.wp.typechenge(now_wp,RS_NAVIGATION);
                 
             }
+            break;
+        case SKIP_WP:
+            now_wp++;
             break;
 
         default:
