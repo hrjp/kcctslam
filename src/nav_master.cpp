@@ -246,6 +246,10 @@ int main(int argc, char **argv){
         rs_odom(pubodom);
         wpmarker.update(csv.wp,now_wp);
 
+        /*if(down_button){
+            now_wp++;
+        }*/
+
         switch (int(csv.wp.type(now_wp))){
 
         //一時停止

@@ -72,9 +72,9 @@
 		<param name="odom_alpha4" type="double" value="3.5" />-->
 		
 		<param name="odom_alpha1" type="double" value="7" />
-		<param name="odom_alpha2" type="double" value="3.5" />
+		<param name="odom_alpha2" type="double" value="5" />
 		<param name="odom_alpha3" type="double" value="3.5" />
-		<param name="odom_alpha4" type="double" value="1.8" />
+		<param name="odom_alpha4" type="double" value="2.4" />
 		
 		<param name="laser_max_beams" type="int" value="150" />
 		<param name="min_particles" type="int" value="300" />
