@@ -133,10 +133,22 @@ int main(int argc, char **argv){
 
         if(wp_mode==LIDAR_NAVIGATION){
             //pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
-            if((lidar_tf.pos-rsdata.vec[now_wp]).size()>1.0){
+            if((lidar_tf.pos-rsdata.vec[now_wp]).size()>0.3){
                 now_wp++;
                 cout<<"Waypoint NUMBER : [ "<<now_wp<<" ] (LiDAR)"<<endl;
                 goal_pub.publish(csv_write(lidar_tf.pos,LIDAR_NAVIGATION));
+                rsdata.vec[now_wp]=lidar_tf.pos;
+                rsdata.vtoa();
+                wpmarker.update(rsdata,now_wp);
+            }
+        }
+
+        if(wp_mode==LIDAR_BACK_NAVIGATION){
+            //pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
+            if((lidar_tf.pos-rsdata.vec[now_wp]).size()>0.3){
+                now_wp++;
+                cout<<"Waypoint NUMBER : [ "<<now_wp<<" ] (LiDAR_BACK)"<<endl;
+                goal_pub.publish(csv_write(lidar_tf.pos,LIDAR_BACK_NAVIGATION));
                 rsdata.vec[now_wp]=lidar_tf.pos;
                 rsdata.vtoa();
                 wpmarker.update(rsdata,now_wp);
@@ -166,14 +178,8 @@ int main(int argc, char **argv){
         }
 
         if(up_button){
-            /*
-            if(wp_mode==RS_NAVIGATION){
-                initial_pub.publish(init_pose(rs_tf.pos));
-            }
-            */
             wp_mode=LIDAR_NAVIGATION;
-            
-           // pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
+           
             cout<<"LIDAR MODE SELECT"<<endl;
             if(now_wp==0){
                 rs_tf.update();
@@ -188,6 +194,26 @@ int main(int argc, char **argv){
             wpmarker.update(rsdata,now_wp);
             
         }
+
+        if(down_button){
+            wp_mode=LIDAR_BACK_NAVIGATION;
+           
+            cout<<"LIDAR MODE SELECT"<<endl;
+            if(now_wp==0){
+                rs_tf.update();
+                lidar_tf.update();
+                rs_odom(pubodom);
+                cout<<"Waypoint NUMBER : [ "<<now_wp<<" ] (LiDAR_BACK)"<<endl;
+                goal_pub.publish(csv_write(lidar_tf.pos,LIDAR_BACK_NAVIGATION));
+                rsdata.vec[now_wp]=lidar_tf.pos;
+            }
+            
+            rsdata.vtoa();
+            wpmarker.update(rsdata,now_wp);
+            
+        }
+
+        /*
         if(down_button){
             wp_mode=RS_NAVIGATION;
  
@@ -225,6 +251,8 @@ int main(int argc, char **argv){
             wpmarker.update(rsdata,now_wp);
          
         }
+        */
+
         if(left_button){
             wp_mode=false;
         }

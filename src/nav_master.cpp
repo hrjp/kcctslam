@@ -130,16 +130,16 @@ Vector rs_odom_attach(Vector rs_tf,Vector lidar_tf,Vector pubodom){
      //param
      const double angle_p=0.7;
      const double angle_stop_p=1.5;
-     double angle_max=0.4;
+     double angle_max=0.3;
      const double vel_p=0.3;
-     double vel_max=0.25;
-     const double curve_stop_angle=30.0*M_PI/180.0;
+     double vel_max=0.15;
+     const double curve_stop_angle=60.0*M_PI/180.0;
      const double front_ditect_dis=5.0;
      const double front_stop_distance=0.5;
 
      if(slow_mode){
-        angle_max=0.35;
-        vel_max=0.2;
+        angle_max=0.3;
+        vel_max=0.12;
      }
 
      double angle1=(wppos-nowpos).rad()-nowpos.yaw+M_PI*2.0+back_drive*M_PI;
@@ -225,6 +225,7 @@ int main(int argc, char **argv){
     const int LIDAR_MODE=1;
     const int RS_MODE=2;
     int delay_count=0;
+    bool nav_mode=0;
 
     tf_lis rs_tf("/map","/rs_link");
     tf_lis lidar_tf("/map","/base_link");
@@ -246,10 +247,20 @@ int main(int argc, char **argv){
         rs_odom(pubodom);
         wpmarker.update(csv.wp,now_wp);
 
-        /*if(down_button){
-            now_wp++;
-        }*/
-
+        if(up_button){
+            nav_mode=true;
+        }
+        if(down_button){
+            nav_mode=false;
+        }
+        if(right_button){
+            now_wp=0;
+        }
+        if(left_button){
+            initial_pub.publish(init_pose(csv.wp.vec[0]));
+            
+        }
+        if(nav_mode){
         switch (int(csv.wp.type(now_wp))){
 
         //一時停止
@@ -265,7 +276,20 @@ int main(int argc, char **argv){
 
         case LIDAR_NAVIGATION:
             final_cmd_vel=cmd_vel_calc(lidar_tf.pos,csv.wp.vec[now_wp],front_dis,false,false);
-            if((lidar_tf.pos-csv.wp.vec[now_wp]).size()<0.8){
+            if((lidar_tf.pos-csv.wp.vec[now_wp]).size()<0.4){
+                //pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
+                now_wp++;
+                cout<<"publishwp="<<now_wp<<endl;
+                if(csv.wp.type(now_wp)==RS_NAVIGATION){
+                    delay_count=0;
+                    //pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
+                    csv.wp.typechenge(now_wp,CHENGE_RS_NAVIGATION);
+                }
+            }
+            break;
+        case LIDAR_BACK_NAVIGATION:
+            final_cmd_vel=cmd_vel_calc(lidar_tf.pos,csv.wp.vec[now_wp],front_dis,true,true);
+            if((lidar_tf.pos-csv.wp.vec[now_wp]).size()<0.4){
                 //pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
                 now_wp++;
                 cout<<"publishwp="<<now_wp<<endl;
@@ -306,6 +330,7 @@ int main(int argc, char **argv){
 
         default:
         final_cmd_vel=nav_vel;
+        }
         }
 
         //直進速度表示
