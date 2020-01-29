@@ -50,10 +50,10 @@
 	
 	<node pkg="gmapping" type="slam_gmapping" name="mapper">
 		<param name="maxUrange" value="80.0" type="double" />
-		<param name="xmax" value="20" type="double" />
-		<param name="ymax" value="20" type="double" />
-		<param name="xmin" value="-20" type="double" />
-		<param name="ymin" value="-20" type="double" />
+		<param name="xmax" value="30" type="double" />
+		<param name="ymax" value="30" type="double" />
+		<param name="xmin" value="-30" type="double" />
+		<param name="ymin" value="-30" type="double" />
 	</node>
 	<!--<node name="tf_pub" pkg="kcctslam" type="tf_pub"/>-->
 

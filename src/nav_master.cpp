@@ -130,9 +130,9 @@ Vector rs_odom_attach(Vector rs_tf,Vector lidar_tf,Vector pubodom){
      //param
      const double angle_p=0.7;
      const double angle_stop_p=1.5;
-     double angle_max=0.5;
+     double angle_max=0.4;
      const double vel_p=0.3;
-     double vel_max=0.3;
+     double vel_max=0.35;
      const double curve_stop_angle=30.0*M_PI/180.0;
      const double front_ditect_dis=5.0;
      const double front_stop_distance=0.5;
@@ -246,6 +246,10 @@ int main(int argc, char **argv){
         rs_odom(pubodom);
         wpmarker.update(csv.wp,now_wp);
 
+        /*if(down_button){
+            now_wp++;
+        }*/
+
         switch (int(csv.wp.type(now_wp))){
 
         //一時停止
@@ -267,7 +271,7 @@ int main(int argc, char **argv){
                 cout<<"publishwp="<<now_wp<<endl;
                 if(csv.wp.type(now_wp)==RS_NAVIGATION){
                     delay_count=0;
-                    pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
+                    //pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
                     csv.wp.typechenge(now_wp,CHENGE_RS_NAVIGATION);
                 }
             }
@@ -295,6 +299,9 @@ int main(int argc, char **argv){
                 csv.wp.typechenge(now_wp,RS_NAVIGATION);
                 
             }
+            break;
+        case SKIP_WP:
+            now_wp++;
             break;
 
         default:
