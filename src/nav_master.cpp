@@ -132,7 +132,7 @@ Vector rs_odom_attach(Vector rs_tf,Vector lidar_tf,Vector pubodom){
      const double angle_stop_p=1.5;
      double angle_max=0.4;
      const double vel_p=0.3;
-     double vel_max=0.35;
+     double vel_max=0.25;
      const double curve_stop_angle=30.0*M_PI/180.0;
      const double front_ditect_dis=5.0;
      const double front_stop_distance=0.5;
