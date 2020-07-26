@@ -9,6 +9,7 @@ Vector(){}
 
 float x,y;
 float yaw;
+int type;
 float rad();
 float deg();
 float size();

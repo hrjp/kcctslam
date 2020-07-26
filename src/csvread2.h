@@ -9,19 +9,20 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <ros/ros.h>
 #include <nav_msgs/Path.h>
 #include"wpdata.h"
 using namespace std;
 
 class csvread2{
     private:
-    static const int gyo=2000;
-    static const int retu=10;
+    //static const int gyo=2000;
+    //static const int retu=10;
     //std::string Score[gyo][retu];
     vector<vector<string> > Score;
-    double wpdata[gyo][retu];
+    //double wpdata[gyo][retu];
     public:
-    csvread2(const char *st);
+    csvread2(const char *st,nav_msgs::Path& path,vector<Vector>& vec);
     void print();
     //nav_msgs::Path wp_path;
     //vector<Vector> wp_vec;
@@ -32,32 +33,21 @@ class csvread2{
 
 
 
-csvread2::csvread2(const char *st):Score(1,vector<string>(1)){
+csvread2::csvread2(const char *st,nav_msgs::Path& path,vector<Vector>& vec):Score(1,vector<string>(1)){
 
     ifstream ifs(st);
- 
     // 開かなかったらエラー
-    if (!ifs)
-    {
+    if (!ifs){
         cout << "Error! File can not be opened" << endl;
         //return 0;
     }
- 
-     
-    //  仮に百人分の配列を作っておく。
-    //　名前・国語・英語・数学の順に値が入る。
-    /*const int gyo=50;
-    const int retu=9;
-    string Score[gyo][retu];
-    double wpdata[gyo][retu];*/
-    
-    
+     /*  
      for(int k=0;k<gyo;k++){
     	for(int l=0;l<retu;l++){
     	    wpdata[k][l]=0;
     	}
     	
-    }
+    }*/
     string str = "";
     int i = 0;  // Score[i][ ]のカウンタ。
     int j = 0;  // Score[ ][j]のカウンタ。
@@ -78,7 +68,7 @@ csvread2::csvread2(const char *st):Score(1,vector<string>(1)){
             j++;
             //Score.at(i).resize(j);
         }
-          cout<<endl;
+          //cout<<endl;
         j = 0;
         i++;  
         Score.resize(i+1);
@@ -86,6 +76,22 @@ csvread2::csvread2(const char *st):Score(1,vector<string>(1)){
      //先頭行のタグを消す
      Score.erase(Score.begin());
     
+    //サイズをwpの大きさに変更
+    path.poses.resize(Score.size()+1);
+    vec.resize(Score.size()+1);
+    //csvの値をPathとVectorに代入
+    for(int k=0;k<Score.size()-1;k++){
+          path.poses[k].pose.position.x=atof(Score.at(k).at(1).c_str());
+          path.poses[k].pose.position.y=atof(Score.at(k).at(2).c_str());
+          path.poses[k].pose.position.z=atof(Score.at(k).at(3).c_str());
+          path.poses[k].pose.orientation.x=atof(Score.at(k).at(4).c_str());
+          path.poses[k].pose.orientation.y=atof(Score.at(k).at(5).c_str());
+          path.poses[k].pose.orientation.z=atof(Score.at(k).at(6).c_str());
+          path.poses[k].pose.orientation.w=atof(Score.at(k).at(7).c_str());
+          cout<<"k="<<k<<endl;
+     }
+     path.header.frame_id="map";
+     path.header.stamp=ros::Time::now();
     //cout<<"RETSU="<<Score.size()<<endl;
     //cout<<"GYOU="<<Score.at(0).size()<<endl;
     /*

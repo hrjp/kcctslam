@@ -20,6 +20,7 @@
 #include <sstream>
 #include<cmath>
 
+#include"csvread2.h"
 #include"csvread.h"
 #include"wpdata.h"
 #include"tf_lis.h"
@@ -189,8 +190,12 @@ int main(int argc, char **argv){
     //ウェイポイントファイルのロード
     ros::NodeHandle pn("~");
     string filename;
+    //２つの形式でwaypointを取得
+    vector<Vector> wp_vec;
+    nav_msgs::Path wp_path;
     pn.getParam("waypointfile",filename);
-    csvread csv(filename.c_str());
+    csvread2 csv(filename.c_str(),wp_path,wp_vec);
+    csv.print();
 
 
     //cmd_velの受信と送信
@@ -216,6 +221,9 @@ int main(int argc, char **argv){
 
     //旋回速度　publisher
     ros::Publisher angular_vel = n.advertise<std_msgs::Float32>("angular_vel", 10);
+
+    //WayPointPath　publisher
+    ros::Publisher path_pub = n.advertise<nav_msgs::Path>("wp_path", 10);
     
     //制御周期10ms
     ros::Rate loop_rate(10);
@@ -317,6 +325,8 @@ int main(int argc, char **argv){
         std_msgs::Float32 angular_vel_data;
         angular_vel_data.data=final_cmd_vel.angular.z;
         angular_vel.publish(angular_vel_data);
+
+        path_pub.publish(wp_path);
 
         final_cmd_vel.linear.y=front_dis;
         cmd_pub.publish(final_cmd_vel);
