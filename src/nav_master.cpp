@@ -286,7 +286,7 @@ int main(int argc, char **argv){
             break;
         /*
         case RS_NAVIGATION:
-<<<<<<< Updated upstream
+//<<<<<<< Updated upstream
             final_cmd_vel=cmd_vel_calc(rs_tf.pos,wp_vec.vec[now_wp],front_dis,false,true);
             if((rs_tf.pos-wp_vec.vec[now_wp]).size()<0.5){
                 now_wp++;
@@ -305,16 +305,17 @@ int main(int argc, char **argv){
                 now_wp++;
                 cout<<"publishwp="<<now_wp<<"type="<<csv.wp.type(now_wp)<<endl;
             }*/
-            break;
+          /*  break;
         case RS_BACK_NAVIGATION:
             /*final_cmd_vel=cmd_vel_calc(rs_tf.pos,csv.wp.vec[now_wp],front_dis,true,true);
             if((rs_tf.pos-csv.wp.vec[now_wp]).size()<0.5){
                 now_wp++;
                 cout<<"publishwp="<<now_wp<<"type="<<csv.wp.type(now_wp)<<endl;
             }*/
->>>>>>> Stashed changes
-            break;
+//>>>>>>> Stashed changes
+            //break;
             
+            /*
         case CHENGE_RS_NAVIGATION:
             delay_count++;
             cout<<delay_count<<endl;
