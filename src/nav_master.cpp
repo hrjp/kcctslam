@@ -234,7 +234,7 @@ int main(int argc, char **argv){
     const int RS_MODE=2;
     int delay_count=0;
 
-    tf_lis rs_tf("/map","/rs_link");
+    //tf_lis rs_tf("/map","/rs_link");
     tf_lis lidar_tf("/map","/base_link");
 
     geometry_msgs::Twist zero_vel;//停止
@@ -249,7 +249,7 @@ int main(int argc, char **argv){
     Vector pubodom;
     initial_pub.publish(vec_to_PoseWithCovarianceStamped(wp_vec[now_wp]));
     while (n.ok())  {
-        rs_tf.update();
+        //rs_tf.update();
         lidar_tf.update();
         rs_odom(pubodom);
         wpmarker.update(wp_vec,now_wp);
@@ -286,6 +286,7 @@ int main(int argc, char **argv){
             break;
         /*
         case RS_NAVIGATION:
+<<<<<<< Updated upstream
             final_cmd_vel=cmd_vel_calc(rs_tf.pos,wp_vec.vec[now_wp],front_dis,false,true);
             if((rs_tf.pos-wp_vec.vec[now_wp]).size()<0.5){
                 now_wp++;
@@ -298,6 +299,20 @@ int main(int argc, char **argv){
                 now_wp++;
                 cout<<"publishwp="<<now_wp<<"type="<<wp_vec.type(now_wp)<<endl;
             }
+=======
+            /*final_cmd_vel=cmd_vel_calc(rs_tf.pos,csv.wp.vec[now_wp],front_dis,false,true);
+            if((rs_tf.pos-csv.wp.vec[now_wp]).size()<0.5){
+                now_wp++;
+                cout<<"publishwp="<<now_wp<<"type="<<csv.wp.type(now_wp)<<endl;
+            }*/
+            break;
+        case RS_BACK_NAVIGATION:
+            /*final_cmd_vel=cmd_vel_calc(rs_tf.pos,csv.wp.vec[now_wp],front_dis,true,true);
+            if((rs_tf.pos-csv.wp.vec[now_wp]).size()<0.5){
+                now_wp++;
+                cout<<"publishwp="<<now_wp<<"type="<<csv.wp.type(now_wp)<<endl;
+            }*/
+>>>>>>> Stashed changes
             break;
             
         case CHENGE_RS_NAVIGATION:
