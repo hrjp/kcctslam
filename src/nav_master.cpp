@@ -20,6 +20,7 @@
 #include <sstream>
 #include<cmath>
 
+#include"csvread2.h"
 #include"csvread.h"
 #include"wpdata.h"
 #include"tf_lis.h"
@@ -89,7 +90,7 @@ geometry_msgs::PoseStamped csv_write(Vector pos,int type){
 }
 
 //初期座標のデータを生成
-geometry_msgs::PoseWithCovarianceStamped init_pose(Vector pos){
+geometry_msgs::PoseWithCovarianceStamped vec_to_PoseWithCovarianceStamped(Vector pos){
             geometry_msgs::PoseWithCovarianceStamped initial_pose;
             initial_pose.pose.pose.position.x = pos.x;
             initial_pose.pose.pose.position.y =pos.y;
@@ -189,8 +190,12 @@ int main(int argc, char **argv){
     //ウェイポイントファイルのロード
     ros::NodeHandle pn("~");
     string filename;
+    //２つの形式でwaypointを取得
+    vector<Vector> wp_vec;
+    nav_msgs::Path wp_path;
     pn.getParam("waypointfile",filename);
-    csvread csv(filename.c_str());
+    csvread2 csv(filename.c_str(),wp_path,wp_vec);
+    csv.print();
 
 
     //cmd_velの受信と送信
@@ -216,6 +221,9 @@ int main(int argc, char **argv){
 
     //旋回速度　publisher
     ros::Publisher angular_vel = n.advertise<std_msgs::Float32>("angular_vel", 10);
+
+    //WayPointPath　publisher
+    ros::Publisher path_pub = n.advertise<nav_msgs::Path>("wp_path", 10);
     
     //制御周期10ms
     ros::Rate loop_rate(10);
@@ -239,24 +247,24 @@ int main(int argc, char **argv){
     wpmarker wpmarker;
     Wpdata rsdata;
     Vector pubodom;
-    initial_pub.publish(init_pose(csv.wp.vec[now_wp]));
+    initial_pub.publish(vec_to_PoseWithCovarianceStamped(wp_vec[now_wp]));
     while (n.ok())  {
         rs_tf.update();
         lidar_tf.update();
         rs_odom(pubodom);
-        wpmarker.update(csv.wp,now_wp);
+        wpmarker.update(wp_vec,now_wp);
 
         /*if(down_button){
             now_wp++;
         }*/
 
-        switch (int(csv.wp.type(now_wp))){
+        switch (wp_vec[now_wp].type){
 
         //一時停止
         case WP_STOP:
             if(up_button){
                 //入力がきたらナビゲーションを再開する
-                csv.wp.typechenge(now_wp,int(csv.wp.type(now_wp+1)));
+                wp_vec.at(now_wp).type=wp_vec.at(now_wp+1).type;
             }
             else{
                 final_cmd_vel=zero_vel;
@@ -264,42 +272,45 @@ int main(int argc, char **argv){
             break;
 
         case LIDAR_NAVIGATION:
-            final_cmd_vel=cmd_vel_calc(lidar_tf.pos,csv.wp.vec[now_wp],front_dis,false,false);
-            if((lidar_tf.pos-csv.wp.vec[now_wp]).size()<0.8){
+            final_cmd_vel=cmd_vel_calc(lidar_tf.pos,wp_vec[now_wp],front_dis,false,false);
+            if((lidar_tf.pos-wp_vec[now_wp]).size()<0.8){
                 //pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
                 now_wp++;
                 cout<<"publishwp="<<now_wp<<endl;
-                if(csv.wp.type(now_wp)==RS_NAVIGATION){
+                if(wp_vec[now_wp].type==RS_NAVIGATION){
                     delay_count=0;
                     //pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
-                    csv.wp.typechenge(now_wp,CHENGE_RS_NAVIGATION);
+                    wp_vec[now_wp].type=CHENGE_RS_NAVIGATION;
                 }
             }
             break;
+        /*
         case RS_NAVIGATION:
-            final_cmd_vel=cmd_vel_calc(rs_tf.pos,csv.wp.vec[now_wp],front_dis,false,true);
-            if((rs_tf.pos-csv.wp.vec[now_wp]).size()<0.5){
+            final_cmd_vel=cmd_vel_calc(rs_tf.pos,wp_vec.vec[now_wp],front_dis,false,true);
+            if((rs_tf.pos-wp_vec.vec[now_wp]).size()<0.5){
                 now_wp++;
-                cout<<"publishwp="<<now_wp<<"type="<<csv.wp.type(now_wp)<<endl;
+                cout<<"publishwp="<<now_wp<<"type="<<wp_vec.type(now_wp)<<endl;
             }
             break;
         case RS_BACK_NAVIGATION:
-            final_cmd_vel=cmd_vel_calc(rs_tf.pos,csv.wp.vec[now_wp],front_dis,true,true);
-            if((rs_tf.pos-csv.wp.vec[now_wp]).size()<0.5){
+            final_cmd_vel=cmd_vel_calc(rs_tf.pos,wp_vec.vec[now_wp],front_dis,true,true);
+            if((rs_tf.pos-wp_vec.vec[now_wp]).size()<0.5){
                 now_wp++;
-                cout<<"publishwp="<<now_wp<<"type="<<csv.wp.type(now_wp)<<endl;
+                cout<<"publishwp="<<now_wp<<"type="<<wp_vec.type(now_wp)<<endl;
             }
             break;
+            
         case CHENGE_RS_NAVIGATION:
             delay_count++;
             cout<<delay_count<<endl;
             final_cmd_vel=zero_vel;
             if(delay_count>40){
                 pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
-                csv.wp.typechenge(now_wp,RS_NAVIGATION);
+                wp_vec.typechenge(now_wp,RS_NAVIGATION);
                 
             }
             break;
+            */
         case SKIP_WP:
             now_wp++;
             break;
@@ -317,6 +328,8 @@ int main(int argc, char **argv){
         std_msgs::Float32 angular_vel_data;
         angular_vel_data.data=final_cmd_vel.angular.z;
         angular_vel.publish(angular_vel_data);
+
+        path_pub.publish(wp_path);
 
         final_cmd_vel.linear.y=front_dis;
         cmd_pub.publish(final_cmd_vel);
