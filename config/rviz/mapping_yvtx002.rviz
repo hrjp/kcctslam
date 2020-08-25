@@ -188,8 +188,6 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
-        base_link:
-          {}
         camera_link:
           2d_blue:
             {}
@@ -197,7 +195,8 @@ Visualization Manager:
             {}
         map:
           odom:
-            {}
+            base_link:
+              {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -229,6 +228,14 @@ Visualization Manager:
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
+      Value: true
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /body_model
+      Name: MarkerArray
+      Namespaces:
+        cmd_vel_display: true
+      Queue Size: 100
       Value: true
   Enabled: true
   Global Options:
@@ -291,5 +298,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1200
-  X: 577
+  X: 121
   Y: 24

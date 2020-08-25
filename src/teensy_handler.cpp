@@ -16,7 +16,14 @@ void int_sensor_data_callback(const std_msgs::Int32MultiArray& int_sensor_data_r
 }
 
 void float_sensor_data_callback(const std_msgs::Float32MultiArray& float_sensor_data_row){ 
+     static tf::TransformBroadcaster br;
      float_sensor_data=float_sensor_data_row.data;
+     tf::Transform transform;
+          transform.setOrigin( tf::Vector3(float_sensor_data[0], float_sensor_data[1], 0.0) );
+          tf::Quaternion q;
+          q.setRPY(0, 0, float_sensor_data[2]);
+          transform.setRotation(q);
+          br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "odom","base_link"));
 }
 
 int main(int argc, char **argv){
@@ -28,20 +35,19 @@ int main(int argc, char **argv){
      ros::NodeHandle lSubscriber("");
      ros::Subscriber int_sub = lSubscriber.subscribe("int_sensor_data", 50, int_sensor_data_callback);
      ros::Subscriber float_sub = lSubscriber.subscribe("float_sensor_data", 50, float_sensor_data_callback);
-
      //ros::Publisher cmd_pub = n.advertise<geometry_msgs::Twist>("final_cmd_vel", 10); 
-     tf::TransformBroadcaster br;
+     
      
      while (n.ok())  {
-
+/*
           //TF
           tf::Transform transform;
           transform.setOrigin( tf::Vector3(float_sensor_data[0], float_sensor_data[1], 0.0) );
           tf::Quaternion q;
           q.setRPY(0, 0, float_sensor_data[2]);
-          transform.setRotatio n(q);
+          transform.setRotation(q);
           br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "map","base_link"));
-
+*/
           ros::spinOnce();
           loop_rate.sleep();
      }
