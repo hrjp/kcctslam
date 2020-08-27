@@ -26,6 +26,7 @@
 #include"tf_lis.h"
 #include"wpmarker.h"
 #include"odom_mode.h"
+#include"watch_position.h"
 
 #include<time.h>
 
@@ -99,11 +100,14 @@ geometry_msgs::PoseWithCovarianceStamped vec_to_PoseWithCovarianceStamped(Vector
             initial_pose.pose.pose.orientation.w = pos.get_qw();
             initial_pose.header.stamp = ros::Time::now();
             initial_pose.header.frame_id = "map";
+            initial_pose.pose.covariance[0]=0.25;
+            initial_pose.pose.covariance[7]=0.25;
+            initial_pose.pose.covariance[35]=0.06853891945200942;
             return initial_pose;
 
 }
 
-//TF rs_odomの配信
+//TF odom_linkの配信
 void odomtf_pub(Vector pos){
    static tf::TransformBroadcaster br;
    tf::Transform transform;
@@ -249,16 +253,29 @@ int main(int argc, char **argv){
     Wpdata rsdata;
     Vector pubodom;
     odom_mode odom_mode;
+    watch_position watch_pos(3.0);
     initial_pub.publish(vec_to_PoseWithCovarianceStamped(wp_vec[now_wp]));
+
+    //最初に一時停止
+    wp_vec.at(now_wp).type=WP_STOP;
+
     while (n.ok())  {
-        //rs_tf.update();
+        odom_tf.update();
         lidar_tf.update();
         odomtf_pub(odom_mode.update());
         wpmarker.update(wp_vec,now_wp);
+        watch_pos.update(lidar_tf.pos);
         
 
-        if(down_button){
+        if(left_button){
             now_wp++;
+        }
+        if(down_button){
+            wp_vec.at(now_wp).type=WP_STOP;
+        }
+        if(right_button){
+           initial_pub.publish(vec_to_PoseWithCovarianceStamped(wp_vec[now_wp]));
+           
         }
 
         switch (wp_vec[now_wp].type){
@@ -271,80 +288,33 @@ int main(int argc, char **argv){
             }
             else{
                 final_cmd_vel=zero_vel;
+                odom_mode.attach();
             }
             break;
 
         case LIDAR_NAVIGATION:
             final_cmd_vel=cmd_vel_calc(lidar_tf.pos,wp_vec[now_wp],front_dis,false,false);
-            odom_mode.attach();
+            if(watch_pos.ok()){
+                odom_mode.attach();
+            }
+            else{
+                 initial_pub.publish(vec_to_PoseWithCovarianceStamped(odom_tf.pos));
+            }
             if((lidar_tf.pos-wp_vec[now_wp]).size()<0.8){
                 //pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
                 now_wp++;
                 cout<<"publishwp="<<now_wp<<endl;
-                if(wp_vec[now_wp].type==RS_NAVIGATION){
-                    delay_count=0;
-                    //pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
-                    wp_vec[now_wp].type=CHENGE_RS_NAVIGATION;
-                }
             }
             break;
 
         case ODOM_NAVIGATION:
-            final_cmd_vel=cmd_vel_calc(odom_tf.pos,wp_vec[now_wp],front_dis,false,false);
+            final_cmd_vel=cmd_vel_calc(odom_tf.pos,wp_vec[now_wp],front_dis,false,true);
             if((odom_tf.pos-wp_vec[now_wp]).size()<0.8){
                 //pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
                 now_wp++;
                 cout<<"publishwp="<<now_wp<<endl;
-                if(wp_vec[now_wp].type==RS_NAVIGATION){
-                    delay_count=0;
-                    //pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
-                    wp_vec[now_wp].type=CHENGE_RS_NAVIGATION;
-                }
             }
             break;
-        /*
-        case RS_NAVIGATION:
-//<<<<<<< Updated upstream
-            final_cmd_vel=cmd_vel_calc(rs_tf.pos,wp_vec.vec[now_wp],front_dis,false,true);
-            if((rs_tf.pos-wp_vec.vec[now_wp]).size()<0.5){
-                now_wp++;
-                cout<<"publishwp="<<now_wp<<"type="<<wp_vec.type(now_wp)<<endl;
-            }
-            break;
-        case RS_BACK_NAVIGATION:
-            final_cmd_vel=cmd_vel_calc(rs_tf.pos,wp_vec.vec[now_wp],front_dis,true,true);
-            if((rs_tf.pos-wp_vec.vec[now_wp]).size()<0.5){
-                now_wp++;
-                cout<<"publishwp="<<now_wp<<"type="<<wp_vec.type(now_wp)<<endl;
-            }
-=======
-            /*final_cmd_vel=cmd_vel_calc(rs_tf.pos,csv.wp.vec[now_wp],front_dis,false,true);
-            if((rs_tf.pos-csv.wp.vec[now_wp]).size()<0.5){
-                now_wp++;
-                cout<<"publishwp="<<now_wp<<"type="<<csv.wp.type(now_wp)<<endl;
-            }*/
-          /*  break;
-        case RS_BACK_NAVIGATION:
-            /*final_cmd_vel=cmd_vel_calc(rs_tf.pos,csv.wp.vec[now_wp],front_dis,true,true);
-            if((rs_tf.pos-csv.wp.vec[now_wp]).size()<0.5){
-                now_wp++;
-                cout<<"publishwp="<<now_wp<<"type="<<csv.wp.type(now_wp)<<endl;
-            }*/
-//>>>>>>> Stashed changes
-            //break;
-            
-            /*
-        case CHENGE_RS_NAVIGATION:
-            delay_count++;
-            cout<<delay_count<<endl;
-            final_cmd_vel=zero_vel;
-            if(delay_count>40){
-                pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
-                wp_vec.typechenge(now_wp,RS_NAVIGATION);
-                
-            }
-            break;
-            */
         case SKIP_WP:
             now_wp++;
             break;
@@ -352,6 +322,7 @@ int main(int argc, char **argv){
         default:
         final_cmd_vel=nav_vel;
         }
+        //cout<<lidar_tf.pos.yaw<<","<<odom_tf.pos.yaw<<endl;
 
         //直進速度表示
         std_msgs::Float32 linear_vel_data;

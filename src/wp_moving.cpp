@@ -193,7 +193,7 @@ int main(int argc, char **argv){
             wp_mode=ODOM_NAVIGATION;
             
            // pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
-            cout<<"LIDAR MODE SELECT"<<endl;
+            cout<<"ODOM MODE SELECT"<<endl;
             if(now_wp==0){
                 //rs_tf.update();
                 lidar_tf.update();
