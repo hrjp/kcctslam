@@ -15,7 +15,6 @@
 #include <tf/transform_broadcaster.h>
 #include"wpdata.h"
 using namespace std;
-
 class csvread2{
     private:
     //static const int gyo=2000;
@@ -29,7 +28,7 @@ class csvread2{
     void print();
     //nav_msgs::Path wp_path;
     //vector<Vector> wp_vec;
-     Wpdata wp;
+     //Wpdata wp;
      
 };
 

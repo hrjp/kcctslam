@@ -212,31 +212,7 @@ Visualization Manager:
           Value: true
         odom:
           Value: true
-        rs_accel_frame:
-          Value: true
-        rs_accel_optical_frame:
-          Value: true
-        rs_camera_link:
-          Value: true
-        rs_fisheye1_frame:
-          Value: true
-        rs_fisheye1_optical_frame:
-          Value: true
-        rs_fisheye2_frame:
-          Value: true
-        rs_fisheye2_optical_frame:
-          Value: true
-        rs_gyro_frame:
-          Value: true
-        rs_gyro_optical_frame:
-          Value: true
-        rs_link:
-          Value: true
         rs_odom:
-          Value: true
-        rs_odom_frame:
-          Value: true
-        rs_pose_frame:
           Value: true
       Marker Scale: 1
       Name: TF
@@ -253,23 +229,7 @@ Visualization Manager:
                 2d_orange:
                   {}
           rs_odom:
-            rs_odom_frame:
-              rs_pose_frame:
-                rs_link:
-                  rs_accel_frame:
-                    rs_accel_optical_frame:
-                      {}
-                  rs_camera_link:
-                    {}
-                  rs_fisheye1_frame:
-                    rs_fisheye1_optical_frame:
-                      {}
-                  rs_fisheye2_frame:
-                    rs_fisheye2_optical_frame:
-                      {}
-                  rs_gyro_frame:
-                    rs_gyro_optical_frame:
-                      {}
+            {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -437,6 +397,29 @@ Visualization Manager:
         cmd_vel_display: true
       Queue Size: 100
       Value: true
+    - Alpha: 1
+      Buffer Length: 1
+      Class: rviz/Path
+      Color: 25; 255; 0
+      Enabled: true
+      Head Diameter: 0.300000012
+      Head Length: 0.200000003
+      Length: 0.300000012
+      Line Style: Lines
+      Line Width: 0.0299999993
+      Name: Path
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+      Pose Color: 255; 85; 255
+      Pose Style: None
+      Radius: 0.0299999993
+      Shaft Diameter: 0.100000001
+      Shaft Length: 0.100000001
+      Topic: /wp_path
+      Unreliable: false
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -457,25 +440,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 22.5743008
+      Distance: 150.863617
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -0.332512498
-        Y: 0.00752384588
-        Z: -0.289551049
+        X: -4.12035704
+        Y: 27.8793736
+        Z: 22.5156059
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.0500000007
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.639797449
+      Pitch: 0.89479661
       Target Frame: base_link
       Value: Orbit (rviz)
-      Yaw: 5.51817846
+      Yaw: 4.48316956
     Saved: ~
 Window Geometry:
   Displays:

@@ -21,10 +21,11 @@
 #include<cmath>
 
 #include"csvread2.h"
-#include"csvread.h"
-#include"wpdata.h"
+//#include"csvread.h"
+//#include"wpdata.h"
 #include"tf_lis.h"
 #include"wpmarker.h"
+#include"odom_mode.h"
 
 #include<time.h>
 
@@ -103,7 +104,7 @@ geometry_msgs::PoseWithCovarianceStamped vec_to_PoseWithCovarianceStamped(Vector
 }
 
 //TF rs_odomの配信
-void rs_odom(Vector pos){
+void odomtf_pub(Vector pos){
    static tf::TransformBroadcaster br;
    tf::Transform transform;
    transform.setOrigin( tf::Vector3(pos.x, pos.y, 0.0) );
@@ -111,7 +112,7 @@ void rs_odom(Vector pos){
    q.setRPY(0, 0, pos.yaw);
    transform.setRotation(q);
    
-   br.sendTransform(tf::StampedTransform(transform, ros::Time::now(),"/map", "/rs_odom"));
+   br.sendTransform(tf::StampedTransform(transform, ros::Time::now(),"/map", "/odom_link"));
 }
 
 //realsenseのTFをLIDARのTFと一致させる
@@ -133,7 +134,7 @@ Vector rs_odom_attach(Vector rs_tf,Vector lidar_tf,Vector pubodom){
      const double angle_stop_p=1.5;
      double angle_max=0.4;
      const double vel_p=0.3;
-     double vel_max=0.25;
+     double vel_max=0.35;
      const double curve_stop_angle=30.0*M_PI/180.0;
      const double front_ditect_dis=5.0;
      const double front_stop_distance=0.5;
@@ -234,7 +235,7 @@ int main(int argc, char **argv){
     const int RS_MODE=2;
     int delay_count=0;
 
-    //tf_lis rs_tf("/map","/rs_link");
+    tf_lis odom_tf("/map","/odom_link");
     tf_lis lidar_tf("/map","/base_link");
 
     geometry_msgs::Twist zero_vel;//停止
@@ -247,16 +248,18 @@ int main(int argc, char **argv){
     wpmarker wpmarker;
     Wpdata rsdata;
     Vector pubodom;
+    odom_mode odom_mode;
     initial_pub.publish(vec_to_PoseWithCovarianceStamped(wp_vec[now_wp]));
     while (n.ok())  {
         //rs_tf.update();
         lidar_tf.update();
-        rs_odom(pubodom);
+        odomtf_pub(odom_mode.update());
         wpmarker.update(wp_vec,now_wp);
+        
 
-        /*if(down_button){
+        if(down_button){
             now_wp++;
-        }*/
+        }
 
         switch (wp_vec[now_wp].type){
 
@@ -273,7 +276,22 @@ int main(int argc, char **argv){
 
         case LIDAR_NAVIGATION:
             final_cmd_vel=cmd_vel_calc(lidar_tf.pos,wp_vec[now_wp],front_dis,false,false);
+            odom_mode.attach();
             if((lidar_tf.pos-wp_vec[now_wp]).size()<0.8){
+                //pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
+                now_wp++;
+                cout<<"publishwp="<<now_wp<<endl;
+                if(wp_vec[now_wp].type==RS_NAVIGATION){
+                    delay_count=0;
+                    //pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
+                    wp_vec[now_wp].type=CHENGE_RS_NAVIGATION;
+                }
+            }
+            break;
+
+        case ODOM_NAVIGATION:
+            final_cmd_vel=cmd_vel_calc(odom_tf.pos,wp_vec[now_wp],front_dis,false,false);
+            if((odom_tf.pos-wp_vec[now_wp]).size()<0.8){
                 //pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
                 now_wp++;
                 cout<<"publishwp="<<now_wp<<endl;

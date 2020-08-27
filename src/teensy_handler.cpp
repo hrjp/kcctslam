@@ -33,7 +33,7 @@ int main(int argc, char **argv){
      ros::Rate loop_rate(10);
 
      ros::NodeHandle lSubscriber("");
-     ros::Subscriber int_sub = lSubscriber.subscribe("int_sensor_data", 50, int_sensor_data_callback);
+     //ros::Subscriber int_sub = lSubscriber.subscribe("int_sensor_data", 50, int_sensor_data_callback);
      ros::Subscriber float_sub = lSubscriber.subscribe("float_sensor_data", 50, float_sensor_data_callback);
      //ros::Publisher cmd_pub = n.advertise<geometry_msgs::Twist>("final_cmd_vel", 10); 
      

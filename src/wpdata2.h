@@ -12,18 +12,20 @@ const int WP_STOP=3;
 const int RS_BACK_NAVIGATION=4;
 const int CHENGE_RS_NAVIGATION=5;
 const int SKIP_WP=6;
+const int ODOM_NAVIGATION=7;
 
 using namespace std;
 
 class Wpdata{
     public:
     Wpdata();
+    void sizeup();
     void atov();
     void vtoa();
     //static const int width=10;
     //static const int height=2000;
     //double data[width][height];
-    vector<vector<double>> data;
+    vector<vector<double> > data;
     //Vector vec[height];
     vector<Vector> vec;
     double x(int num){return data[0][num];}
@@ -42,7 +44,11 @@ class Wpdata{
 };
 
 Wpdata::Wpdata(){
-
+    
+}
+void Wpdata::sizeup(){
+    data.push_back();
+    vec.push_back();
 }
 
 void Wpdata::QuaternionToEulerAngles(double q0, double q1, double q2, double q3,double& roll, double& pitch, double& yaw)
@@ -81,6 +87,7 @@ int Wpdata::size(){
 }
 
 void Wpdata::atov(){
+    int height=vec.size();
         for(int j=0;j<height;j++){
             vec[j].x=x(j);
             vec[j].y=y(j);
@@ -91,6 +98,7 @@ void Wpdata::atov(){
 }
 
 void Wpdata::vtoa(){
+    int height=vec.size();
         for(int j=0;j<height;j++){
             data[0][j]=vec[j].x;
             data[1][j]=vec[j].y;

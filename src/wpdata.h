@@ -5,12 +5,14 @@ const int WP_NAVIGATION=0;
 const int WP_DITECTION=1;
 const int WP_STOP=2;
 */
+
 const int LIDAR_NAVIGATION=1;
 const int RS_NAVIGATION=2;
 const int WP_STOP=3;
 const int RS_BACK_NAVIGATION=4;
 const int CHENGE_RS_NAVIGATION=5;
 const int SKIP_WP=6;
+const int ODOM_NAVIGATION=7;
 
 class Wpdata{
     public:
@@ -18,7 +20,7 @@ class Wpdata{
     void atov();
     void vtoa();
     static const int width=10;
-    static const int height=2000;
+    static const int height=5000;
     double data[width][height];
     Vector vec[height];
     double x(int num){return data[0][num];}
