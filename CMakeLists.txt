@@ -141,6 +141,9 @@ add_executable(pcl_handler
 add_executable(teensy_handler src/teensy_handler.cpp)
 	      
 add_executable(odom_pub src/odom_pub.cpp)
+add_executable(robot_model_node src/robot_model.cpp)
+
+target_link_libraries(robot_model_node ${catkin_LIBRARIES})
 
 target_link_libraries(basic_twist_publisher
   ${catkin_LIBRARIES}

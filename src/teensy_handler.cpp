@@ -2,6 +2,7 @@
 #include <tf/transform_broadcaster.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <std_msgs/Float32MultiArray.h>
+#include <std_msgs/Float32.h>
 #include <std_msgs/Int32MultiArray.h>
 #include <string>
 #include <math.h>
@@ -10,6 +11,7 @@ using namespace std;
 
 vector<int32_t> int_sensor_data;
 vector<float> float_sensor_data;
+std_msgs::Float32 linear_vel;
 
 void int_sensor_data_callback(const std_msgs::Int32MultiArray& int_sensor_data_row){ 
      int_sensor_data=int_sensor_data_row.data;
@@ -18,6 +20,7 @@ void int_sensor_data_callback(const std_msgs::Int32MultiArray& int_sensor_data_r
 void float_sensor_data_callback(const std_msgs::Float32MultiArray& float_sensor_data_row){ 
      static tf::TransformBroadcaster br;
      float_sensor_data=float_sensor_data_row.data;
+     linear_vel.data=float_sensor_data_row.data[3]*3.6;
      tf::Transform transform;
           transform.setOrigin( tf::Vector3(float_sensor_data[0], float_sensor_data[1], 0.0) );
           tf::Quaternion q;
@@ -35,7 +38,7 @@ int main(int argc, char **argv){
      ros::NodeHandle lSubscriber("");
      //ros::Subscriber int_sub = lSubscriber.subscribe("int_sensor_data", 50, int_sensor_data_callback);
      ros::Subscriber float_sub = lSubscriber.subscribe("float_sensor_data", 50, float_sensor_data_callback);
-     //ros::Publisher cmd_pub = n.advertise<geometry_msgs::Twist>("final_cmd_vel", 10); 
+     ros::Publisher vel_pub = n.advertise<std_msgs::Float32>("robot_linear_vel", 10); 
      
      
      while (n.ok())  {
@@ -48,6 +51,7 @@ int main(int argc, char **argv){
           transform.setRotation(q);
           br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "map","base_link"));
 */
+          vel_pub.publish(linear_vel);
           ros::spinOnce();
           loop_rate.sleep();
      }

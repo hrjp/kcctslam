@@ -5,7 +5,6 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
-        - /PoseParticles1
       Splitter Ratio: 0.530555546
     Tree Height: 775
   - Class: rviz/Tool Properties
@@ -212,7 +211,7 @@ Visualization Manager:
           Value: true
         odom:
           Value: true
-        rs_odom:
+        odom_link:
           Value: true
       Marker Scale: 1
       Name: TF
@@ -228,7 +227,7 @@ Visualization Manager:
                   {}
                 2d_orange:
                   {}
-          rs_odom:
+          odom_link:
             {}
       Update Interval: 0
       Value: true
@@ -331,17 +330,17 @@ Visualization Manager:
       Value: true
       auto color change: true
       background color: 0; 0; 0
-      backround alpha: 0
+      backround alpha: 0.5
       foreground alpha: 0.699999988
       foreground alpha 2: 0.400000006
-      foreground color: 25; 255; 240
-      left: 170
+      foreground color: 0; 255; 0
+      left: 220
       max color: 255; 0; 0
       max value: 0.400000006
       min value: 0
       show caption: true
-      size: 128
-      text size: 16
+      size: 104
+      text size: 12
       top: 20
     - Class: jsk_rviz_plugin/PieChart
       Enabled: true
@@ -350,18 +349,18 @@ Visualization Manager:
       Value: true
       auto color change: false
       background color: 0; 0; 0
-      backround alpha: 0
+      backround alpha: 0.5
       foreground alpha: 0.699999988
       foreground alpha 2: 0.400000006
-      foreground color: 25; 255; 240
-      left: 320
+      foreground color: 0; 255; 0
+      left: 220
       max color: 255; 0; 0
       max value: 1
       min value: 0
       show caption: true
-      size: 128
-      text size: 16
-      top: 20
+      size: 104
+      text size: 12
+      top: 142
     - Class: jsk_rviz_plugin/TFTrajectory
       Enabled: true
       Name: TFTrajectory
@@ -372,22 +371,22 @@ Visualization Manager:
       line_width: 0.0700000003
     - Class: jsk_rviz_plugin/PieChart
       Enabled: true
-      Name: Robot Vel
-      Topic: /robot_odom
+      Name: km/h
+      Topic: /robot_linear_vel
       Value: true
       auto color change: true
       background color: 0; 0; 0
-      backround alpha: 0
+      backround alpha: 0.5
       foreground alpha: 0.699999988
       foreground alpha 2: 0.400000006
       foreground color: 25; 255; 240
       left: 20
       max color: 255; 0; 0
-      max value: 3
+      max value: 5
       min value: 0
       show caption: true
-      size: 128
-      text size: 14
+      size: 200
+      text size: 30
       top: 20
     - Class: rviz/MarkerArray
       Enabled: true
@@ -440,25 +439,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 150.863617
+      Distance: 14.1063738
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -4.12035704
-        Y: 27.8793736
-        Z: 22.5156059
+        X: -0.0490273759
+        Y: 0.00806854386
+        Z: 1.70216143
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.0500000007
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.89479661
+      Pitch: 0.419796705
       Target Frame: base_link
       Value: Orbit (rviz)
-      Yaw: 4.48316956
+      Yaw: 3.24317813
     Saved: ~
 Window Geometry:
   Displays:
