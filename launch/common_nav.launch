@@ -6,7 +6,7 @@
      <arg name="camera"              default="rs"/>
     -->
 <!--    <include file="$(find realsense2_camera)/launch/rs_t265.launch"/>-->
-   <arg name="map_file" default="$(find kcctslam)/config/map/n202.yaml" />
+   <arg name="map_file" default="$(find kcctslam)/config/map/n203.yaml" />
 
 <!--    <node pkg="tf" type="static_transform_publisher" name="rs_odom_transform" args="0 0 0 0 0 0 rs_odom rs_odom_frame 100"/>-->
 	<node pkg="tf" type="static_transform_publisher" name="stf_hokuyo3d_laser" args="0.225 -0.255 0.0 0.0 0.0 0.0 camera_link 2d_blue 100"/>
