@@ -13,6 +13,7 @@ from datetime import datetime as dt
 tdatetime = dt.now()
 tstr = tdatetime.strftime('%y%m%d_%H%M%S')
 # output to excel file
+predata.drop(predata.columns[[0]], axis=1,inplace=True)
 predata.to_csv('~/catkin_ws/src/kcctslam/config/waypointdata/wpdata'+tstr+".csv")
 
 df=pd.DataFrame(columns=['x', 'y','z','qx','qy','qz','qw','type'])
