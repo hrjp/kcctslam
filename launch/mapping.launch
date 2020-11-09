@@ -1,12 +1,10 @@
 <?xml version="1.0"?>
 <launch>
-	<node pkg="tf" type="static_transform_publisher" name="stf_hokuyo3d_laser" args="0.225 -0.255 0.0 0.0 0.0 0.0 camera_link 2d_blue 100"/>
-	<node pkg="tf" type="static_transform_publisher" name="stf_hokuyo3d_laser2" args="-0.485 0.255 0.0 3.14159 0.0 0.0 camera_link 2d_orange 100"/>
-	<node pkg="tf" type="static_transform_publisher" name="stp_laser" args="0 0 0.25 0 0 0 base_link camera_link 100" />
+	
 	 
  
 	<include file="$(find kcctslam)/launch/sensor.launch"/>
-		<node pkg="kcctslam" type="robot_model_node" name="robot_model_node" output="screen"/>
+	<node pkg="kcctslam" type="robot_model_node" name="robot_model_node" output="screen"/>
 	<node pkg="gmapping" type="slam_gmapping" name="mapper">
 		<param name="maxUrange" value="80.0" type="double" />
 		<param name="xmax" value="30" type="double" />
@@ -22,7 +20,7 @@
 		</node>
 -->				
 <node pkg="rviz" type="rviz" args="-d '$(find kcctslam)/config/rviz/mapping_yvtx002.rviz'" name="visualizer" respawn="true" />
-<include file="$(find ublox_gps)/launch/ublox_zed-f9p.launch"/>
+<!--<include file="$(find ublox_gps)/launch/ublox_zed-f9p.launch"/>-->
 
 
 

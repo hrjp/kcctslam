@@ -21,6 +21,7 @@
 #include"wpdata.h"
 #include"tf_lis.h"
 #include"wp_realtime_marker.h"
+#include"odom_mode.h"
 
 #include<time.h>
 
@@ -92,6 +93,18 @@ Vector rs_odom_attach(Vector rs_tf,Vector lidar_tf,Vector pubodom){
     return pubodom;
 }
 
+//TF odom_linkの配信
+void odomtf_pub(Vector pos){
+   static tf::TransformBroadcaster br;
+   tf::Transform transform;
+   transform.setOrigin( tf::Vector3(pos.x, pos.y, 0.0) );
+   tf::Quaternion q;
+   q.setRPY(0, 0, pos.yaw);
+   transform.setRotation(q);
+   
+   br.sendTransform(tf::StampedTransform(transform, ros::Time::now(),"/map", "/odom_link"));
+}
+
 
 
 int main(int argc, char **argv){
@@ -121,18 +134,23 @@ int main(int argc, char **argv){
 
     //tf_lis rs_tf("/map","/rs_link");
     tf_lis lidar_tf("/map","/base_link");
+    tf_lis odom_tf("/map","/odom_link");
     
 
     wpmarker wpmarker;
     Wpdata rsdata;
     Vector pubodom;
+    odom_mode odom_mode;
+
     while (n.ok())  {
        //rs_tf.update();
        lidar_tf.update();
        rs_odom(pubodom);
+       odomtf_pub(odom_mode.update());
 
         if(wp_mode==LIDAR_NAVIGATION){
             //pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
+            odom_mode.attach();
             if((lidar_tf.pos-rsdata.vec[now_wp]).size()>1.0){
                 now_wp++;
                 cout<<"Waypoint NUMBER : [ "<<now_wp<<" ] (LiDAR)"<<endl;

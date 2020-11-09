@@ -31,7 +31,7 @@
 #include<time.h>
 
 
-typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
+//typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
 
 using namespace std;
 geometry_msgs::Twist nav_vel;//navigation stack の速度指令
@@ -246,7 +246,7 @@ int main(int argc, char **argv){
     zero_vel.linear.x=0;
     zero_vel.angular.z=0;
 
-    MoveBaseClient ac("move_base", true);
+    //MoveBaseClient ac("move_base", true);
     
 
     wpmarker wpmarker;
