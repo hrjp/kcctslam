@@ -64,10 +64,10 @@ void body_model::update(char *fix_id){
     marker_array.markers[i].action = visualization_msgs::Marker::ADD;
     marker_array.markers[i].scale.x = 0.7;
     marker_array.markers[i].scale.y = 0.45;
-    marker_array.markers[i].scale.z = 0.4;
+    marker_array.markers[i].scale.z = 0.6;
     marker_array.markers[i].pose.position.x=-0.2;
     marker_array.markers[i].pose.position.y=0;
-    marker_array.markers[i].pose.position.z=0.45;
+    marker_array.markers[i].pose.position.z=0.55;
     marker_array.markers[i].pose.orientation.x=0;
     marker_array.markers[i].pose.orientation.y=0;
     marker_array.markers[i].pose.orientation.z=0;
@@ -148,7 +148,7 @@ void body_model::update(char *fix_id){
     marker_array.markers[i].color.g = 0.2f;
     marker_array.markers[i].color.b = 0.2f;
     marker_array.markers[i].color.a = 0.9f;
-    
+    /*
     i=6;
     marker_array.markers[i].header.frame_id = "/rs_link";
     marker_array.markers[i].header.stamp = ros::Time::now();
@@ -172,7 +172,7 @@ void body_model::update(char *fix_id){
     marker_array.markers[i].color.g = 0.0f;
     marker_array.markers[i].color.b = 0.0f;
     marker_array.markers[i].color.a = 0.9f;
-
+*/
 
     marker_pub.publish(marker_array);
 }

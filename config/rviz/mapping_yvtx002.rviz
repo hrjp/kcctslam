@@ -5,9 +5,7 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
-        - /Status1
-        - /PointCloud21
-        - /LaserScan2
+        - /Map1
       Splitter Ratio: 0.5
     Tree Height: 745
   - Class: rviz/Selection
@@ -28,7 +26,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: LaserScan
+    SyncSource: ""
 Toolbars:
   toolButtonStyle: 2
 Visualization Manager:
@@ -106,9 +104,9 @@ Visualization Manager:
       Enabled: true
       Invert Rainbow: false
       Max Color: 255; 255; 255
-      Max Intensity: 12893
+      Max Intensity: 115
       Min Color: 0; 0; 0
-      Min Intensity: 77
+      Min Intensity: 0
       Name: LaserScan
       Position Transformer: XYZ
       Queue Size: 10
@@ -169,10 +167,6 @@ Visualization Manager:
       Enabled: true
       Frame Timeout: 15
       Frames:
-        2d_blue:
-          Value: true
-        2d_orange:
-          Value: true
         All Enabled: true
         base_link:
           Value: true
@@ -188,15 +182,9 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
-        camera_link:
-          2d_blue:
+        base_link:
+          camera_link:
             {}
-          2d_orange:
-            {}
-        map:
-          odom:
-            base_link:
-              {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -237,6 +225,36 @@ Visualization Manager:
         cmd_vel_display: true
       Queue Size: 100
       Value: true
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 10
+        Min Value: -10
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz/PointCloud2
+      Color: 255; 255; 255
+      Color Transformer: Intensity
+      Decay Time: 0
+      Enabled: true
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Max Intensity: 119
+      Min Color: 0; 0; 0
+      Min Intensity: 0
+      Name: PointCloud2
+      Position Transformer: XYZ
+      Queue Size: 10
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.00999999978
+      Style: Flat Squares
+      Topic: /velodyne_points
+      Unreliable: false
+      Use Fixed Frame: true
+      Use rainbow: true
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -262,7 +280,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 9.91095543
+      Distance: 2.08376813
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
@@ -277,10 +295,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.91020292
+      Pitch: 0.589796901
       Target Frame: hokuyo3d
       Value: Orbit (rviz)
-      Yaw: 3.87042046
+      Yaw: 1.01041007
     Saved: ~
 Window Geometry:
   Displays:

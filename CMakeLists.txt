@@ -12,6 +12,8 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   pcl_ros
+  kcctslam_msgs
+  nav_msgs
 )
 
 
@@ -130,6 +132,7 @@ include_directories(
 
 
 add_executable(nav_master src/nav_master.cpp)
+add_dependencies(nav_master ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_executable(tf_pub src/tf_pub.cpp)
 add_executable(basic_twist_publisher src/basic_twist_publisher.cpp)
 #add_executable(wp_pub src/wp_pub.cpp)
@@ -142,6 +145,7 @@ add_executable(teensy_handler src/teensy_handler.cpp)
 	      
 add_executable(odom_pub src/odom_pub.cpp)
 add_executable(robot_model_node src/robot_model.cpp)
+add_executable(map_selecter src/map_selecter.cpp)
 
 target_link_libraries(robot_model_node ${catkin_LIBRARIES})
 
@@ -176,6 +180,7 @@ target_link_libraries(odom_pub
 target_link_libraries(teensy_handler
   ${catkin_LIBRARIES}
 )
+target_link_libraries(map_selecter ${catkin_LIBRARIES})
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/kcctslam.cpp

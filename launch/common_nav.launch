@@ -1,24 +1,29 @@
 <launch>
 
-    <!--
-    realsense2_camera/launch/rs_t265.launch
-    の中身を以下のように書き換える
-     <arg name="camera"              default="rs"/>
-    -->
-<!--    <include file="$(find realsense2_camera)/launch/rs_t265.launch"/>-->
-   <arg name="map_file" default="$(find kcctslam)/config/map/g202.yaml" />
+   <arg name="map_file0" default="$(find kcctslam)/config/map/g2011-2.yaml" />
+   <arg name="map_file1" default="$(find kcctslam)/config/map/g201.yaml" />
+   <arg name="map_file2" default="$(find kcctslam)/config/map/g203.yaml" />
+   <arg name="map_file3" default="$(find kcctslam)/config/map/g202.yaml" />
+   <arg name="map_file4" default="$(find kcctslam)/config/map/g202.yaml" />
 
 <!--    <node pkg="tf" type="static_transform_publisher" name="rs_odom_transform" args="0 0 0 0 0 0 rs_odom rs_odom_frame 100"/>-->
-	<node pkg="tf" type="static_transform_publisher" name="stf_hokuyo3d_laser" args="0.225 -0.255 0.0 0.0 0.0 0.0 camera_link 2d_blue 100"/>
-	<node pkg="tf" type="static_transform_publisher" name="stf_hokuyo3d_laser2" args="-0.485 0.255 0.0 3.14159 0.0 0.0 camera_link 2d_orange 100"/>	
+<!--	<node pkg="tf" type="static_transform_publisher" name="stf_hokuyo3d_laser" args="0.225 -0.255 0.0 0.0 0.0 0.0 camera_link 2d_blue 100"/>
+	<node pkg="tf" type="static_transform_publisher" name="stf_hokuyo3d_laser2" args="-0.485 0.255 0.0 3.14159 0.0 0.0 camera_link 2d_orange 100"/>-->	
 	<!--<node pkg="tf" type="static_transform_publisher" name="map_transform" args="0 0 0 0 0 0 map base_link 100"/>-->
-	<node pkg="tf" type="static_transform_publisher" name="base_transform" args="0 0 0 0 0 0 base_link camera_link 100"/>
+<!--	<node pkg="tf" type="static_transform_publisher" name="base_transform" args="0 0 0 0 0 0 base_link camera_link 100"/>-->
 <!--	<node pkg="tf" type="static_transform_publisher" name="rs_base_link_transform" args="-0.2 0 0 0 0 0 rs_link rs_camera_link 100"/>-->
 	
 	<rosparam param="footprint" ns="/move_base/local_costmap">[[0.05,-0.2], [0.05,0.2], [-0.3,0.2], [-0.3,-0.2]]</rosparam>
 	<rosparam param="footprint" ns="/move_base/global_costmap">[[0.05,-0.2], [0.05,0.2], [-0.3,0.2], [-0.3,-0.2]]</rosparam>
 
-	<node respawn="true" name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)"/> 
+
+	<node respawn="true" name="map_server0" pkg="map_server" type="map_server" args="$(arg map_file0)"><remap from="/map" to="/map0" /></node>
+	<node respawn="true" name="map_server1" pkg="map_server" type="map_server" args="$(arg map_file1)"><remap from="/map" to="/map1" /><remap from="/static_map" to="/static_map1" /></node>
+	<node respawn="true" name="map_server2" pkg="map_server" type="map_server" args="$(arg map_file2)"><remap from="/map" to="/map2" /><remap from="/static_map" to="/static_map2" /></node>
+	<node respawn="true" name="map_server3" pkg="map_server" type="map_server" args="$(arg map_file3)"><remap from="/map" to="/map3" /><remap from="/static_map" to="/static_map3" /></node>
+	<node respawn="true" name="map_server4" pkg="map_server" type="map_server" args="$(arg map_file4)"><remap from="/map" to="/map4" /><remap from="/static_map" to="/static_map4" /></node>
+
+	<node pkg="kcctslam" type="map_selecter" name="map_selecter" output="screen"/>
 	<!--
 	<node name="joy_node" pkg="joy" type="joy_node" />
 	<node name="basic_twist_publisher" pkg="basic_lecture" type="basic_twist_publisher">
@@ -54,6 +59,7 @@
 		<param name="max_particles" type="int" value="5000" />
 		<param name="update_min_d" type="double" value="0.05" />
 		<param name="update_min_a" type="double" value="0.08" />
+		<param name="use_map_topic" type="bool" value="false" />
 	</node>
 
 	<node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
@@ -96,7 +102,7 @@
 	
 	
 	<node pkg="rviz" type="rviz" args="-d '$(find kcctslam)/config/rviz/navigation_yvtx004.rviz'" name="visualizer" respawn="true" />
-	<node name="odom_pub" pkg="kcctslam" type="odom_pub"/>
+	<!--<node name="odom_pub" pkg="kcctslam" type="odom_pub"/>-->
 	<!--<node name="tf_pub" pkg="kcctslam" type="tf_pub"/>-->
 	<include file="$(find ublox_gps)/launch/ublox_zed-f9p.launch"/>
 	

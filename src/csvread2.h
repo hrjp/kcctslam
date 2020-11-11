@@ -94,6 +94,7 @@ csvread2::csvread2(const char *st,nav_msgs::Path& path,vector<Vector>& vec):Scor
           vec.at(k).y=atof(Score.at(k).at(2).c_str());
           vec.at(k).yaw=geometry_quat_getyaw(path.poses[k].pose.orientation);
           vec.at(k).type=atof(Score.at(k).at(8).c_str());
+          
           cout<<"k="<<k<<endl;
      }
      path.header.frame_id="map";

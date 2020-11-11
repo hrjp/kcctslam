@@ -9,6 +9,7 @@
 #include <geometry_msgs/Twist.h>
 #include<geometry_msgs/PoseWithCovarianceStamped.h>
 #include <std_msgs/Float32.h>
+#include <kcctslam_msgs/WayPoint.h>
 
 
 #include <move_base_msgs/MoveBaseAction.h>
@@ -29,7 +30,6 @@
 #include"watch_position.h"
 
 #include<time.h>
-
 
 //typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
 
