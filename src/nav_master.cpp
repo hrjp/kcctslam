@@ -9,6 +9,7 @@
 #include <geometry_msgs/Twist.h>
 #include<geometry_msgs/PoseWithCovarianceStamped.h>
 #include <std_msgs/Float32.h>
+#include <std_msgs/Int32.h>
 #include <kcctslam_msgs/WayPoint.h>
 
 
@@ -229,7 +230,13 @@ int main(int argc, char **argv){
 
     //WayPointPath　publisher
     ros::Publisher path_pub = n.advertise<nav_msgs::Path>("wp_path", 10);
-    
+
+    //Now wp publisher
+    ros::Publisher now_pw_pub = n.advertise<std_msgs::Int32>("now_wp", 10);
+
+    //map number publisher
+    ros::Publisher map_num_pub = n.advertise<std_msgs::Int32>("map_num", 10);
+
     //制御周期10ms
     ros::Rate loop_rate(10);
 
@@ -277,7 +284,11 @@ int main(int argc, char **argv){
            initial_pub.publish(vec_to_PoseWithCovarianceStamped(wp_vec[now_wp]));
            
         }
-
+        if(wp_vec[now_wp].map!=wp_vec[now_wp+1].map){
+            std_msgs::Int32 map_num;
+            map_num.data=wp_vec[now_wp+1].map;
+            map_num_pub.publish(map_num);
+        }
         switch (wp_vec[now_wp].type){
 
         //一時停止
@@ -298,7 +309,7 @@ int main(int argc, char **argv){
                 odom_mode.attach();
             }
             else{
-                 initial_pub.publish(vec_to_PoseWithCovarianceStamped(odom_tf.pos));
+                 //initial_pub.publish(vec_to_PoseWithCovarianceStamped(odom_tf.pos));
             }
             if((lidar_tf.pos-wp_vec[now_wp]).size()<0.8){
                 //pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
@@ -320,9 +331,15 @@ int main(int argc, char **argv){
             break;
 
         default:
-        final_cmd_vel=nav_vel;
+        //final_cmd_vel=nav_vel;
+        final_cmd_vel=zero_vel;
         }
         //cout<<lidar_tf.pos.yaw<<","<<odom_tf.pos.yaw<<endl;
+
+        //wp pub
+        std_msgs::Int32 pub_now_wp;
+        pub_now_wp.data=now_wp;
+        now_pw_pub.publish(pub_now_wp);
 
         //直進速度表示
         std_msgs::Float32 linear_vel_data;
