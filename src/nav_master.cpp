@@ -10,6 +10,7 @@
 #include<geometry_msgs/PoseWithCovarianceStamped.h>
 #include <std_msgs/Float32.h>
 #include <std_msgs/Int32.h>
+#include <std_msgs/Empty.h>
 #include <kcctslam_msgs/WayPoint.h>
 
 
@@ -38,6 +39,8 @@ using namespace std;
 geometry_msgs::Twist nav_vel;//navigation stack の速度指令
 
 geometry_msgs::Twist final_cmd_vel;//ロボットに送る速度指令
+
+int now_wp=0;
 
 double double_constrain(double val,double down_limit,double up_limit){
   if(val>up_limit){
@@ -186,6 +189,10 @@ Vector rs_odom_attach(Vector rs_tf,Vector lidar_tf,Vector pubodom){
     return calc_vel;
 }
 
+void map_chenged_callback(std_msgs::Empty empty){
+    now_wp++;
+}
+
 
 
 int main(int argc, char **argv){
@@ -232,7 +239,10 @@ int main(int argc, char **argv){
     ros::Publisher path_pub = n.advertise<nav_msgs::Path>("wp_path", 10);
 
     //Now wp publisher
-    ros::Publisher now_pw_pub = n.advertise<std_msgs::Int32>("now_wp", 10);
+    ros::Publisher now_wp_pub = n.advertise<std_msgs::Int32>("now_wp", 10);
+
+    //map chenged subscliber
+    ros::Subscriber map_chenged_sub = lSubscriber.subscribe("map_chenged", 50, map_chenged_callback);
 
     //map number publisher
     ros::Publisher map_num_pub = n.advertise<std_msgs::Int32>("map_num", 10);
@@ -240,7 +250,7 @@ int main(int argc, char **argv){
     //制御周期10ms
     ros::Rate loop_rate(10);
 
-    int now_wp=0;
+    
     int wp_mode=false;
     const int LIDAR_MODE=1;
     const int RS_MODE=2;
@@ -284,11 +294,15 @@ int main(int argc, char **argv){
            initial_pub.publish(vec_to_PoseWithCovarianceStamped(wp_vec[now_wp]));
            
         }
+
+        //
         if(wp_vec[now_wp].map!=wp_vec[now_wp+1].map){
             std_msgs::Int32 map_num;
             map_num.data=wp_vec[now_wp+1].map;
             map_num_pub.publish(map_num);
         }
+
+
         switch (wp_vec[now_wp].type){
 
         //一時停止
@@ -309,12 +323,20 @@ int main(int argc, char **argv){
                 odom_mode.attach();
             }
             else{
-                 //initial_pub.publish(vec_to_PoseWithCovarianceStamped(odom_tf.pos));
+                 initial_pub.publish(vec_to_PoseWithCovarianceStamped(odom_tf.pos));
             }
             if((lidar_tf.pos-wp_vec[now_wp]).size()<0.8){
                 //pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
-                now_wp++;
-                cout<<"publishwp="<<now_wp<<endl;
+                if(now_wp<wp_vec.size()-1){
+                    now_wp++;
+                    //cout<<"p="<<now_wp<<endl;
+                    ROS_INFO("NOW WAYPOINT[%d]",now_wp);
+                }
+                else{
+                    final_cmd_vel=zero_vel;
+
+                }
+                
             }
             break;
 
@@ -322,8 +344,14 @@ int main(int argc, char **argv){
             final_cmd_vel=cmd_vel_calc(odom_tf.pos,wp_vec[now_wp],front_dis,false,true);
             if((odom_tf.pos-wp_vec[now_wp]).size()<0.8){
                 //pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
-                now_wp++;
-                cout<<"publishwp="<<now_wp<<endl;
+                if(now_wp<wp_vec.size()-1){
+                    now_wp++;
+                    ROS_INFO("NOW WAYPOINT[%d]",now_wp);
+                }
+                else{
+                    final_cmd_vel=zero_vel;
+                    
+                }
             }
             break;
         case SKIP_WP:
@@ -339,7 +367,7 @@ int main(int argc, char **argv){
         //wp pub
         std_msgs::Int32 pub_now_wp;
         pub_now_wp.data=now_wp;
-        now_pw_pub.publish(pub_now_wp);
+        now_wp_pub.publish(pub_now_wp);
 
         //直進速度表示
         std_msgs::Float32 linear_vel_data;

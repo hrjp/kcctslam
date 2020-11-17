@@ -64,7 +64,7 @@ void wpmarker::update(vector<Vector> wp,int now_wp){
     marker_array.markers[i].color.b = 0.0f;
     marker_array.markers[i].color.a = 1.0f;
     }
-    if(wp.at(i).type==SKIP_WP){
+    if(wp.at(i).type==SKIP_WP||wp.at(i).map!=wp.at(now_wp).map){
         marker_array.markers[i].color.r = 0.5f;
         marker_array.markers[i].color.g = 0.5f;
         marker_array.markers[i].color.b = 0.5f;
@@ -102,7 +102,7 @@ void wpmarker::update(vector<Vector> wp,int now_wp){
         marker_array1.markers[i].color.b = 0.5f;
         marker_array1.markers[i].color.a = 1.0f;
     }
-    if(wp.at(i).type==SKIP_WP){
+    if(wp.at(i).type==SKIP_WP||wp.at(i).map!=wp.at(now_wp).map){
         marker_array1.markers[i].color.r = 0.5f;
         marker_array1.markers[i].color.g = 0.5f;
         marker_array1.markers[i].color.b = 0.5f;

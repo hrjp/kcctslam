@@ -1,7 +1,7 @@
 <launch>
 
-   <arg name="map_file0" default="$(find kcctslam)/config/map/g2011-2.yaml" />
-   <arg name="map_file1" default="$(find kcctslam)/config/map/g201112.yaml" />
+   <arg name="map_file0" default="$(find kcctslam)/config/map/nec201114-10.yaml" />
+   <arg name="map_file1" default="$(find kcctslam)/config/map/g201113-2.yaml" />
    <arg name="map_file2" default="$(find kcctslam)/config/map/g203.yaml" />
    <arg name="map_file3" default="$(find kcctslam)/config/map/g202.yaml" />
    <arg name="map_file4" default="$(find kcctslam)/config/map/g202.yaml" />
@@ -19,10 +19,10 @@
 
 	<node respawn="true" name="map_server0" pkg="map_server" type="map_server" args="$(arg map_file0)"><remap from="/map" to="/map0" /></node>
 	<node respawn="true" name="map_server1" pkg="map_server" type="map_server" args="$(arg map_file1)"><remap from="/map" to="/map1" /><remap from="/static_map" to="/static_map1" /></node>
-	<node respawn="true" name="map_server2" pkg="map_server" type="map_server" args="$(arg map_file2)"><remap from="/map" to="/map2" /><remap from="/static_map" to="/static_map2" /></node>
+	<!--<node respawn="true" name="map_server2" pkg="map_server" type="map_server" args="$(arg map_file2)"><remap from="/map" to="/map2" /><remap from="/static_map" to="/static_map2" /></node>
 	<node respawn="true" name="map_server3" pkg="map_server" type="map_server" args="$(arg map_file3)"><remap from="/map" to="/map3" /><remap from="/static_map" to="/static_map3" /></node>
 	<node respawn="true" name="map_server4" pkg="map_server" type="map_server" args="$(arg map_file4)"><remap from="/map" to="/map4" /><remap from="/static_map" to="/static_map4" /></node>
-
+-->
 	<node pkg="kcctslam" type="map_selecter" name="map_selecter" output="screen"/>
 	<!--
 	<node name="joy_node" pkg="joy" type="joy_node" />
@@ -56,7 +56,7 @@
 		-->
 		<param name="laser_max_beams" type="int" value="150" />
 		<param name="min_particles" type="int" value="300" />
-		<param name="max_particles" type="int" value="5000" />
+		<param name="max_particles" type="int" value="1000" />
 		<param name="update_min_d" type="double" value="0.05" />
 		<param name="update_min_a" type="double" value="0.08" />
 		<param name="use_map_topic" type="bool" value="false" />

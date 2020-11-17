@@ -98,6 +98,7 @@ csvread2::csvread2(const char *st,nav_msgs::Path& path,vector<Vector>& vec):Scor
           
           cout<<"k="<<k<<endl;
      }
+     //vec.at(Score.size()-2).type=WP_STOP;
      path.header.frame_id="map";
      path.header.stamp=ros::Time::now();
      //cout<<"SCORE_SIZE="<<Score.size()<<endl;

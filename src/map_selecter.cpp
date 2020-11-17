@@ -1,10 +1,10 @@
 #include <ros/ros.h>
 #include <nav_msgs/OccupancyGrid.h>
 #include<geometry_msgs/PoseWithCovarianceStamped.h>
-#include <std_srvs/Empty.h>
 #include <nav_msgs/SetMap.h>
 #include <std_msgs/Int32.h>
 #include <nav_msgs/Path.h>
+#include <std_msgs/Empty.h>
 #include <tf/transform_broadcaster.h>
 #include <vector>
 #include "Vector.h"
@@ -71,11 +71,14 @@ Vector now_wp_vec;
 Vector next_wp_vec;
 void path_callback(const nav_msgs::Path& path_data){
     wp_path=path_data;
+    
+    if(now_wp+2<wp_path.poses.size()){
     now_wp_vec=Pose_to_vec(wp_path.poses.at(now_wp).pose);
     next_wp_vec=Pose_to_vec(wp_path.poses.at(now_wp+1).pose);
+    }
 }
 /*
-bool map_service_callback(nav_msgs::GetMap::Request &get_map,nav_msgs::GetMap::Response &return_map){
+bool map_service_callback(std_srvs::GetMap::Request &get_map,nav_msgs::GetMap::Response &return_map){
     
     return_map.map=map_array.at(0);
     return true;
@@ -97,8 +100,9 @@ int main(int argc, char **argv){
     ros::Subscriber int_sub = lSubscriber.subscribe("/map_num", 50, int_callback);
     ros::Subscriber wp_sub = lSubscriber.subscribe("/now_wp", 50, wp_callback);
     ros::Subscriber path_sub = lSubscriber.subscribe("/wp_path", 50, path_callback);
-    //ros::ServiceServer map_service = n.advertiseService("static_map",map_service_callback);
-
+    //ros::ServiceServer map_service = n.advertiseService("chenge_map",map_service_callback);
+    //Now wp publisher
+    ros::Publisher map_chenged_pub = n.advertise<std_msgs::Empty>("map_chenged", 10);
     tf_lis lidar_tf("/map","/base_link");
 
     //制御周期10ms
@@ -123,6 +127,8 @@ int main(int argc, char **argv){
             set_map.request.map=map_array.at(map_num.data);
             if(map_client.call(set_map)){
                 ROS_INFO("MAP IS CHENGED!! MAP NUMBER[%d]",map_num.data);
+                std_msgs::Empty map_chenged_data;
+                map_chenged_pub.publish(map_chenged_data);
             }
             else{
                 ROS_INFO("DON'T SET MAP");
