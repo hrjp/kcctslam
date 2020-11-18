@@ -4,7 +4,7 @@
 	 
  
 	<include file="$(find kcctslam)/launch/sensor.launch"/>
-	<node pkg="kcctslam" type="robot_model_node" name="robot_model_node" output="screen"/>
+	
 	<node pkg="gmapping" type="slam_gmapping" name="mapper">
 		<param name="maxUrange" value="80.0" type="double" />
 		<param name="xmax" value="30" type="double" />

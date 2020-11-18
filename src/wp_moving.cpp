@@ -24,6 +24,7 @@
 #include"odom_mode.h"
 
 #include<time.h>
+#include <nav_msgs/Path.h>
 
 
 
@@ -70,6 +71,18 @@ geometry_msgs::PoseWithCovarianceStamped init_pose(Vector pos){
             return initial_pose;
 
 }
+
+geometry_msgs::PoseStamped Vec_to_PoseStamped(Vector pos,int type){
+            geometry_msgs::PoseStamped goal_point;
+            goal_point.pose.position.x = pos.x;
+            goal_point.pose.position.y = pos.y;
+            goal_point.pose.position.z = pos.z;
+            goal_point.pose.orientation.z =  pos.get_qz();
+            goal_point.pose.orientation.w = pos.get_qw();
+            goal_point.header.stamp = ros::Time::now();
+            goal_point.header.frame_id = "map";
+            return goal_point;
+}
 //TF rs_odomの配信
 void rs_odom(Vector pos){
    static tf::TransformBroadcaster br;
@@ -104,8 +117,23 @@ void odomtf_pub(Vector pos){
    
    br.sendTransform(tf::StampedTransform(transform, ros::Time::now(),"/map", "/odom_link"));
 }
+nav_msgs::Path path;
+void pose_save_to_path(geometry_msgs::Pose pose){
+    geometry_msgs::PoseStamped pose_stamp;
+    pose_stamp.pose=pose;
+    pose_stamp.header.frame_id="map";
+    pose_stamp.header.stamp=ros::Time::now();
+    path.poses.push_back(pose_stamp);
+    int path_size=path.poses.size();
+}
 
-
+Vector pose_position_to_vec(geometry_msgs::Pose pose){
+    Vector vec;
+    vec.x=pose.position.x;
+    vec.y=pose.position.y;
+    vec.z=pose.position.z;
+    //vec.yaw=pose.position.;
+}
 
 int main(int argc, char **argv){
     
@@ -122,6 +150,10 @@ int main(int argc, char **argv){
 
     //2D_POSE_ESTIMATE publisher
     ros::Publisher initial_pub = n.advertise<geometry_msgs::PoseWithCovarianceStamped>("/initialpose", 1);
+
+    //Path publisher
+    ros::Publisher path_pub = n.advertise<nav_msgs::Path>("/Path", 1);
+    
     
     //制御周期10ms
     ros::Rate loop_rate(10);
@@ -135,32 +167,34 @@ int main(int argc, char **argv){
     //tf_lis rs_tf("/map","/rs_link");
     tf_lis lidar_tf("/map","/base_link");
     tf_lis odom_tf("/map","/odom_link");
-    
+    Vector pre_vec;
 
-    wpmarker wpmarker;
-    Wpdata rsdata;
-    Vector pubodom;
-    odom_mode odom_mode;
+   // wpmarker wpmarker;
+    //Wpdata rsdata;
+    //Vector pubodom;
+    //odom_mode odom_mode;
 
     while (n.ok())  {
        //rs_tf.update();
        lidar_tf.update();
-       rs_odom(pubodom);
-       odomtf_pub(odom_mode.update());
-
+       //rs_odom(pubodom);
+       //odomtf_pub(odom_mode.update());
+        
         if(wp_mode==LIDAR_NAVIGATION){
             //pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
-            odom_mode.attach();
-            if((lidar_tf.pos-rsdata.vec[now_wp]).size()>1.0){
+            //odom_mode.attach();
+            if((lidar_tf.pos-pre_vec).size()>1.0){
+                pose_save_to_path(lidar_tf.pose);
+                pre_vec=lidar_tf.pos;
                 now_wp++;
                 cout<<"Waypoint NUMBER : [ "<<now_wp<<" ] (LiDAR)"<<endl;
-                goal_pub.publish(csv_write(lidar_tf.pos,LIDAR_NAVIGATION));
-                rsdata.vec[now_wp]=lidar_tf.pos;
-                rsdata.vtoa();
-                wpmarker.update(rsdata,now_wp);
+                //goal_pub.publish(csv_write(lidar_tf.pos,LIDAR_NAVIGATION));
+                //rsdata.vec[now_wp]=lidar_tf.pos;
+                //rsdata.vtoa();
+                //wpmarker.update(rsdata,now_wp);
             }
         }
-
+/*
         if(wp_mode==ODOM_NAVIGATION){
             if((lidar_tf.pos-rsdata.vec[now_wp]).size()>1.0){
                 now_wp++;
@@ -171,6 +205,7 @@ int main(int argc, char **argv){
                 wpmarker.update(rsdata,now_wp);
             }
         }
+        */
 /*
         if(wp_mode==RS_BACK_NAVIGATION){
             if((rs_tf.pos-rsdata.vec[now_wp]).size()>1.0){
@@ -190,7 +225,7 @@ int main(int argc, char **argv){
             }
             */
             wp_mode=LIDAR_NAVIGATION;
-            
+            /*
            // pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
             cout<<"LIDAR MODE SELECT"<<endl;
             if(now_wp==0){
@@ -204,9 +239,9 @@ int main(int argc, char **argv){
             
             rsdata.vtoa();
             wpmarker.update(rsdata,now_wp);
-            
+            */
         }
-        
+        /*
         if(down_button){
             wp_mode=ODOM_NAVIGATION;
             
@@ -239,7 +274,7 @@ int main(int argc, char **argv){
             rsdata.vtoa();
             wpmarker.update(rsdata,now_wp);
         }
-
+        */
         if(right_button){
             wp_mode=false;
         }
@@ -260,7 +295,9 @@ int main(int argc, char **argv){
         //cout<<"x="<<lidar_tf.pos.x<<"y="<<lidar_tf.pos.y<<endl;
        // cout<<"rs="<<rs_tf.pos.yaw<<"  lidar="<<lidar_tf.pos.yaw<<"  odom="<<rsodom.yaw<<endl;
         //cout<<loop_rate.cycleTime()<<endl;
-
+        path.header.frame_id="map";
+        path.header.stamp=ros::Time::now();
+        path_pub.publish(path);
         key_reset();
         ros::spinOnce();//subsucriberの割り込み関数はこの段階で実装される
         loop_rate.sleep();

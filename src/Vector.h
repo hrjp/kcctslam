@@ -7,7 +7,7 @@ Vector(float init_x,float init_y);
 Vector(float init_x,float init_y,float init_yaw);
 Vector(){}
 
-float x,y;
+float x,y,z;
 float yaw;
 int type;
 int map;

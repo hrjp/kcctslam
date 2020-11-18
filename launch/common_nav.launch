@@ -98,7 +98,7 @@
 	<node pkg="turtlesim" type="turtle_teleop_key" name="turtle_teleop_key" output="screen"/>
 	
 	<!--<node name="waypoint" pkg="nakanoshima" type="wpmove.py" output="screen"/>-->
-	<node pkg="kcctslam" type="robot_model_node" name="robot_model_node" output="screen"/>
+	
 	
 	
 	<node pkg="rviz" type="rviz" args="-d '$(find kcctslam)/config/rviz/navigation_yvtx004.rviz'" name="visualizer" respawn="true" />

@@ -6,6 +6,7 @@
 #include <tf/tf.h>
 #include <tf/transform_datatypes.h>
 #include <tf/transform_listener.h>
+#include <geometry_msgs/Pose.h>
 #include <string>
 #include "Vector.h"
 using namespace std;
@@ -15,6 +16,7 @@ class tf_lis{
     tf_lis(const char *base_id,const char *child_id);
     Vector update();
     Vector pos;
+    geometry_msgs::Pose pose;
     private:
     ros::NodeHandle n;
     tf::TransformListener listener;
@@ -37,6 +39,13 @@ Vector tf_lis::update(){
         pos.x = trans_slam.getOrigin().x();
         pos.y= trans_slam.getOrigin().y();
         pos.yaw = tf::getYaw(trans_slam.getRotation());
+        pose.position.x=trans_slam.getOrigin().x();
+        pose.position.y=trans_slam.getOrigin().y();
+        pose.position.z=trans_slam.getOrigin().z();
+        pose.orientation.x=trans_slam.getRotation().x();
+        pose.orientation.y=trans_slam.getRotation().y();
+        pose.orientation.z=trans_slam.getRotation().z();
+        pose.orientation.w=trans_slam.getRotation().w();
     }
     catch (tf::TransformException &ex)  {
         ROS_ERROR("%s", ex.what());
