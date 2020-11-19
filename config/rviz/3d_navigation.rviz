@@ -207,6 +207,8 @@ Visualization Manager:
           Value: true
         odom:
           Value: true
+        odom_link:
+          Value: true
       Marker Scale: 0.5
       Name: TF
       Show Arrows: false
@@ -222,6 +224,8 @@ Visualization Manager:
                 {}
               imu_link:
                 {}
+          odom_link:
+            {}
       Update Interval: 0
       Value: true
     - Class: rviz/MarkerArray
@@ -249,7 +253,7 @@ Visualization Manager:
       Enabled: true
       Invert Rainbow: false
       Max Color: 255; 255; 255
-      Max Intensity: 118
+      Max Intensity: 125
       Min Color: 0; 0; 0
       Min Intensity: 0
       Name: PointCloud2
@@ -267,6 +271,22 @@ Visualization Manager:
     - Class: rviz/MarkerArray
       Enabled: true
       Marker Topic: /body_model
+      Name: MarkerArray
+      Namespaces:
+        cmd_vel_display: true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /marker_array
+      Name: MarkerArray
+      Namespaces:
+        cmd_vel_display: true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /marker_array1
       Name: MarkerArray
       Namespaces:
         cmd_vel_display: true
@@ -297,7 +317,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 21.3314037
+      Distance: 13.2854176
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
@@ -312,10 +332,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.929800391
+      Pitch: 1.22979653
       Target Frame: base_link
       Value: Orbit (rviz)
-      Yaw: 0.306810051
+      Yaw: 0.736809671
     Saved: ~
 Window Geometry:
   Displays:

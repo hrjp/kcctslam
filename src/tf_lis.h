@@ -7,6 +7,7 @@
 #include <tf/transform_datatypes.h>
 #include <tf/transform_listener.h>
 #include <geometry_msgs/Pose.h>
+#include <geometry_msgs/PoseStamped.h>
 #include <string>
 #include "Vector.h"
 using namespace std;
@@ -17,6 +18,8 @@ class tf_lis{
     Vector update();
     Vector pos;
     geometry_msgs::Pose pose;
+    geometry_msgs::PoseStamped pose_stamped;
+
     private:
     ros::NodeHandle n;
     tf::TransformListener listener;
@@ -46,6 +49,9 @@ Vector tf_lis::update(){
         pose.orientation.y=trans_slam.getRotation().y();
         pose.orientation.z=trans_slam.getRotation().z();
         pose.orientation.w=trans_slam.getRotation().w();
+        pose_stamped.header.frame_id=tf_name2;
+        pose_stamped.header.stamp=ros::Time::now();
+        pose_stamped.pose=pose;
     }
     catch (tf::TransformException &ex)  {
         ROS_ERROR("%s", ex.what());

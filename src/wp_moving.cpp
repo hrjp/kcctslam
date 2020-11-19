@@ -118,13 +118,8 @@ void odomtf_pub(Vector pos){
    br.sendTransform(tf::StampedTransform(transform, ros::Time::now(),"/map", "/odom_link"));
 }
 nav_msgs::Path path;
-void pose_save_to_path(geometry_msgs::Pose pose){
-    geometry_msgs::PoseStamped pose_stamp;
-    pose_stamp.pose=pose;
-    pose_stamp.header.frame_id="map";
-    pose_stamp.header.stamp=ros::Time::now();
-    path.poses.push_back(pose_stamp);
-    int path_size=path.poses.size();
+void posestamped_to_path(geometry_msgs::PoseStamped pose_stamped){
+    path.poses.push_back(pose_stamped);
 }
 
 Vector pose_position_to_vec(geometry_msgs::Pose pose){
@@ -184,7 +179,7 @@ int main(int argc, char **argv){
             //pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
             //odom_mode.attach();
             if((lidar_tf.pos-pre_vec).size()>1.0){
-                pose_save_to_path(lidar_tf.pose);
+                posestamped_to_path(lidar_tf.pose_stamped);
                 pre_vec=lidar_tf.pos;
                 now_wp++;
                 cout<<"Waypoint NUMBER : [ "<<now_wp<<" ] (LiDAR)"<<endl;
