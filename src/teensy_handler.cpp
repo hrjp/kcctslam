@@ -24,7 +24,7 @@ void float_sensor_data_callback(const std_msgs::Float32MultiArray& float_sensor_
      float_sensor_data=float_sensor_data_row.data;
      linear_vel.data=float_sensor_data_row.data[13]*3.6;
      tf::Transform transform;
-          transform.setOrigin( tf::Vector3(float_sensor_data[1], float_sensor_data[0], 0.0) );
+          transform.setOrigin( tf::Vector3(float_sensor_data[1], float_sensor_data[0], float_sensor_data[2]) );
           tf::Quaternion q;
           //q.setRPY(0, 0, float_sensor_data[14]);
           q.setX(-float_sensor_data[10]);
@@ -62,7 +62,7 @@ int main(int argc, char **argv){
           
           nav_msgs::Odometry odom;
           static uint32_t seq_odom=0;
-          odom.header.frame_id="map";
+          odom.header.frame_id="odom";
           odom.header.stamp=ros::Time::now();
           odom.header.seq=seq_odom;
           odom.child_frame_id="base_link";

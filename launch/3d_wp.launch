@@ -3,6 +3,7 @@
 
 <node pkg="turtlesim" type="turtle_teleop_key" name="turtle_teleop_key" output="screen"/>
 <node name="wp_moving_node" pkg="kcctslam" type="wp_moving_node" output="screen"/>
+<node name="wp_visualizer" pkg="kcctslam" type="wp_visualizer" output="screen"/>
 <node name="waypoint_recorder_py" pkg="kcctslam" type="wpout.py" output="screen"/>
 
 </launch>

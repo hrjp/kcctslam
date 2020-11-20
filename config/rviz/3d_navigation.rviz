@@ -80,8 +80,8 @@ Visualization Manager:
     - Alpha: 0.100000001
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
-        Max Value: 18.1433029
-        Min Value: -2.3017683
+        Max Value: 23.2844353
+        Min Value: -5.30121994
         Value: true
       Axis: Z
       Channel Name: intensity
@@ -207,8 +207,6 @@ Visualization Manager:
           Value: true
         odom:
           Value: true
-        odom_link:
-          Value: true
       Marker Scale: 0.5
       Name: TF
       Show Arrows: false
@@ -224,8 +222,6 @@ Visualization Manager:
                 {}
               imu_link:
                 {}
-          odom_link:
-            {}
       Update Interval: 0
       Value: true
     - Class: rviz/MarkerArray
@@ -253,7 +249,7 @@ Visualization Manager:
       Enabled: true
       Invert Rainbow: false
       Max Color: 255; 255; 255
-      Max Intensity: 125
+      Max Intensity: 250
       Min Color: 0; 0; 0
       Min Intensity: 0
       Name: PointCloud2
@@ -292,6 +288,29 @@ Visualization Manager:
         cmd_vel_display: true
       Queue Size: 100
       Value: true
+    - Alpha: 1
+      Buffer Length: 1
+      Class: rviz/Path
+      Color: 25; 255; 0
+      Enabled: true
+      Head Diameter: 0.300000012
+      Head Length: 0.200000003
+      Length: 0.300000012
+      Line Style: Lines
+      Line Width: 0.0299999993
+      Name: Path
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+      Pose Color: 255; 85; 255
+      Pose Style: None
+      Radius: 0.0299999993
+      Shaft Diameter: 0.100000001
+      Shaft Length: 0.100000001
+      Topic: /Path
+      Unreliable: false
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -317,25 +336,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 13.2854176
+      Distance: 12.0602465
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -0.181517363
-        Y: 0.904824376
-        Z: 0.150016621
+        X: -0.218666896
+        Y: 0.301631063
+        Z: 0.340910912
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.0500000007
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 1.22979653
+      Pitch: 0.834797502
       Target Frame: base_link
       Value: Orbit (rviz)
-      Yaw: 0.736809671
+      Yaw: 1.29181314
     Saved: ~
 Window Geometry:
   Displays:

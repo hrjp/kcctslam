@@ -26,6 +26,7 @@ body_model::body_model(){
 
 void body_model::update(char *fix_id){
     visualization_msgs::MarkerArray marker_array;
+
     marker_array.markers.resize(10);
         //marker0
     int i=0;

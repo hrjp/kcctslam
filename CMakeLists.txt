@@ -146,6 +146,7 @@ add_executable(teensy_handler src/teensy_handler.cpp)
 add_executable(odom_pub src/odom_pub.cpp)
 add_executable(robot_model_node src/robot_model.cpp)
 add_executable(map_selecter src/map_selecter.cpp)
+add_executable(wp_visualizer src/wp_visualizer.cpp)
 
 target_link_libraries(robot_model_node ${catkin_LIBRARIES})
 
@@ -181,6 +182,7 @@ target_link_libraries(teensy_handler
   ${catkin_LIBRARIES}
 )
 target_link_libraries(map_selecter ${catkin_LIBRARIES})
+target_link_libraries(wp_visualizer ${catkin_LIBRARIES})
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/kcctslam.cpp
