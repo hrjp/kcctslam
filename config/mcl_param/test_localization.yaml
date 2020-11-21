@@ -3,6 +3,10 @@ mcl_3dl:
   accum_cloud: 2
   lpf_step: 1.0
   dist_weight_z: 2.0
+  odom_err_lin_lin: 0.6
+  odom_err_lin_ang: 0.3
+  odom_err_ang_lin: 0.2
+  odom_err_ang_ang: 0.2
   likelihood:
     match_dist_min: 0.5
     match_output_dist: 0.3

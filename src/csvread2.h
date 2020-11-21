@@ -92,6 +92,7 @@ csvread2::csvread2(const char *st,nav_msgs::Path& path,vector<Vector>& vec):Scor
           path.poses[k].pose.orientation.w=atof(Score.at(k).at(7).c_str());
           vec.at(k).x=atof(Score.at(k).at(1).c_str());
           vec.at(k).y=atof(Score.at(k).at(2).c_str());
+          vec.at(k).z=atof(Score.at(k).at(3).c_str());
           vec.at(k).yaw=geometry_quat_getyaw(path.poses[k].pose.orientation);
           vec.at(k).type=atof(Score.at(k).at(8).c_str());
           vec.at(k).map=atof(Score.at(k).at(9).c_str());

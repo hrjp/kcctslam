@@ -47,7 +47,7 @@ void wpmarker::update(vector<Vector> wp,int now_wp){
     marker_array.markers[i].scale.z = 0.2;
     marker_array.markers[i].pose.position.x=wp.at(i).x;
     marker_array.markers[i].pose.position.y=wp.at(i).y;
-    marker_array.markers[i].pose.position.z=0.0;
+    marker_array.markers[i].pose.position.z=wp.at(i).z;
     marker_array.markers[i].pose.orientation.x=wp.at(i).get_qx();
     marker_array.markers[i].pose.orientation.y=wp.at(i).get_qy();
     marker_array.markers[i].pose.orientation.z=wp.at(i).get_qz();
@@ -85,7 +85,7 @@ void wpmarker::update(vector<Vector> wp,int now_wp){
     marker_array1.markers[i].scale.z = 1;
     marker_array1.markers[i].pose.position.x=wp.at(i).x;
     marker_array1.markers[i].pose.position.y=wp.at(i).y;
-    marker_array1.markers[i].pose.position.z=1.0;
+    marker_array1.markers[i].pose.position.z=wp.at(i).z+1.0;
     marker_array1.markers[i].pose.orientation.x=wp.at(i).get_qx();
     marker_array1.markers[i].pose.orientation.y=wp.at(i).get_qy();
     marker_array1.markers[i].pose.orientation.z=wp.at(i).get_qz();

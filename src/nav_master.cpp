@@ -100,6 +100,7 @@ geometry_msgs::PoseWithCovarianceStamped vec_to_PoseWithCovarianceStamped(Vector
             geometry_msgs::PoseWithCovarianceStamped initial_pose;
             initial_pose.pose.pose.position.x = pos.x;
             initial_pose.pose.pose.position.y =pos.y;
+            initial_pose.pose.pose.position.y =pos.z;
             initial_pose.pose.pose.orientation.z = pos.get_qz();
             initial_pose.pose.pose.orientation.w = pos.get_qw();
             initial_pose.header.stamp = ros::Time::now();
@@ -142,13 +143,13 @@ Vector rs_odom_attach(Vector rs_tf,Vector lidar_tf,Vector pubodom){
      const double angle_stop_p=1.5;
      double angle_max=0.4;
      const double vel_p=0.3;
-     double vel_max=0.3;
+     double vel_max=0.25;
      const double curve_stop_angle=30.0*M_PI/180.0;
      const double front_ditect_dis=5.0;
      const double front_stop_distance=0.5;
 
      if(slow_mode){
-        angle_max=0.35;
+        angle_max=025;
         vel_max=0.2;
      }
 
