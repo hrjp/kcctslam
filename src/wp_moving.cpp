@@ -8,7 +8,7 @@
 #include <tf/transform_broadcaster.h>
 #include <geometry_msgs/Twist.h>
 #include<geometry_msgs/PoseWithCovarianceStamped.h>
-
+#include <std_msgs/Int32.h>
 #include <move_base_msgs/MoveBaseAction.h>
 #include <actionlib/client/simple_action_client.h>
 
@@ -83,6 +83,13 @@ geometry_msgs::PoseStamped Vec_to_PoseStamped(Vector pos,int type){
             goal_point.header.frame_id = "map";
             return goal_point;
 }
+
+bool initialpose_flag=false;
+int initialpose_num=0;
+void initialpose_num_callback(std_msgs::Int32 initialpose_num_raw){
+    initialpose_flag=true;
+    initialpose_num=initialpose_num_raw.data;
+}
 //TF rs_odomの配信
 void rs_odom(Vector pos){
    static tf::TransformBroadcaster br;
@@ -142,6 +149,7 @@ int main(int argc, char **argv){
    ros::NodeHandle lSubscriber("");
    ros::Subscriber ket_sub = lSubscriber.subscribe("/turtle1/cmd_vel", 50, key_vel_callback);
     
+    ros::Subscriber initial_sub = lSubscriber.subscribe("initialpose_num", 50, initialpose_num_callback);
 
     //2D_POSE_ESTIMATE publisher
     ros::Publisher initial_pub = n.advertise<geometry_msgs::PoseWithCovarianceStamped>("/initialpose", 1);
@@ -174,6 +182,20 @@ int main(int argc, char **argv){
        lidar_tf.update();
        //rs_odom(pubodom);
        //odomtf_pub(odom_mode.update());
+
+    //initial pose 
+       if(initialpose_flag){
+           if(0<=initialpose_num && initialpose_num<path.poses.size()){
+                geometry_msgs::PoseWithCovarianceStamped pub_initialpose;
+                pub_initialpose.pose.pose=path.poses.at(initialpose_num).pose;
+                pub_initialpose.header.stamp = ros::Time::now();
+                pub_initialpose.header.frame_id = "map";
+                pub_initialpose.pose.covariance[0]=0.25;
+                pub_initialpose.pose.covariance[7]=0.25;
+                pub_initialpose.pose.covariance[35]=0.06853891945200942;
+           }
+           initialpose_flag=false;
+       }
         
         if(wp_mode==LIDAR_NAVIGATION){
             //pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);

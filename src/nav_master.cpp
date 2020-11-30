@@ -100,7 +100,7 @@ geometry_msgs::PoseWithCovarianceStamped vec_to_PoseWithCovarianceStamped(Vector
             geometry_msgs::PoseWithCovarianceStamped initial_pose;
             initial_pose.pose.pose.position.x = pos.x;
             initial_pose.pose.pose.position.y =pos.y;
-            initial_pose.pose.pose.position.y =pos.z;
+            initial_pose.pose.pose.position.z =pos.z;
             initial_pose.pose.pose.orientation.z = pos.get_qz();
             initial_pose.pose.pose.orientation.w = pos.get_qw();
             initial_pose.header.stamp = ros::Time::now();

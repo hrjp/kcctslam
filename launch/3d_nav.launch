@@ -24,4 +24,5 @@
 	<param name="y_min" value="-0.4"/>
 	<param name="loop_rate" value="10"/>		
 	</node>
+	<node pkg="imageProcessor" name="colorTracking" type="colorTracking.py" />
 </launch>
