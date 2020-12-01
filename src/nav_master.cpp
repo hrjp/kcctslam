@@ -10,6 +10,7 @@
 #include<geometry_msgs/PoseWithCovarianceStamped.h>
 #include <std_msgs/Float32.h>
 #include <std_msgs/Int32.h>
+#include <std_msgs/Int32MultiArray.h>
 #include <std_msgs/Empty.h>
 #include <kcctslam_msgs/WayPoint.h>
 
@@ -63,6 +64,15 @@ void dis_vel_callback(const geometry_msgs::Twist& vel_cmd){
 //cmd_vel subscribe
 void cmd_vel_callback(const geometry_msgs::Twist& vel_cmd){ 
      nav_vel=vel_cmd;
+}
+
+//human subscribe
+double human_angle;
+void human_callback(const std_msgs::Int32MultiArray& human_angle_row){ 
+     human_angle=human_angle_row.data.at(0);
+     if(abs(human_angle_row.data.at(0))>290&&abs(human_angle_row.data.at(0))<50){
+        human_angle=0;
+     }
 }
 
 //key input
@@ -139,7 +149,7 @@ Vector rs_odom_attach(Vector rs_tf,Vector lidar_tf,Vector pubodom){
  geometry_msgs::Twist cmd_vel_calc(Vector nowpos,Vector wppos,double front_dis,bool back_drive,bool slow_mode){
      geometry_msgs::Twist calc_vel;
      //param
-     const double angle_p=0.7;
+     const double angle_p=0.3;
      const double angle_stop_p=1.5;
      double angle_max=0.4;
      const double vel_p=0.3;
@@ -190,6 +200,30 @@ Vector rs_odom_attach(Vector rs_tf,Vector lidar_tf,Vector pubodom){
     return calc_vel;
 }
 
+geometry_msgs::Twist person_tracking(double front_angle,double front_dis){
+    geometry_msgs::Twist calc_vel;
+    //param
+     const double angle_p=0.1;
+     double angle_max=1.0;
+     const double vel_p=0.3;
+     double vel_max=0.2;
+     const double front_stop_distance=0.5;
+     const double front_ditect_dis=5.0;
+
+     front_dis-=front_stop_distance;
+     if(front_dis>front_ditect_dis){
+        calc_vel.linear.x=vel_max;
+    }
+    else{
+        calc_vel.linear.x=double_constrain(front_dis*vel_p,0,vel_max);
+    }
+        calc_vel.angular.z=-front_angle;
+        calc_vel.angular.z*=angle_p;
+    calc_vel.angular.z=double_constrain(calc_vel.angular.z,-angle_max,angle_max);
+    //calc_vel.linear.x=0;//*=(abs(calc_vel.angular.z)<curve_stop_angle);
+    return calc_vel;
+}
+
 void map_chenged_callback(std_msgs::Empty empty){
     now_wp++;
 }
@@ -225,6 +259,8 @@ int main(int argc, char **argv){
     
    //十字キー入力 subscliber
    ros::Subscriber ket_sub = lSubscriber.subscribe("/turtle1/cmd_vel", 50, key_vel_callback);
+   //十字キー入力 subscliber
+   ros::Subscriber human_sub = lSubscriber.subscribe("/position", 50, human_callback);
     
 
     //2D_POSE_ESTIMATE publisher
@@ -355,6 +391,11 @@ int main(int argc, char **argv){
                 }
             }
             break;
+        case HUMAN_DITECTION:
+            final_cmd_vel=person_tracking(human_angle,front_dis);
+            ROS_INFO("PERSON DITECTION[%d]",now_wp);
+            break;
+
         case SKIP_WP:
             now_wp++;
             break;

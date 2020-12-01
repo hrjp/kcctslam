@@ -13,6 +13,7 @@ const int RS_BACK_NAVIGATION=4;
 const int CHENGE_RS_NAVIGATION=5;
 const int SKIP_WP=6;
 const int ODOM_NAVIGATION=7;
+const int HUMAN_DITECTION=8;
 
 class Wpdata{
     public:
