@@ -323,12 +323,15 @@ int main(int argc, char **argv){
 
         if(left_button){
             now_wp++;
+            ROS_INFO("[SKIP] WAYPOINT[%d]",now_wp);
         }
         if(down_button){
             wp_vec.at(now_wp).type=WP_STOP;
+            ROS_INFO("[PAUSE] WAYPOINT[%d]",now_wp);
         }
         if(right_button){
            initial_pub.publish(vec_to_PoseWithCovarianceStamped(wp_vec[now_wp]));
+           ROS_INFO("[INTIAL POSE] WAYPOINT[%d]",now_wp);
            
         }
 
@@ -347,6 +350,7 @@ int main(int argc, char **argv){
             if(up_button){
                 //入力がきたらナビゲーションを再開する
                 wp_vec.at(now_wp).type=wp_vec.at(now_wp+1).type;
+                ROS_INFO("[START] NOW WAYPOINT[%d]",now_wp);
             }
             else{
                 final_cmd_vel=zero_vel;
