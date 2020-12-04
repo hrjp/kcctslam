@@ -203,8 +203,8 @@ Vector rs_odom_attach(Vector rs_tf,Vector lidar_tf,Vector pubodom){
 geometry_msgs::Twist person_tracking(double front_angle,double front_dis){
     geometry_msgs::Twist calc_vel;
     //param
-     const double angle_p=0.1;
-     double angle_max=1.0;
+     const double angle_p=0.05;
+     double angle_max=0.5;
      const double vel_p=0.3;
      double vel_max=0.2;
      const double front_stop_distance=0.5;
