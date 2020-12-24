@@ -14,7 +14,7 @@ mcl_3dl:
   likelihood:
     match_dist_min: 0.5
     match_output_dist: 0.3
-    num_points: 2000
+    num_points: 1000
     num_points_global: 500
   beam:
     clip_far: 100.0

@@ -2,7 +2,7 @@
 <include file="$(find kcctslam)/launch/sensor.launch"/>
 
 <node pkg="turtlesim" type="turtle_teleop_key" name="turtle_teleop_key" output="screen"/>
-<node name="nav_master" pkg="kcctslam" type="nav_master" output="screen">
+<node name="nav_master" pkg="kcctslam" type="nav_master" output="screen" respawn="true">
 	<param name="waypointfile" type="str" value="$(find kcctslam)/config/waypointdata/wpdata.csv" />
 	</node>
     	<node pkg="kcctslam" name="laser2pc" type="laser2pc.py" output="screen">
