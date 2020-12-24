@@ -12,7 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   pcl_ros
-  kcctslam_msgs
+#  kcctslam_msgs
   nav_msgs
 )
 
