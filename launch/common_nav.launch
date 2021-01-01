@@ -1,6 +1,8 @@
 <launch>
 
-   <arg name="map_file0" default="$(find kcctslam)/config/map/nec201114-10.yaml" />
+<include file="$(find kcctslam)/launch/sensorsim.launch"/>
+
+   <arg name="map_file0" default="$(find kcctslam)/config/map/sim1.yaml" />
    <arg name="map_file1" default="$(find kcctslam)/config/map/g201113-2.yaml" />
    <arg name="map_file2" default="$(find kcctslam)/config/map/g203.yaml" />
    <arg name="map_file3" default="$(find kcctslam)/config/map/g202.yaml" />
@@ -30,7 +32,7 @@
 	</node>
 	value="57600"
 	-->
-	<include file="$(find kcctslam)/launch/sensor.launch"/>
+	
 	
 	
 	
@@ -98,12 +100,12 @@
 	<node pkg="turtlesim" type="turtle_teleop_key" name="turtle_teleop_key" output="screen"/>
 	
 	<!--<node name="waypoint" pkg="nakanoshima" type="wpmove.py" output="screen"/>-->
-	<node pkg="kcctslam" type="robot_model_node" name="robot_model_node" output="screen"/>
+	<!--<node pkg="kcctslam" type="robot_model_node" name="robot_model_node" output="screen"/>-->
 	
 	
 	<node pkg="rviz" type="rviz" args="-d '$(find kcctslam)/config/rviz/navigation_yvtx004.rviz'" name="visualizer" respawn="true" />
 	<!--<node name="odom_pub" pkg="kcctslam" type="odom_pub"/>-->
 	<!--<node name="tf_pub" pkg="kcctslam" type="tf_pub"/>-->
-	<include file="$(find ublox_gps)/launch/ublox_zed-f9p.launch"/>
+	<!--<include file="$(find ublox_gps)/launch/ublox_zed-f9p.launch"/>-->
 	
 </launch>

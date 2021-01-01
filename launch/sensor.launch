@@ -9,4 +9,5 @@
 	<include file="$(find kcctslam)/launch/velodyne_2d.launch"/>
 	
  <node name="teensy_handler" pkg="kcctslam" type="teensy_handler"/>
+ <node pkg="kcctslam" type="robot_model_node" name="robot_model_node" output="screen"/>
 </launch>
