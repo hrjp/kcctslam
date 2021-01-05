@@ -1,13 +1,22 @@
 <launch>
+	<arg name="sim" default="false"/>
+	
+	<group if="$(arg sim)">
+		<include file="$(find kcctslam)/launch/sensorsim.launch"/>
+  	</group>
 
-<node name="serial_node"        pkg="rosserial_python"      type="serial_node.py">
-	<param name="port"              type="string"               value="/dev/teensy"/>
-	<param name="baud"              type="int"                  value="57600"/>
-	</node>
+  	<group unless="$(arg sim)">
+
+		<node name="serial_node"        pkg="rosserial_python"      type="serial_node.py">
+			<param name="port"              type="string"               value="/dev/teensy"/>
+			<param name="baud"              type="int"                  value="57600"/>
+		</node>
 	
-	<!--<include file="$(find kcctslam)/launch/hokuyo_urg.launch"/>-->
-	<include file="$(find kcctslam)/launch/velodyne_2d.launch"/>
+		<!--<include file="$(find kcctslam)/launch/hokuyo_urg.launch"/>-->
+		<include file="$(find kcctslam)/launch/velodyne_2d.launch"/>
 	
- <node name="teensy_handler" pkg="kcctslam" type="teensy_handler"/>
- <node pkg="kcctslam" type="robot_model_node" name="robot_model_node" output="screen"/>
+ 		<node name="teensy_handler" pkg="kcctslam" type="teensy_handler"/>
+ 		<node pkg="kcctslam" type="robot_model_node" name="robot_model_node" output="screen"/>
+	</group>
+
 </launch>

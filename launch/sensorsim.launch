@@ -1,5 +1,5 @@
 <launch>
-        <node pkg="ira_laser_tools" name="laserscan_multi_merger" type="laserscan_multi_merger" output="screen">
+        <node pkg="ira_laser_tools" name="laserscan_multi_merger" type="laserscan_multi_merger" output="screen" respawn="true">
 		<param name="destination_frame" value="/camera_link"/>
 		<param name="cloud_destination_topic" value="/merged_cloud"/>
 		<param name="scan_destination_topic" value="/scan"/>
@@ -7,4 +7,8 @@
    		<param name="angle_min" value="-3.14"/>
   		<param name="angle_max" value="3.14"/>		
 	</node>
+	<node pkg="fourth_robot_gazebo" name="twist_remapper" type="twist_remapper.py" output="screen">
+	<remap from="cmd_vel" to="final_cmd_vel" />
+	</node>
+	<node pkg="fourth_robot_gazebo" name="linear_vel_node" type="linear_vel_node.py" output="screen"/>
 </launch>
