@@ -1,5 +1,9 @@
 <launch>
-    <include file="$(find kcctslam)/launch/common_nav.launch"/>
+	<arg name="sim" default="true" />
+	<include file="$(find kcctslam)/launch/common_nav.launch">
+		<arg name="sim" value="$(arg sim)" />
+	</include>
+
 	<node name="nav_master" pkg="kcctslam" type="nav_master" output="screen" respawn="true">
 	<param name="waypointfile" type="str" value="$(find kcctslam)/config/waypointdata/wpdata.csv" />
 	</node>

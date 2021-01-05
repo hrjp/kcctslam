@@ -1,9 +1,8 @@
 <launch>
-	<arg name="sim" default="false"/>
-	
+	<arg name="sim" default="false" />
 	<group if="$(arg sim)">
 		<include file="$(find kcctslam)/launch/sensorsim.launch"/>
-  	</group>
+	</group>	
 
   	<group unless="$(arg sim)">
 

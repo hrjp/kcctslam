@@ -1,5 +1,8 @@
 <launch>
-<include file="$(find kcctslam)/launch/sensor.launch"/>
+	<arg name="sim" default="false" />
+	<include file="$(find kcctslam)/launch/sensor.launch">
+		<arg name="sim" value="$(arg sim)" />
+	</include>
 
    <arg name="map_file0" default="$(find kcctslam)/config/map/sim1.yaml" />
    <arg name="map_file1" default="$(find kcctslam)/config/map/g201113-2.yaml" />
