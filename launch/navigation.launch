@@ -1,6 +1,6 @@
 <launch>
     <include file="$(find kcctslam)/launch/common_nav.launch"/>
-	<node name="nav_master" pkg="kcctslam" type="nav_master" output="screen">
+	<node name="nav_master" pkg="kcctslam" type="nav_master" output="screen" respawn="true">
 	<param name="waypointfile" type="str" value="$(find kcctslam)/config/waypointdata/wpdata.csv" />
 	</node>
 </launch>

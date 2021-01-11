@@ -1,6 +1,6 @@
 <launch>
 
-   <arg name="map_file0" default="$(find kcctslam)/config/map/nec201114-10.yaml" />
+   <arg name="map_file0" default="$(find kcctslam)/config/map/honbu201225.yaml" />
    <arg name="map_file1" default="$(find kcctslam)/config/map/g201113-2.yaml" />
    <arg name="map_file2" default="$(find kcctslam)/config/map/g203.yaml" />
    <arg name="map_file3" default="$(find kcctslam)/config/map/g202.yaml" />
@@ -61,7 +61,7 @@
 		<param name="update_min_a" type="double" value="0.08" />
 		<param name="use_map_topic" type="bool" value="false" />
 	</node>
-
+<!--
 	<node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
 		<rosparam file="$(find kcctslam)/config/nav_param/move_base.yaml" command="load" />
 		<rosparam file="$(find kcctslam)/config/nav_param/costmap_common.yaml" command="load" ns="global_costmap" />
@@ -70,7 +70,7 @@
 		<rosparam file="$(find kcctslam)/config/nav_param/costmap_global.yaml" command="load" />
 		<rosparam file="$(find kcctslam)/config/nav_param/planner_local_yvt.yaml" command="load" />
 		<rosparam file="$(find kcctslam)/config/nav_param/planner_global.yaml" command="load" />
-	</node>
+	</node>-->
 	
 	<!-- To run python scripts, chmod 755 to file is required (in this case, chmod 755 laser2pc.py). -->
 	
@@ -104,6 +104,6 @@
 	<node pkg="rviz" type="rviz" args="-d '$(find kcctslam)/config/rviz/navigation_yvtx004.rviz'" name="visualizer" respawn="true" />
 	<!--<node name="odom_pub" pkg="kcctslam" type="odom_pub"/>-->
 	<!--<node name="tf_pub" pkg="kcctslam" type="tf_pub"/>-->
-	<include file="$(find ublox_gps)/launch/ublox_zed-f9p.launch"/>
+	<!--<include file="$(find ublox_gps)/launch/ublox_zed-f9p.launch"/>-->
 	
 </launch>

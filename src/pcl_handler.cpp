@@ -154,7 +154,7 @@ int main(int argc, char** argv){
     ros::Rate loop_rate(g_loop_rate);
     while (nh.ok()){
 	
-	pub.publish(gfiltered);
+	//pub.publish(gfiltered);
 	cmd_pub.publish(g_vel);
 	ros::spinOnce ();
 	loop_rate.sleep();
