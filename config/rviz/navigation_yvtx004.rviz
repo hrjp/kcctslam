@@ -215,6 +215,8 @@ Visualization Manager:
           Value: true
         odom:
           Value: true
+        odom_link:
+          Value: true
         rear_lrf_link:
           Value: true
         right_wheel_link:
@@ -239,6 +241,8 @@ Visualization Manager:
                   {}
                 right_wheel_link:
                   {}
+          odom_link:
+            {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -310,19 +314,19 @@ Visualization Manager:
       Queue Size: 100
       Value: true
     - Class: rviz/MarkerArray
-      Enabled: true
+      Enabled: false
       Marker Topic: /marker_array
       Name: MarkerArray
       Namespaces:
         {}
       Queue Size: 100
-      Value: true
+      Value: false
     - Class: rviz/MarkerArray
       Enabled: true
       Marker Topic: /marker_array1
       Name: MarkerArray
       Namespaces:
-        {}
+        cmd_vel_display: true
       Queue Size: 100
       Value: true
     - Class: rviz/Marker
@@ -376,7 +380,7 @@ Visualization Manager:
       Name: TFTrajectory
       Value: true
       color: 0; 170; 255
-      duration: 60
+      duration: 600000
       frame: base_link
       line_width: 0.07000000029802322
     - Class: jsk_rviz_plugin/PieChart
@@ -409,13 +413,13 @@ Visualization Manager:
     - Alpha: 1
       Buffer Length: 1
       Class: rviz/Path
-      Color: 25; 255; 0
+      Color: 78; 154; 6
       Enabled: true
       Head Diameter: 0.30000001192092896
       Head Length: 0.20000000298023224
       Length: 0.30000001192092896
-      Line Style: Lines
-      Line Width: 0.029999999329447746
+      Line Style: Billboards
+      Line Width: 0.05000000074505806
       Name: Path
       Offset:
         X: 0

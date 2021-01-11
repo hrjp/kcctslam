@@ -53,10 +53,10 @@ double double_constrain(double val,double down_limit,double up_limit){
 
 
 //前方の障害物の距離受信
-double front_dis=0;
+double front_dis=20.0;
 void dis_vel_callback(const geometry_msgs::Twist& vel_cmd){ 
      front_dis=vel_cmd.linear.x-0.255;
-      front_dis=20.0;
+      //front_dis=20.0;
 }
 
 //cmd_vel subscribe
