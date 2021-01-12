@@ -5,7 +5,7 @@
 		<param name="scan_destination_topic" value="/scan"/>
                 <param name="laserscan_topics" value ="/scan1 /scan2"/>
    		<param name="angle_min" value="-3.14"/>
-  		<param name="angle_max" value="3.14"/>		
+  		<param name="angle_max" value="3.14"/>
 	</node>
 	<node pkg="fourth_robot_gazebo" name="twist_remapper" type="twist_remapper.py" output="screen">
 	<remap from="cmd_vel" to="final_cmd_vel" />

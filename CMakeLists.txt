@@ -146,6 +146,7 @@ add_executable(teensy_handler src/teensy_handler.cpp)
 add_executable(odom_pub src/odom_pub.cpp)
 add_executable(robot_model_node src/robot_model.cpp)
 add_executable(map_selecter src/map_selecter.cpp)
+add_executable(path_error_calc src/path_error_calc.cpp)
 
 target_link_libraries(robot_model_node ${catkin_LIBRARIES})
 
@@ -159,6 +160,9 @@ target_link_libraries(tf_pub
 #  ${catkin_LIBRARIES}
 #)
 target_link_libraries(wp_moving_node
+  ${catkin_LIBRARIES}
+)
+target_link_libraries(path_error_calc
   ${catkin_LIBRARIES}
 )
 
