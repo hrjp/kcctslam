@@ -16,4 +16,6 @@
     	<remap from="cmd_vel" to="final_cmd_vel1"/>
   	</node>
 	<node name="joy_node" pkg="joy" type="joy_node" />
+	<node name="path_error_calc" pkg="kcctslam" type="path_error_calc" output="screen"/>
+
 </launch>

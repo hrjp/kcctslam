@@ -324,7 +324,7 @@ int main(int argc, char **argv){
             else{
                  initial_pub.publish(vec_to_PoseWithCovarianceStamped(odom_tf.pos));
             }
-            if((lidar_tf.pos-wp_vec[now_wp]).size()<0.8){
+            if((lidar_tf.pos-wp_vec[now_wp]).size()<1.0){
                 //pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
                 if(now_wp<wp_vec.size()-1){
                     now_wp++;
