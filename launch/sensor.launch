@@ -5,8 +5,8 @@
 	<param name="baud"              type="int"                  value="57600"/>
 	</node>
 	
-	<include file="$(find kcctslam)/launch/hokuyo_urg.launch"/>
-	<!--<include file="$(find kcctslam)/launch/velodyne_2d.launch"/>-->
+	<!--<include file="$(find kcctslam)/launch/hokuyo_urg.launch"/>-->
+	<include file="$(find kcctslam)/launch/velodyne_2d.launch"/>
 	
  <node name="teensy_handler" pkg="kcctslam" type="teensy_handler"/>
 </launch>
