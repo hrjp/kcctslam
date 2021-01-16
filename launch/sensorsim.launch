@@ -17,5 +17,6 @@
   	</node>
 	<node name="joy_node" pkg="joy" type="joy_node" />
 	<node name="path_error_calc" pkg="kcctslam" type="path_error_calc" output="screen"/>
+	<node name="data_recorder" pkg="kcctslam" type="data_recorder.py" output="screen"/>
 
 </launch>

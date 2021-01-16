@@ -290,7 +290,7 @@ Visualization Manager:
       Max Color: 255; 255; 255
       Max Intensity: 999999
       Min Color: 0; 0; 0
-      Min Intensity: -999999
+      Min Intensity: 0
       Name: LaserScan
       Position Transformer: XYZ
       Queue Size: 10
@@ -488,9 +488,59 @@ Visualization Manager:
       Marker Topic: /path_error_marker
       Name: MarkerArray
       Namespaces:
-        {}
+        path_error: true
       Queue Size: 100
       Value: true
+    - Buffer length: 100
+      Class: jsk_rviz_plugin/Plotter2D
+      Enabled: true
+      Name: Path Error [m]
+      Show Value: true
+      Topic: /path_error
+      Value: true
+      auto color change: false
+      auto scale: true
+      background color: 0; 0; 0
+      backround alpha: 0.5
+      border: true
+      foreground alpha: 0.699999988
+      foreground color: 25; 255; 240
+      height: 128
+      left: 20
+      linewidth: 2
+      max color: 255; 0; 0
+      max value: 1
+      min value: -1
+      show caption: true
+      text size: 11
+      top: 265
+      update interval: 0.0399999991
+      width: 305
+    - Buffer length: 100
+      Class: jsk_rviz_plugin/Plotter2D
+      Enabled: true
+      Name: Area[m^2]
+      Show Value: true
+      Topic: /error_area
+      Value: true
+      auto color change: false
+      auto scale: true
+      background color: 0; 0; 0
+      backround alpha: 0.5
+      border: true
+      foreground alpha: 0.699999988
+      foreground color: 25; 255; 240
+      height: 128
+      left: 20
+      linewidth: 1
+      max color: 255; 0; 0
+      max value: 1
+      min value: -1
+      show caption: true
+      text size: 11
+      top: 412
+      update interval: 0.0399999991
+      width: 305
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -526,10 +576,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.834796727
+      Pitch: 0.844797015
       Target Frame: base_link
       Value: Orbit (rviz)
-      Yaw: 4.14318132
+      Yaw: 4.2731781
     Saved: ~
 Window Geometry:
   Displays:
