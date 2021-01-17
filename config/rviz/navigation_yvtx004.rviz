@@ -290,7 +290,7 @@ Visualization Manager:
       Max Color: 255; 255; 255
       Max Intensity: 999999
       Min Color: 0; 0; 0
-      Min Intensity: 0
+      Min Intensity: -999999
       Name: LaserScan
       Position Transformer: XYZ
       Queue Size: 10
@@ -320,13 +320,13 @@ Visualization Manager:
       Queue Size: 100
       Value: false
     - Class: rviz/MarkerArray
-      Enabled: true
+      Enabled: false
       Marker Topic: /marker_array1
       Name: MarkerArray
       Namespaces:
-        cmd_vel_display: true
+        {}
       Queue Size: 100
-      Value: true
+      Value: false
     - Class: rviz/Marker
       Enabled: true
       Marker Topic: /waypoint1
@@ -488,7 +488,7 @@ Visualization Manager:
       Marker Topic: /path_error_marker
       Name: MarkerArray
       Namespaces:
-        path_error: true
+        {}
       Queue Size: 100
       Value: true
     - Buffer length: 100
@@ -576,10 +576,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.844797015
+      Pitch: 1.00979686
       Target Frame: base_link
       Value: Orbit (rviz)
-      Yaw: 4.2731781
+      Yaw: 4.65818405
     Saved: ~
 Window Geometry:
   Displays:

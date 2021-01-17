@@ -21,7 +21,7 @@ def listener():
     rospy.spin()
     tdatetime = dt.now()
     tstr = tdatetime.strftime('%y%m%d_%H%M%S')
-    df.to_csv('~/catkin_ws/src/kcctslam/config/path_log/'+tstr+'data.csv', header=True)
+    df.to_csv('~/catkin_ws/src/kcctslam/config/path_log/'+tstr+'_v09_t15.csv', header=True)
     print('CSV Saved !!')
 
 if __name__ == '__main__':

@@ -151,7 +151,7 @@ int main(int argc, char **argv){
         if(wp_mode==LIDAR_NAVIGATION){
             //pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
             odom_mode.attach();
-            if((lidar_tf.pos-rsdata.vec[now_wp]).size()>1.0){
+            if((lidar_tf.pos-rsdata.vec[now_wp]).size()>0.25){
                 now_wp++;
                 cout<<"Waypoint NUMBER : [ "<<now_wp<<" ] (LiDAR)"<<endl;
                 goal_pub.publish(csv_write(lidar_tf.pos,LIDAR_NAVIGATION));

@@ -31,7 +31,7 @@ int main(int argc, char **argv){
      ros::init(argc, argv, "path_error_calc");
      ros::NodeHandle n;
      //制御周期10Hz
-    ros::Rate loop_rate(10);
+    ros::Rate loop_rate(50);
 
      //subscriber
      ros::NodeHandle lSubscriber("");
@@ -60,7 +60,7 @@ int main(int argc, char **argv){
           base_tf.update();
           static int start_wp=2;
           static int now_path=start_wp;
-          if(start_wp<now_wp && now_wp<path.poses.size()-1){
+          if(start_wp<now_wp && now_wp<path.poses.size()-1-12){
                //pathの座標取得
                double x0=path.poses.at(now_path-1).pose.position.x;
                double y0=path.poses.at(now_path-1).pose.position.y;
