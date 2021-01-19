@@ -11,7 +11,16 @@
 -->
 
 <launch>
-
+  <node pkg="tf" type="static_transform_publisher" name="imu_transform" args="0 0 0 0 0 0 base_link imu_link 100"/>
+  <node pkg="tf" type="static_transform_publisher" name="gps_transform" args="0 0 0 0 0 0 base_link gps_link 100"/>
+  <node name="serial_node"        pkg="rosserial_python"      type="serial_node.py">
+    <param name="port"              type="string"               value="/dev/teensy"/>
+    <param name="baud"              type="int"                  value="57600"/>
+    </node>
+  <include file="$(find ublox_gps)/launch/ublox_zed-f9p.launch"/>
+  <node name="teensy_handler" pkg="kcctslam" type="teensy_handler">
+    <remap from="odom" to="odometry/wheel"/>
+  </node>
   <rosparam command="load" file="$(find kcctslam)/config/params/dual_ekf_navsat_example.yaml" />
 
   <node pkg="robot_localization" type="ekf_localization_node" name="ekf_se_odom" clear_params="true"/>
@@ -21,6 +30,7 @@
   </node>
 
   <node pkg="robot_localization" type="navsat_transform_node" name="navsat_transform" clear_params="true">
+    <remap from="gps/fix" to="/ublox_gps/fix"/>
     <remap from="odometry/filtered" to="odometry/filtered_map"/>
   </node>
 
