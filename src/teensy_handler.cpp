@@ -32,7 +32,7 @@ void float_sensor_data_callback(const std_msgs::Float32MultiArray& float_sensor_
           q.setZ(float_sensor_data[11]);
           q.setW(float_sensor_data[12]);
           transform.setRotation(q);
-          br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "odom","base_link_raw"));
+          br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "odom","base_link"));
 }
 
 int main(int argc, char **argv){
