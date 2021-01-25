@@ -141,7 +141,7 @@ Vector rs_odom_attach(Vector rs_tf,Vector lidar_tf,Vector pubodom){
      const double angle_stop_p=1.5;
      double angle_max=0.4;
      const double vel_p=0.3;
-     double vel_max=0.6;
+     double vel_max=0.3;
      const double curve_stop_angle=30.0*M_PI/180.0;
      const double front_ditect_dis=5.0;
      const double front_stop_distance=0.5;
@@ -324,7 +324,7 @@ int main(int argc, char **argv){
             else{
                  initial_pub.publish(vec_to_PoseWithCovarianceStamped(odom_tf.pos));
             }
-            if((lidar_tf.pos-wp_vec[now_wp]).size()<1){
+            if((lidar_tf.pos-wp_vec[now_wp]).size()<0.25){
                 //pubodom=rs_odom_attach(rs_tf.pos,lidar_tf.pos,pubodom);
                 if(now_wp<wp_vec.size()-1){
                     now_wp++;
