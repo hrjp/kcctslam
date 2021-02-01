@@ -53,7 +53,10 @@ double double_constrain(double val,double down_limit,double up_limit){
   return val;
 }
 
-
+//set wp
+void set_wp_callback(const std_msgs::Int32& sub_wp){ 
+     now_wp=sub_wp.data;
+}
 
 //前方の障害物の距離受信
 double front_dis=0;
@@ -261,6 +264,8 @@ int main(int argc, char **argv){
    ros::Subscriber ket_sub = lSubscriber.subscribe("/turtle1/cmd_vel", 50, key_vel_callback);
    //十字キー入力 subscliber
    ros::Subscriber human_sub = lSubscriber.subscribe("/position", 50, human_callback);
+   //set way point subscliber
+   ros::Subscriber set_wp_sub = lSubscriber.subscribe("/set_wp", 50, set_wp_callback);
     
 
     //2D_POSE_ESTIMATE publisher
