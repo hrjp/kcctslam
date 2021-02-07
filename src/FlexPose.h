@@ -36,17 +36,34 @@ class FlexPose{
     void setYaw(double angle);
     void setRoll(double angle);
     void setPitch(double angle);
+    void setRPY(double roll,double pitch,double yaw);
 
     void setPose(geometry_msgs::Pose pose);
     void setPose(geometry_msgs::PoseStamped pose);
     void setPose(const char *parent_id,const char *child_id);
+
+    geometry_msgs::Pose toPose();
+    geometry_msgs::PoseStamped toPoseStamped();
     
+    void updateTF();
+    void sendTF();
+
+    FlexPose operator+(FlexPose pose);
+    FlexPose operator-(FlexPose pose);
+    FlexPose operator*(double gain);
+
+    FlexPose operator+=(FlexPose pose);
+    FlexPose operator-=(FlexPose pose);
+    FlexPose operator*=(double gain);
+
+
 
     private:
     tf::TransformListener listener;
     geometry_msgs::PoseStamped pos;
     geometry_msgs::PoseStamped TFtoPoseStamped(const char *parent_id,const char *child_id);
     std::string child_id;
+    void EulerAnglesToQuaternion(double roll, double pitch, double yaw,double& q0, double& q1, double& q2, double& q3);
 };
 
 
@@ -89,3 +106,17 @@ geometry_msgs::PoseStamped FlexPose::TFtoPoseStamped(const char *parent_id,const
     }
 }
 
+void FlexPose::EulerAnglesToQuaternion(double roll, double pitch, double yaw,double& q0, double& q1, double& q2, double& q3){
+            //q0:w q1:x q2:y q3:z
+            double cosRoll = cos(roll / 2.0);
+            double sinRoll = sin(roll / 2.0);
+            double cosPitch = cos(pitch / 2.0);
+            double sinPitch = sin(pitch / 2.0);
+            double cosYaw = cos(yaw / 2.0);
+            double sinYaw = sin(yaw / 2.0);
+
+            q0 = cosRoll * cosPitch * cosYaw + sinRoll * sinPitch * sinYaw;
+            q1 = sinRoll * cosPitch * cosYaw - cosRoll * sinPitch * sinYaw;
+            q2 = cosRoll * sinPitch * cosYaw + sinRoll * cosPitch * sinYaw;
+            q3 = cosRoll * cosPitch * sinYaw - sinRoll * sinPitch * cosYaw;
+}
