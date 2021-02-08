@@ -31,6 +31,7 @@
 #include"wpmarker.h"
 #include"odom_mode.h"
 #include"watch_position.h"
+#include "FlexPose.h"
 
 #include<time.h>
 

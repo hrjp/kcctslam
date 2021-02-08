@@ -12,10 +12,6 @@
 #include <ros/ros.h>
 #include <geometry_msgs/Pose.h>
 #include <geometry_msgs/PoseStamped.h>
-#include <tf/tf.h>
-#include <tf/transform_broadcaster.h>
-#include <tf/transform_listener.h>
-#include <tf/transform_datatypes.h>
 #include <string>
 
 
@@ -23,10 +19,11 @@ class FlexPose{
     public:
     
     /// @brief constructor
+    FlexPose();
     FlexPose(double x,double y,double z=0.0);
     FlexPose(geometry_msgs::Pose pose);
     FlexPose(geometry_msgs::PoseStamped pose);
-    FlexPose(std::string parent_id,std::string child_id);
+    //FlexPose(std::string parent_id,std::string child_id);
 
     void setPosition(double x,double y,double z=0.0);
     void setPosition(geometry_msgs::Point position);
@@ -40,7 +37,7 @@ class FlexPose{
 
     void setPose(geometry_msgs::Pose pose);
     void setPose(geometry_msgs::PoseStamped pose);
-    void setPose(std::string parent_id,std::string child_id);
+    //void setPose(std::string parent_id,std::string child_id);
 
     void setHeader(std_msgs::Header header);
     void setChildid(std::string child_frame_id);
@@ -48,15 +45,15 @@ class FlexPose{
     geometry_msgs::Pose toPose();
     geometry_msgs::PoseStamped toPoseStamped();
     
-    void updateTF();
-    void sendTF();
+    //void updateTF();
+    //void sendTF();
 
-    FlexPose operator+(FlexPose pose);
-    FlexPose operator-(FlexPose pose);
+    FlexPose operator+(const FlexPose& pose);
+    FlexPose operator-(const FlexPose& pose);
     FlexPose operator*(double gain);
 
-    FlexPose operator+=(FlexPose pose);
-    FlexPose operator-=(FlexPose pose);
+    FlexPose operator+=(const FlexPose& pose);
+    FlexPose operator-=(const FlexPose& pose);
     FlexPose operator*=(double gain);
 
 
@@ -64,18 +61,21 @@ class FlexPose{
 
 
     private:
-    tf::TransformListener listener;
+    //tf::TransformListener listener;
+    ///tf::TransformBroadcaster br;
+    //tf::TransformListener listener1;
     geometry_msgs::PoseStamped pos;
     std::string child_id;
-    tf::TransformBroadcaster br;
+    
 
-    geometry_msgs::PoseStamped TFtoPoseStamped(std::string parent_id,std::string child_id);
+    //geometry_msgs::PoseStamped TFtoPoseStamped(std::string parent_id,std::string child_id);
     void EulerAnglesToQuaternion(double roll, double pitch, double yaw,double& q0, double& q1, double& q2, double& q3);
     geometry_msgs::Quaternion EulerAnglesToQuaternion(double roll, double pitch, double yaw);
 };
 
+FlexPose::FlexPose(){}
 
-FlexPose::FlexPose(double x,double y,double z=0.0){
+FlexPose::FlexPose(double x,double y,double z){
     pos.pose.position.x=x;
     pos.pose.position.y=y;
     pos.pose.position.z=z;
@@ -88,12 +88,12 @@ FlexPose::FlexPose(geometry_msgs::Pose pose){
 FlexPose::FlexPose(geometry_msgs::PoseStamped pose){
     pos=pose;
 }
-
+/*
 FlexPose::FlexPose(std::string parent_id,std::string child_id){
     pos=TFtoPoseStamped(parent_id,child_id);
-}
+}*/
 
-void FlexPose::setPosition(double x,double y,double z=0.0){
+void FlexPose::setPosition(double x,double y,double z){
     pos.pose.position.x=x;
     pos.pose.position.y=y;
     pos.pose.position.z=z;
@@ -133,9 +133,10 @@ void FlexPose::setPose(geometry_msgs::Pose pose){
 void FlexPose::setPose(geometry_msgs::PoseStamped pose){
     pos=pose;
 }
+/*
 void FlexPose::setPose(std::string parent_id,std::string child_id){
     pos=TFtoPoseStamped(parent_id,child_id);
-}
+}*/
 
 void FlexPose::setHeader(std_msgs::Header header){
     pos.header=header;
@@ -150,18 +151,70 @@ geometry_msgs::Pose FlexPose::toPose(){
 geometry_msgs::PoseStamped FlexPose::toPoseStamped(){
     return pos;
 }
-
+/*
 void FlexPose::updateTF(){
     TFtoPoseStamped(pos.header.frame_id,child_id);
 }
+/*
 void FlexPose::sendTF(){
    tf::Transform transform;
    tf::poseMsgToTF(pos.pose,transform);
    br.sendTransform(tf::StampedTransform(transform, ros::Time::now(),pos.header.frame_id, child_id));
+}*/
+
+FlexPose FlexPose::operator+(const FlexPose& pose){
+    FlexPose calc;
+    calc.pos=this->pos;
+    calc.child_id=this->child_id;
+    calc.pos.pose.position.x+=pose.pos.pose.position.x;
+    calc.pos.pose.position.y+=pose.pos.pose.position.y;
+    calc.pos.pose.position.z+=pose.pos.pose.position.z;
+    return calc;
 }
 
-//private functions
+FlexPose FlexPose::operator-(const FlexPose& pose){
+    FlexPose calc;
+    calc.pos=this->pos;
+    calc.child_id=this->child_id;
+    calc.pos.pose.position.x-=pose.pos.pose.position.x;
+    calc.pos.pose.position.y-=pose.pos.pose.position.y;
+    calc.pos.pose.position.z-=pose.pos.pose.position.z;
+    return calc;
+}
+FlexPose FlexPose::operator*(double gain){
+    FlexPose calc;
+    calc.pos=this->pos;
+    calc.child_id=this->child_id;
+    calc.pos.pose.position.x*=gain;
+    calc.pos.pose.position.y*=gain;
+    calc.pos.pose.position.z*=gain;
+    return calc;
+}
 
+FlexPose FlexPose::operator+=(const FlexPose& pose){
+    this->pos.pose.position.x+=pose.pos.pose.position.x;
+    this->pos.pose.position.y+=pose.pos.pose.position.y;
+    this->pos.pose.position.z+=pose.pos.pose.position.z;
+    return *this;
+}
+FlexPose FlexPose::operator-=(const FlexPose& pose){
+    this->pos.pose.position.x-=pose.pos.pose.position.x;
+    this->pos.pose.position.y-=pose.pos.pose.position.y;
+    this->pos.pose.position.z-=pose.pos.pose.position.z;
+    return *this;
+}
+FlexPose FlexPose::operator*=(double gain){
+    this->pos.pose.position.x*=gain;
+    this->pos.pose.position.y*=gain;
+    this->pos.pose.position.z*=gain;
+    return *this;
+}
+
+
+
+
+//private functions
+/*
 geometry_msgs::PoseStamped FlexPose::TFtoPoseStamped(std::string parent_id,std::string child_id){
     tf::StampedTransform listf;
     try {
@@ -181,7 +234,7 @@ geometry_msgs::PoseStamped FlexPose::TFtoPoseStamped(std::string parent_id,std::
         ROS_ERROR("%s", ex.what());
         ros::Duration(1.0).sleep();
     }
-}
+}*/
 
 void FlexPose::EulerAnglesToQuaternion(double roll, double pitch, double yaw,double& q0, double& q1, double& q2, double& q3){
             //q0:w q1:x q2:y q3:z
@@ -198,7 +251,7 @@ void FlexPose::EulerAnglesToQuaternion(double roll, double pitch, double yaw,dou
             q3 = cosRoll * cosPitch * sinYaw - sinRoll * sinPitch * cosYaw;
 }
 
-geometry_msgs::Quaternion EulerAnglesToQuaternion(double roll, double pitch, double yaw){
+geometry_msgs::Quaternion FlexPose::EulerAnglesToQuaternion(double roll, double pitch, double yaw){
     //q0:w q1:x q2:y q3:z
     double cosRoll = cos(roll / 2.0);
     double sinRoll = sin(roll / 2.0);
