@@ -27,9 +27,9 @@ void float_sensor_data_callback(const std_msgs::Float32MultiArray& float_sensor_
      linear_vel.data=float_sensor_data_row.data[13]*3.6;
      tf::Transform transform;
           //3D
-          //transform.setOrigin( tf::Vector3(float_sensor_data[1], float_sensor_data[0], float_sensor_data[2]) );
+          transform.setOrigin( tf::Vector3(float_sensor_data[1], float_sensor_data[0], float_sensor_data[2]) );
           //2D
-          transform.setOrigin( tf::Vector3(float_sensor_data[19], float_sensor_data[18], 0.0) );
+          //transform.setOrigin( tf::Vector3(float_sensor_data[19], float_sensor_data[18], 0.0) );
           tf::Quaternion q;
           //q.setRPY(0, 0, float_sensor_data[14]);
           q.setX(-float_sensor_data[10]);
@@ -72,13 +72,13 @@ int main(int argc, char **argv){
           odom.header.seq=seq_odom;
           odom.child_frame_id="base_link";
           //3D
-          //odom.pose.pose.position.x=float_sensor_data[1];
-          //odom.pose.pose.position.y=float_sensor_data[0];
-          //odom.pose.pose.position.z=float_sensor_data[2];
+          odom.pose.pose.position.x=float_sensor_data[1];
+          odom.pose.pose.position.y=float_sensor_data[0];
+          odom.pose.pose.position.z=float_sensor_data[2];
           //2D
-          odom.pose.pose.position.x=float_sensor_data[19];
-          odom.pose.pose.position.y=float_sensor_data[18];
-          odom.pose.pose.position.z=0.0;
+          //odom.pose.pose.position.x=float_sensor_data[19];
+          //odom.pose.pose.position.y=float_sensor_data[18];
+          //odom.pose.pose.position.z=0.0;
 
           odom.pose.pose.orientation.x=-float_sensor_data[10];
           odom.pose.pose.orientation.y=float_sensor_data[9];

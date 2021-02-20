@@ -96,6 +96,20 @@ void key_reset(){
     right_button=0;
 }
 
+int button_clicked=0;
+enum buttons_status{
+    buttons_status_free,
+    buttons_status_start,
+    buttons_status_pause,
+    buttons_status_initialpose,
+    buttons_status_plus,
+    buttons_status_mynus,
+    buttons_status_reset
+};
+void buttons_callback(const std_msgs::Int32 sub_buttons){
+    button_clicked=sub_buttons.data;
+}
+
 //2d nav goal pub用データ
 geometry_msgs::PoseStamped csv_write(Vector pos,int type){
             geometry_msgs::PoseStamped goal_point;
@@ -263,10 +277,12 @@ int main(int argc, char **argv){
     
    //十字キー入力 subscliber
    ros::Subscriber ket_sub = lSubscriber.subscribe("/turtle1/cmd_vel", 50, key_vel_callback);
-   //十字キー入力 subscliber
+   //rviz control panel subscliber
+   ros::Subscriber buttons_sub = lSubscriber.subscribe("buttons", 50, buttons_callback);
+   //subscliber
    ros::Subscriber human_sub = lSubscriber.subscribe("/position", 50, human_callback);
    //set way point subscliber
-   ros::Subscriber set_wp_sub = lSubscriber.subscribe("/set_wp", 50, set_wp_callback);
+   ros::Subscriber set_wp_sub = lSubscriber.subscribe("waypoint/set", 50, set_wp_callback);
     
 
     //2D_POSE_ESTIMATE publisher
@@ -327,15 +343,19 @@ int main(int argc, char **argv){
         watch_pos.update(lidar_tf.pos);
         
 
-        if(left_button){
+        if(button_clicked==buttons_status_plus){
             now_wp++;
             ROS_INFO("[SKIP] WAYPOINT[%d]",now_wp);
         }
-        if(down_button){
+        if(button_clicked==buttons_status_mynus){
+            now_wp--;
+            ROS_INFO("[UNDO] WAYPOINT[%d]",now_wp);
+        }
+        if(button_clicked==buttons_status_pause){
             wp_vec.at(now_wp).type=WP_STOP;
             ROS_INFO("[PAUSE] WAYPOINT[%d]",now_wp);
         }
-        if(right_button){
+        if(button_clicked==buttons_status_initialpose){
            initial_pub.publish(vec_to_PoseWithCovarianceStamped(wp_vec[now_wp]));
            ROS_INFO("[INTIAL POSE] WAYPOINT[%d]",now_wp);
            
@@ -353,7 +373,7 @@ int main(int argc, char **argv){
 
         //一時停止
         case WP_STOP:
-            if(up_button){
+            if(button_clicked==buttons_status_start){
                 //入力がきたらナビゲーションを再開する
                 wp_vec.at(now_wp).type=wp_vec.at(now_wp+1).type;
                 ROS_INFO("[START] NOW WAYPOINT[%d]",now_wp);
@@ -436,6 +456,7 @@ int main(int argc, char **argv){
         final_cmd_vel.linear.y=front_dis;
         cmd_pub.publish(final_cmd_vel);
         key_reset();
+        button_clicked=0;
         ros::spinOnce();//subsucriberの割り込み関数はこの段階で実装される
         loop_rate.sleep();
         
