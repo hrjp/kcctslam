@@ -1,6 +1,6 @@
 <launch>
 
-   <arg name="map_file0" default="$(find kcctslam)/config/map/honbu201225.yaml" />
+   <arg name="map_file0" default="$(find kcctslam)/config/map/210309hiroba.yaml" />
    <arg name="map_file1" default="$(find kcctslam)/config/map/g201113-2.yaml" />
    <arg name="map_file2" default="$(find kcctslam)/config/map/g203.yaml" />
    <arg name="map_file3" default="$(find kcctslam)/config/map/g202.yaml" />
