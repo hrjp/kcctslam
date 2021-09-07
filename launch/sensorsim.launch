@@ -7,14 +7,16 @@
    		<param name="angle_min" value="-3.14"/>
   		<param name="angle_max" value="3.14"/>
 	</node>
-	<node pkg="fourth_robot_gazebo" name="twist_remapper" type="twist_remapper.py" output="screen">
+	<!--
+	<node pkg="kcctsim" name="twist_remapper" type="twist_remapper.py" output="screen">
 	<remap from="cmd_vel" to="final_cmd_vel" />
 	</node>
-	<node pkg="fourth_robot_gazebo" name="linear_vel_node" type="linear_vel_node.py" output="screen"/>
+	<node pkg="kcctsim" name="linear_vel_node" type="linear_vel_node.py" output="screen"/>
 
 	<node name="basic_twist_publisher" pkg="kcctslam" type="basic_twist_publisher">
     	<remap from="cmd_vel" to="final_cmd_vel1"/>
   	</node>
+	  -->
 	<node name="joy_node" pkg="joy" type="joy_node" />
 	<node name="path_error_calc" pkg="kcctslam" type="path_error_calc" output="screen"/>
 	<node name="data_recorder" pkg="kcctslam" type="data_recorder.py" output="screen"/>
